@@ -5,13 +5,13 @@ app.config(function($stateProvider, $urlRouterProvider) {
 	    .state('tab', {
 	        url: "/tab",
 	        abstract: true,
-	        templateUrl: "templates/07_queue/tab.html"
+	        templateUrl: "templates/mid_project/tab.html"
 	    })
         .state('tab.friends', {
             url: '/friends',
             views: {
                 'tab-friends': {
-                    templateUrl: 'templates/07_queue/helloFriends.html',
+                    templateUrl: 'templates/mid_project/helloFriends.html',
                     controller: 'HelloFriendsCtrl'
                 }
             }
@@ -20,7 +20,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: "/frienddetail?id",
             views: {
                 'tab-friends': {
-                    templateUrl: 'templates/07_queue/friendDetail.html',
+                    templateUrl: 'templates/mid_project/friendDetail.html',
                     controller: 'FriendDetailCtrl'
                 }
             }
@@ -29,7 +29,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: "/newfriend",
             views: {
                 'tab-friends': {
-                    templateUrl: 'templates/07_queue/newFriend.html',
+                    templateUrl: 'templates/mid_project/newFriend.html',
                     controller: 'NewFriendCtrl'
                 }
             }
@@ -38,7 +38,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: "/messagepage?id",
             views: {
                 'tab-friends': {
-                    templateUrl: 'templates/07_queue/messagePage.html',
+                    templateUrl: 'templates/mid_project/messagePage.html',
                     controller: 'MessagePageCtrl'
                 }
             }
@@ -47,7 +47,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: "/setting",
             views: {
                 'tab-setting': {
-                    templateUrl: 'templates/07_queue/setting.html',
+                    templateUrl: 'templates/mid_project/setting.html',
                     controller: 'SettingCtrl'
                 }
             }

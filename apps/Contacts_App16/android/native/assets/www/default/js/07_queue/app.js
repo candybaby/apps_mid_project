@@ -85,17 +85,17 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, iLabMessag
     };
     
     var onReceiveMessage = function() {
-            $rootScope.$on('mqtt.notification', function(event, res) {
-                var index = res.indexOf(":");
-                var phone = res.substring(0, index);
-                var message = res.substring(index + 1, res.length);
-                var msgObj = {};
-                msgObj['targetPhone'] = phone;
-                msgObj['content'] = message;
-                msgObj['owner'] = 'target';
-                MessageManager.add(msgObj);
-                console.log("onReceiveMessage:" + message);
-            });
+        $rootScope.$on('mqtt.notification', function(event, res) {
+            var index = res.indexOf(":");
+            var phone = res.substring(0, index);
+            var message = res.substring(index + 1, res.length);
+            var msgObj = {};
+            msgObj['targetPhone'] = phone;
+            msgObj['content'] = message;
+            msgObj['owner'] = 'target';
+            MessageManager.add(msgObj);
+            console.log("onReceiveMessage:" + message);
+        });
     }
     
     var GCMSENDERID = '325215294371';
