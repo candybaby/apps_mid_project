@@ -1,4 +1,4 @@
-var app = angular.module("Contacts_App16", ['ionic', 'PhoneGap', 'iLabBirthdayLine']);
+var app = angular.module("Contacts_App16", ['ionic', 'PhoneGap', 'iLabBirthdayLine', 'acLabActivityBook']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider
@@ -49,6 +49,15 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 'tab-setting': {
                     templateUrl: 'templates/mid_project/setting.html',
                     controller: 'SettingCtrl'
+                }
+            }
+        })
+        .state('tab.activitylist', {
+            url: "/activitylist",
+            views: {
+                'tab-activity': {
+                    templateUrl: 'templates/mid_project/activityList.html',
+                    controller: 'ActivityListCtrl'
                 }
             }
         })
