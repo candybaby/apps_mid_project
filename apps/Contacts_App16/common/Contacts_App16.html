@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+    	<head>
+    		<meta charset="UTF-8">
+    		<title>Contacts_App16</title>
+    		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    		<link rel="shortcut icon" href="images/favicon.png">
+    		<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    		<link rel="stylesheet" href="css/ionic.min.css">
+    		<link rel="stylesheet" href="css/Contacts_App16.css">
+    		<script src="js/lib/ionic.bundle.min.js"></script>
+            <script src="js/plugins/SQLitePlugin.js"></script>
+            <script src="js/plugins/sms.js"></script>
+            <script src="js/plugins/EmailComposer.js"></script>
+            <script src="js/plugins/PushNotification.js"></script>
+            <script src="js/plugins/MQTTPlugin.js"></script>
+
+    		<script src="js/PhoneGapModule.js"></script>
+            <!-- Controller START -->
+            <!-- 03_contacts START 
+                <script src="js/03_contacts/app.js"></script>
+                <script src="js/03_contacts/friendListCtrl.js"></script>
+                <script src="js/03_contacts/friendDetailCtrl.js"></script>
+            <!-- 03_contacts END -->
+            <!-- 04_sqlite START
+                <script src="js/04_sqlite/app.js"></script>
+                <script src="js/04_sqlite/helloSQLiteCtrl.js"></script>
+                <script src="js/04_sqlite/friendDetailCtrl.js"></script>
+                <script src="js/04_sqlite/newFriendCtrl.js"></script>
+            <!-- 04_sqlite END -->
+            <!-- 05_sms START
+                <script src="js/05_sms/app.js"></script>
+                <script src="js/05_sms/service.js"></script>
+                <script src="js/05_sms/helloSMSCtrl.js"></script>
+                <script src="js/05_sms/friendDetailCtrl.js"></script>
+                <script src="js/05_sms/newFriendCtrl.js"></script>
+            <!-- 05_sms END -->
+            <!-- 06_push START
+                <script src="js/06_push/iLabBirthdayLine.js"></script>
+                <script src="js/06_push/app.js"></script>
+                <script src="js/06_push/service.js"></script>
+                <script src="js/06_push/helloFriendsCtrl.js"></script>
+                <script src="js/06_push/friendDetailCtrl.js"></script>
+                <script src="js/06_push/newFriendCtrl.js"></script>
+                <script src="js/06_push/messagePageCtrl.js"></script>
+                <script src="js/06_push/settingCtrl.js"></script>
+            <!-- 06_push END -->
+            <!-- 07_queue START -->
+                <script src="js/07_queue/iLabBirthdayLine.js"></script>
+                <script src="js/07_queue/app.js"></script>
+                <script src="js/07_queue/service.js"></script>
+                <script src="js/07_queue/helloFriendsCtrl.js"></script>
+                <script src="js/07_queue/friendDetailCtrl.js"></script>
+                <script src="js/07_queue/newFriendCtrl.js"></script>
+                <script src="js/07_queue/messagePageCtrl.js"></script>
+                <script src="js/07_queue/settingCtrl.js"></script>
+            <!-- 07_queue END -->
+            <!-- Controller END -->
+    	</head>
+    	<body ng-app="Contacts_App16">
+    		<ion-nav-bar type="bar-positive"
+    					 animation="nav-title-slide-ios7"
+    					 back-button-type="button-icon button-clear"
+    					 back-button-icon="ion-ios7-arrow-back"></ion-nav-bar>
+    		<ion-nav-view  animation="slide-left-right"></ion-nav-view>
+    		<script src="js/initOptions.js"></script>
+    		<script src="js/Contacts_App16.js"></script>
+    		<script src="js/messages.js"></script>
+
+    		<div id="content"></div>
+    	</body>
+</html>

@@ -1,0 +1,45 @@
+<ion-view title="'朋友資訊'" right-buttons="editFriendButton" ng-init="init();">
+	<ion-content has-header="true" padding="true">
+		<div class="card">
+			<div class="item item-image item-divider">
+    			<img src="images/people_1.png" width="120">
+  			</div>
+			<div ng-show="showEditOption" class="item item-text-wrap">
+				<label class="item item-input">
+			    	<span class="input-label">姓名: </span>
+			    	<input type="text" ng-model="model.name">
+				</label>
+				<label class="item item-input">
+			    	<span class="input-label">電話: </span>
+			    	<input type="tel" ng-model="model.phone">
+				</label>
+				<label class="item item-input">
+			    	<span class="input-label">郵件: </span>
+			    	<input type="text" ng-model="model.email">
+				</label>
+				<label class="item item-input">
+			    	<span class="input-label">生日: </span>
+			    	<input type="text" ng-model="model.birthday">
+				</label>
+				<button ng-click="onEditClick()" class="button button-block button-positive">修改</button>
+			</div>
+			<div ng-show="!showEditOption" class="item item-text-wrap">
+				<p>姓名: {{model.name}}</p>
+				<p>電話: {{model.phone}}</p>
+				<p>郵件: {{model.email}}</p>
+				<p>生日: {{model.birthday}}</p>
+			</div>
+			<div class="item item-divider">
+			    <a class="button icon-left ion-ios7-telephone" href="tel:{{model.phone}}">
+					電話
+				</a>
+				<a class="button icon-left ion-ios7-chatbubble button-positive" href="sms:">
+					簡訊
+				</a>
+				<a class="button button-outline icon-right ion-ios7-email button-balanced" href="mailto:{{model.email}}">
+					郵件
+				</a>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

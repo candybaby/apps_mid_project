@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="App16">
+        <wb-resource deploy-path="/" source-path="/apps/Simple_App16/common"/>
+        <wb-resource deploy-path="/" source-path="/apps/Simple_App16/iphone"/>
+        <wb-resource deploy-path="/" source-path="/apps/Simple_App16/android"/>
+        <wb-resource deploy-path="/" source-path="/apps/Contacts_App16/common"/>
+        <wb-resource deploy-path="/" source-path="/apps/Contacts_App16/android"/>
+        <wb-resource deploy-path="/" source-path="/apps/Contacts_App16/iphone"/>
+        <wb-resource deploy-path="/" source-path="/apps/SQLite_App16/common"/>
+        <wb-resource deploy-path="/" source-path="/apps/SQLite_App16/iphone"/>
+        <wb-resource deploy-path="/" source-path="/apps/SQLite_App16/android"/>
+        <property name="context-root" value="App16"/>
+    </wb-module>
+</project-modules>

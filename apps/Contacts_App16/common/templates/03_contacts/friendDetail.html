@@ -1,0 +1,25 @@
+<ion-view title="'朋友資訊'" ng-init="init();">
+	<ion-content has-header="true" padding="true">
+		<div class="card">
+			<div class="item item-image item-divider">
+    			<img class="full-image" src="http://140.124.181.70/images/{{photo}}">
+  			</div>
+			<div class="item item-text-wrap">
+				<p>{{name}}</p>
+		    	<p>{{phone}}</p>
+		    	<p>{{email}}</p>
+			</div>
+			<div class="item item-divider">
+			    <a class="button icon-left ion-ios7-telephone" href="tel:{{phone}}">
+					電話
+				</a>
+				<a class="button icon-left ion-ios7-chatbubble button-positive" href="sms:">
+					簡訊
+				</a>
+				<a class="button button-outline icon-right ion-ios7-email button-balanced" href="mailto:{{email}}">
+					郵件
+				</a>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>
