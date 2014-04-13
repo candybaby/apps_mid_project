@@ -13,7 +13,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: '/friends',
             views: {
                 'tab-friends': {
-                    templateUrl: 'templates/mid_project/helloFriends.html',
+                    templateUrl: 'templates/mid_project/friend/helloFriends.html',
                     controller: 'HelloFriendsCtrl'
                 }
             }
@@ -22,7 +22,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: "/frienddetail?id",
             views: {
                 'tab-friends': {
-                    templateUrl: 'templates/mid_project/friendDetail.html',
+                    templateUrl: 'templates/mid_project/friend/friendDetail.html',
                     controller: 'FriendDetailCtrl'
                 }
             }
@@ -31,7 +31,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: "/newfriend",
             views: {
                 'tab-friends': {
-                    templateUrl: 'templates/mid_project/newFriend.html',
+                    templateUrl: 'templates/mid_project/friend/newFriend.html',
                     controller: 'NewFriendCtrl'
                 }
             }
@@ -40,7 +40,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: "/messagepage?id",
             views: {
                 'tab-friends': {
-                    templateUrl: 'templates/mid_project/messagePage.html',
+                    templateUrl: 'templates/mid_project/friend/messagePage.html',
                     controller: 'MessagePageCtrl'
                 }
             }
@@ -58,8 +58,26 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: "/activitylist",
             views: {
                 'tab-activity': {
-                    templateUrl: 'templates/mid_project/activityList.html',
+                    templateUrl: 'templates/mid_project/activity/activityList.html',
                     controller: 'ActivityListCtrl'
+                }
+            }
+        })
+        .state('tab.createactivity', {
+            url: "/createactivity",
+            views: {
+                'tab-activity': {
+                    templateUrl: 'templates/mid_project/activity/createActivity.html',
+                    controller: 'CreateActivityCtrl'
+                }
+            }
+        })
+        .state('tab.activitydetail', {
+            url: "/activitydetail?id",
+            views: {
+                'tab-activity': {
+                    templateUrl: 'templates/mid_project/activity/activityDetail.html',
+                    controller: 'ActivityDetailCtrl'
                 }
             }
         })
