@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/mid_project/app.js in folder common */
-var app = angular.module("Contacts_App16", ['ionic', 'PhoneGap', 'iLabBirthdayLine', 'acLabActivityBook']);
+var app = angular.module("Contacts_App16", ['ionic', 'PhoneGap', 'acLabActivityBook']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider
@@ -86,13 +86,13 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/tab/friends");
 });
 
-app.run(function(DBManager, SettingManager, PushNotificationsFactory, iLabMessage, $window, PhoneGap, $rootScope,MessageManager) {
+app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, MessageManager) {
     var host = SettingManager.getHost();
     
     PhoneGap.ready(function() {
         if(host.phone) {
             $window.document.addEventListener("pause", function() {
-                iLabMessage.resetCounter(host.phone);
+                //iLabMessage.resetCounter(host.phone);
             }, false);
         }
         onReceiveMessage();

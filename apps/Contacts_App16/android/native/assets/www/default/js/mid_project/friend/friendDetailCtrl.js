@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/mid_project/friend/friendDetailCtrl.js in folder common */
-app.controller('FriendDetailCtrl', function($scope, $stateParams, $location, FriendManager, MessageManager, Notification, $window, $rootScope, iLabMessage) {
+app.controller('FriendDetailCtrl', function($scope, $stateParams, $location, FriendManager, MessageManager, Notification, $window, $rootScope) {
 		$scope.model = {};
 		$scope.editModel = {};
 		$scope.showEditOption = false;
