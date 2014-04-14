@@ -90,6 +90,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     PhoneGap.ready(function() {
         if(host.phone) {
             $window.document.addEventListener("pause", function() {
+                console.log("**** pause time ****");
                 //iLabMessage.resetCounter(host.phone);
             }, false);
         }
@@ -123,7 +124,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         });
     }
     
-    var GCMSENDERID = '325215294371';
+    var GCMSENDERID = '568888441927';
     
     PushNotificationsFactory(GCMSENDERID, function(token, type) {
         var host = SettingManager.getHost();
