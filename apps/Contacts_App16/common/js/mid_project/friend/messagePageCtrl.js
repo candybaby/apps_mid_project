@@ -1,4 +1,4 @@
-app.controller('MessagePageCtrl', function($scope, $stateParams, FriendManager, MessageManager, SettingManager, iLabMessage) {
+app.controller('MessagePageCtrl', function($scope, $stateParams, FriendManager, MessageManager, SettingManager, acLabMessage) {
 		$scope.model = {};
 		$scope.message = {};
 		$scope.message.text = "";
@@ -15,7 +15,7 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, FriendManager, 
 			msgObj['content'] = $scope.message.text;
 			msgObj['owner'] = 'source';
 			MessageManager.add(msgObj);
-			iLabMessage.sendMessage(SettingManager.getHost().phone, $scope.model.phone, $scope.message.text);
+			acLabMessage.sendMessage(SettingManager.getHost().phone, $scope.model.phone, $scope.message.text);
 			$scope.message.text = "";
 		};
 

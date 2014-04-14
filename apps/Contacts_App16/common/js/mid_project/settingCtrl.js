@@ -1,4 +1,4 @@
-app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoading, $http, Notification, iLabMember, iLabMessage){
+app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoading, $http, Notification, acLabMember){
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
 	$scope.DELETE = 2;
@@ -22,7 +22,7 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
     		return;
     	}
     	$scope.show();
-    	iLabMember.register($scope.host,
+    	acLabMember.register($scope.host,
      		   function() {
  				$scope.hide();
      			$scope.host.registered = true;
@@ -38,7 +38,7 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
 	
 	$scope.onDeleteClick = function() {
 		$scope.show();
-		iLabMember.unregister($scope.host.phone, function(response) {
+		acLabMember.unregister($scope.host.phone, function(response) {
 			$scope.host.name = "";
 			$scope.host.phone = "";
 			$scope.host.email = "";

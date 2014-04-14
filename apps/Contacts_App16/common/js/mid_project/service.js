@@ -132,7 +132,7 @@ app.factory('MessageManager', function(DBManager) {
     }
 });
 
-app.factory('FriendManager', function(DBManager, iLabMember) {
+app.factory('FriendManager', function(DBManager, acLabMember) {
     var idIndexedFriends = {};
     var phoneIndexedFriends = {};
     DBManager.getFriends(function(tx, res) {
@@ -142,7 +142,7 @@ app.factory('FriendManager', function(DBManager, iLabMember) {
     });
     return {
         add: function(friend, onSuccess, onError) {
-            iLabMember.isMember(friend.phone, function(response) {
+            acLabMember.isMember(friend.phone, function(response) {
                 friend.isMember = JSON.parse(response) ? 1 : 0;
                 DBManager.addFriend(friend, function() {
                     idIndexedFriends[friend.id] = friend;
@@ -157,7 +157,7 @@ app.factory('FriendManager', function(DBManager, iLabMember) {
             });
         },
         edit: function(friend, onSuccess, onError) {
-            iLabMember.isMember(friend.phone, function(response) {
+            acLabMember.isMember(friend.phone, function(response) {
                 friend.isMember = JSON.parse(response) ? 1 : 0;
                 DBManager.updateFriend(friend, function() {
                     idIndexedFriends[friend.id] = friend;

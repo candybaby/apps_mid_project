@@ -46,59 +46,68 @@ angular.module('iLabBirthdayLine', ['PhoneGap']).factory('iLabMessage', function
 });
 
 angular.module('iLabBirthdayLine').factory('iLabMember', function ($rootScope, $window, $http) {
-	var iLabServiceUrl = 'http://140.124.183.158:7828/api/Member';
-	
-	return {
+	var acLabServiceUrl = 'http://140.124.181.70/web/api/member/';
+    var acLabServiceFormat = '/format/json';
+    
+    return {
         isMember: function(phone, onSuccess, onError) {
-			var check = $http({
-				method: 'GET',
-				url: iLabServiceUrl,
-				params: {phone: phone}
-			});
-			check.success(function(response, status, headers, config){
-    			(onSuccess || angular.noop)(response);
-    		});
-			check.error(function (response, status, headers, config){
-    			(onError || angular.noop)(false);
-    		});
+            var data = {
+                phone: phone
+            };
+
+            var check = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'isExist' + acLabServiceFormat,
+                data: data
+            });
+
+            check.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+            check.error(function (response, status, headers, config){
+                (onError || angular.noop)(false);
+            });
         },
-	    
-	    register: function(host, onSuccess, onError) {
-	    	var hostData = {
-    			Phone: host.phone,
-    			DeviceType: host.type,
-    			DeviceToken: host.token
-    		};
-	        	
-    		var add = $http({
-    			method: 'POST',
-    			url: iLabServiceUrl,
-    			data: hostData
-    		});
-	    		
-    		add.success(function(response, status, headers, config){
-    			(onSuccess || angular.noop)(response);
-    		});
-	    		
-    		add.error(function (response, status, headers, config){
-    			(onError || angular.noop);
-    		});
-	    },
-	    
-	    unregister: function(phone, onSuccess, onError) {
-        	var remove = $http({
-    			method: 'DELETE',
-    			url: iLabServiceUrl,
-    			params: {
-    				phone: phone
-    			}
-    		});
-        	remove.success(function(response, status, headers, config){
-    			(onSuccess || angular.noop)(response);
-    		});
-        	remove.error(function (response, status, headers, config){
-    			(onError || angular.noop)(false);
-    		});
+        
+        register: function(host, onSuccess, onError) {
+            var hostData = {
+                phone: host.phone,
+                device_type: host.type,
+                token: host.token
+            };
+                
+            var add = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'register' + acLabServiceFormat,
+                data: hostData
+            });
+                
+            add.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+                
+            add.error(function (response, status, headers, config){
+                (onError || angular.noop);
+            });
+        },
+        
+        unregister: function(phone, onSuccess, onError) {
+            var data = {
+                phone: phone
+            };
+
+            var remove = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'unregister' + acLabServiceFormat,
+                data: data
+            });
+
+            remove.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+            remove.error(function (response, status, headers, config){
+                (onError || angular.noop)(false);
+            });
         }
-	};
+    };
 });
