@@ -14,6 +14,10 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
     	return FriendManager.list();
     };
 
+    $scope.getMemberList = function() {
+    	return FriendManager.list();
+    };
+
     $scope.onFriendItemClick = function(msg) {
     	if (!$scope.showDeleteOption) {
     		$location.url('tab/frienddetail?id=' + msg);
@@ -53,6 +57,10 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 	}];
 
 	$scope.getFriendsCount = function() {
+		return FriendManager.count();
+	};
+
+	$scope.getMembersCount = function() {
 		return FriendManager.count();
 	};
 

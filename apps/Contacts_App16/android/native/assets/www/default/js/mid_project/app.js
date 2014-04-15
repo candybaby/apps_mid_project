@@ -100,10 +100,9 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     });
     
     $window.receiveMessage = function(message) {
-        if(message.indexOf(':') < 0)
+        if(message.length <= 0)
             return;
         $rootScope.$broadcast('mqtt.notification', message);
-        console.log("mqtt.notification" + message);
     };
     
     if (host.registered) {
@@ -115,15 +114,8 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     
     var onReceiveMessage = function() {
         $rootScope.$on('mqtt.notification', function(event, res) {
-            var index = res.indexOf(":");
-            var phone = res.substring(0, index);
-            var message = res.substring(index + 1, res.length);
-            var msgObj = {};
-            msgObj['targetPhone'] = phone;
-            msgObj['content'] = message;
-            msgObj['owner'] = 'target';
-            MessageManager.add(msgObj);
-            console.log("onReceiveMessage:" + message);
+            // mqtt 傳幾則 收幾則 收到格式 json
+            console.log("mqtt onReceiveMessage:" + res);
         });
     }
     

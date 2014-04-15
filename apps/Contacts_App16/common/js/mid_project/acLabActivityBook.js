@@ -92,6 +92,34 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
             });
         }
     };
+})
+.factory('acLabMessage', function ($http, $window, PhoneGap, $rootScope) {
+    var acLabServiceUrl = 'http://140.124.181.70/web/api/message/';
+    var acLabServiceFormat = '/format/json';
+    
+    return {
+        sendMessage: function(senderPhone, receiverPhone, message) {
+            var messageData = {
+                sender_phone: senderPhone,
+                receiver_phone: receiverPhone,
+                message: message
+            };
+            
+            var send = $http({
+                method: 'POST',
+                url: acLabServiceUrl + "send" + acLabServiceFormat,
+                data: messageData
+            });
+            
+            send.success(function(response, status, headers, config){
+                console.log("發送成功");
+            });
+            
+            send.error(function(response, status, headers, config) {
+                console.log("發送失敗，原因:"+response);
+            });
+        }
+    };
 });
 
 

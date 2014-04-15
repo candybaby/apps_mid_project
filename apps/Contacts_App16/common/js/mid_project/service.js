@@ -134,7 +134,6 @@ app.factory('MessageManager', function(DBManager) {
 
 app.factory('FriendManager', function(DBManager, acLabMember) {
     var idIndexedFriends = {};
-    var phoneIndexedFriends = {};
     DBManager.getFriends(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexedFriends[res.rows.item(i).id] = res.rows.item(i);
@@ -161,14 +160,12 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
                 friend.isMember = JSON.parse(response) ? 1 : 0;
                 DBManager.updateFriend(friend, function() {
                     idIndexedFriends[friend.id] = friend;
-                    phoneIndexedFriends[friend.phone] = friend;
                     (onSuccess || angular.noop)();
                 }, onError);
             }, function() {
                 friend.isMember = 0;
                 DBManager.updateFriend(friend, function() {
                     idIndexedFriends[friend.id] = friend;
-                    phoneIndexedFriends[friend.phone] = friend;
                     (onSuccess || angular.noop)();
                 }, onError);
             });
@@ -180,17 +177,6 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
         },
         getById: function(id) {
             return idIndexedFriends[id];
-        },
-        getByPhone: function(phone) {
-            if (phoneIndexedFriends[phone] == undefined) {
-                for (var id in idIndexedFriends) {
-                    if (idIndexedFriends[id].phone == phone) {
-                        phoneIndexedFriends[phone] = idIndexedFriends[id];
-                        break;
-                    }
-                }
-            }
-            return phoneIndexedFriends[phone];
         },
         list: function() {
             return idIndexedFriends;
