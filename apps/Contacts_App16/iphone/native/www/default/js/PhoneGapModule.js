@@ -155,7 +155,7 @@ angular.module('PhoneGap').factory('PushNotificationsFactory', function ($rootSc
                             data: notification.payload.message,
                             provider: 'GCM'
                         });
-                        console.log("phonegapPush.notification:" + notification.payload.message);
+                        console.log("phonegapPush.notification:" + notification.message);
                         break;
 
                     case 'error':

@@ -107,6 +107,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     if (host.registered) {
         PhoneGap.ready(function() {     
             $window.plugins.MQTTPlugin.CONNECT(angular.noop, angular.noop, host.phone, host.phone);
+            console.log("MQTTPlugin.CONNECT:" + host.phone);
         });
     };
     
