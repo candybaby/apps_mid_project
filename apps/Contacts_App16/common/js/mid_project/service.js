@@ -137,7 +137,7 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
     DBManager.getFriends(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexedFriends[res.rows.item(i).id] = res.rows.item(i);
-        }
+        } 
     });
     return {
         add: function(friend, onSuccess, onError) {
@@ -181,8 +181,70 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
         list: function() {
             return idIndexedFriends;
         },
+        listMember: function() {
+            // return friends with isMember: true
+            var members = {};
+            for (var id in idIndexedFriends) {
+                if (idIndexedFriends[id].isMember)
+                {
+                    members[id] = idIndexedFriends[id];
+                }
+            }
+            return members;
+        },
+        listFriend: function() {
+            // return friends with isMember: false
+            var friends = {};
+            for (var id in idIndexedFriends) {
+                if (!idIndexedFriends[id].isMember)
+                {
+                    friends[id] = idIndexedFriends[id];
+                }
+            }
+            return friends;
+        },
         count: function() {
             return Object.keys(idIndexedFriends).length;
+        },
+        countMember: function() {
+            // return listMember count
+            var members = {};
+            for (var id in idIndexedFriends) {
+                if (idIndexedFriends[id].isMember)
+                {
+                    members[id] = idIndexedFriends[id];
+                }
+            }
+            return Object.keys(members).length;
+        },
+        countFriend: function() {
+            // return listFriend count
+            var friends = {};
+            for (var id in idIndexedFriends) {
+                if (!idIndexedFriends[id].isMember)
+                {
+                    friends[id] = idIndexedFriends[id];
+                }
+            }
+            return Object.keys(friends).length;
+        },
+        updateIsMember: function() {
+            // var tempIndexedFriends = angular.copy(idIndexedFriends);
+            // for (var id in tempIndexedFriends) {
+            // // 更新isMember
+            //     console.log("updateIsMember id:" + id);
+            //     var friend = tempIndexedFriends[id];
+            //     console.log("updateIsMember friendid:" + friend.id);
+            //     acLabMember.isMember(friend.phone, function(response) {
+            //         friend.isMember = JSON.parse(response) ? 1 : 0;
+            //         console.log("updateIsMember:" + friend.phone);
+            //         console.log("updateIsMember:" + friend.isMember);
+            //         DBManager.updateFriend(friend, function() {
+            //             idIndexedFriends[friend.id] = friend;
+            //             (onSuccess || angular.noop)();
+            //         });
+            //     });
+            // }
         }
     };
   

@@ -7,15 +7,16 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 	$scope.showDeleteOption = false;
 	
 	$scope.init = function() {
-		//$scope.friendList = FriendManager.list();
+		// but 空的method
+		FriendManager.updateIsMember();
     };
 
     $scope.getFriendList = function() {
-    	return FriendManager.list();
+    	return FriendManager.listFriend();
     };
 
     $scope.getMemberList = function() {
-    	return FriendManager.list();
+    	return FriendManager.listMember();
     };
 
     $scope.onFriendItemClick = function(msg) {
@@ -57,11 +58,11 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 	}];
 
 	$scope.getFriendsCount = function() {
-		return FriendManager.count();
+		return FriendManager.countFriend();
 	};
 
 	$scope.getMembersCount = function() {
-		return FriendManager.count();
+		return FriendManager.countMember();
 	};
 
     var update = function() {};

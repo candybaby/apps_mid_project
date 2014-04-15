@@ -66,7 +66,12 @@ app.controller('FriendDetailCtrl', function($scope, $stateParams, $location, Fri
 		};
 
 		$scope.onSMSClick = function() {
-			var message = $scope.model.name + "：真高興，你又長了一歲。祝你生日快樂，永遠快樂！";
+			var message = "";
+			if (!$scope.model.isMember)
+			{
+				message = $scope.model.name + "：邀請你加入使用ActivityBook";
+			}
+			
 			$window.sms.send($scope.model.phone, message, "INTENT");
 			//$window.open("sms:"+ $scope.model.phone + "?body=" + message);
 		};
@@ -76,14 +81,18 @@ app.controller('FriendDetailCtrl', function($scope, $stateParams, $location, Fri
 		};
 	
 		$scope.onEmailClick = function() {
-			var subject = "生日快樂！";
-			var message = $scope.model.name + "：真高興，你又長了一歲。祝你生日快樂，永遠快樂！";
+			var message = "";
+			if (!$scope.model.isMember)
+			{
+				message = $scope.model.name + "：邀請你加入使用ActivityBook";
+			}
+			var subject = "ActivityBook！";
 			$window.plugins.emailComposer.showEmailComposer(subject, message, [$scope.model.email], [], [], true, []);
 			//$window.open('mailto:' + $scope.model.email + '?subject=' + subject + '&body=' + message);
 		};
 
 		$scope.onMessageClick = function() {
-			$location.url('tab/messagepage?id=' + $scope.model.id);
+			$location.url('messagepage?id=' + $scope.model.id);
 		};
 
 		var isObjectEmpty = function(obj) {

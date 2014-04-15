@@ -9,7 +9,7 @@
 			</span>
 		</div>
         <div class="item item-divider">
-            已加入會員
+            已加入 ActivityBook
         </div>
 		<div ng-show="getMembersCount() > 0">
             <div ng-repeat="friend in getMemberList()" class="item" ng-click="onFriendItemClick(friend.id);">
@@ -33,7 +33,7 @@
 			</div>
 	    </div>
         <div class="item item-divider">
-            未加入會員
+            未加入 ActivityBook
         </div>
         <div ng-show="getFriendsCount() > 0">
             <div ng-repeat="friend in getFriendList()" class="item" ng-click="onFriendItemClick(friend.id);">

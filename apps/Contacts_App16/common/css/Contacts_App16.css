@@ -49,3 +49,15 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	background:#158ffe;
 	color:#fff;
 }
+
+.chatContent {
+	margin-top:90px;
+	margin-bottom:45px;
+}
+
+.test {
+	background-color: yellow;
+	margin-top:90px;
+	margin-bottom:45px;
+}
+

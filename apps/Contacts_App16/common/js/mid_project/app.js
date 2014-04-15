@@ -34,14 +34,19 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('tab.messagepage', {
+        // .state('tab.messagepage', {
+        //     url: "/messagepage?id",
+        //     views: {
+        //         'tab-friends': {
+        //             templateUrl: 'templates/mid_project/friend/messagePage.html',
+        //             controller: 'MessagePageCtrl'
+        //         }
+        //     }
+        // })
+        .state('messagepage', {
             url: "/messagepage?id",
-            views: {
-                'tab-friends': {
-                    templateUrl: 'templates/mid_project/friend/messagePage.html',
-                    controller: 'MessagePageCtrl'
-                }
-            }
+            templateUrl: 'templates/mid_project/friend/messagePage.html',
+            controller: 'MessagePageCtrl'      
         })
         .state('tab.setting', {
             url: "/setting",
@@ -113,6 +118,12 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     var onReceiveMessage = function() {
         $rootScope.$on('mqtt.notification', function(event, res) {
             // mqtt 傳幾則 收幾則 收到格式 json
+            var message = JSON.parse(res);
+            var msgObj = {};
+            msgObj['targetPhone'] = message['sender_phone'];
+            msgObj['content'] = message['message'];
+            msgObj['owner'] = 'target';
+            MessageManager.add(msgObj);
             console.log("mqtt onReceiveMessage:" + res);
         });
     }
