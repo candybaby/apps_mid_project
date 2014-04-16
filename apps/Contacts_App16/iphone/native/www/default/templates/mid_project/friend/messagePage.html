@@ -5,7 +5,25 @@
 	<ion-content padding="true" class="chatContent">
   		<ol class="messages">
   			<li ng-repeat="message in getMessageList()" ng-class="message.owner">
-  				<p>{{message.content}}</p>
+
+  					<table>
+  						<tr>
+  							<td class="chatTableTd" ng-show="message.owner == 'source'">
+  								<span class="read" ng-show="message.hasRead">已讀</span>
+  								<span class="time">{{message.dateTime}}</span>
+  							</td>
+
+  							<td>
+  								<span class="msg">{{message.content}}</span>
+  							</td>
+  							<td class="chatTableTd" ng-show="message.owner == 'target'">
+  								<span class="read" ng-show="message.hasRead">已讀</span>
+  								<span class="read" ng-hide="message.hasRead" ng-click="readMessage(message.mId)">未讀</span>
+  								<span class="time">{{message.dateTime}}</span>
+  							</td>
+  						</tr>
+  					</table>
+
   			</li>
 		</ol>
     </ion-content>

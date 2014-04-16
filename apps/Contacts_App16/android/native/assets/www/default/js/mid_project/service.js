@@ -105,6 +105,30 @@ app.factory('DBManager', function($window, PhoneGap) {
                     );
                 });
             });
+        },
+
+        updateMessageHasRead: function (mId, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("UPDATE messages SET hasRead = ? where mId = ?",
+                        [true, mId],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
+        getMessageId: function (mId, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("SELECT * FROM messages where mId = ?",
+                        [mId],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
         }
     };
 });
@@ -114,6 +138,7 @@ app.factory('MessageManager', function(DBManager) {
     DBManager.getMessages(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexMessages[res.rows.item(i).id] = res.rows.item(i);
+            console.log("message mId:" + res.rows.item(i).mId + "  hasRead:" + res.rows.item(i).hasRead);
         }
     });
     return {
@@ -130,6 +155,15 @@ app.factory('MessageManager', function(DBManager) {
                 }
             }
             return messagesByPhone;
+        },
+        updateHasRead: function(mId) {
+            DBManager.updateMessageHasRead(mId, function() {
+                DBManager.getMessageId(mId, function(tx, res) {
+                    var hasReadId = res.rows.item(0).id;
+                    console.log("Message id:" + hasReadId);
+                    idIndexMessages[hasReadId].hasRead = true;
+                });
+            });
         }
     }
 });

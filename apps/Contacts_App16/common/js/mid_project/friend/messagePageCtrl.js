@@ -1,6 +1,6 @@
 app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDelegate, $rootScope, $location, FriendManager, MessageManager, SettingManager, acLabMessage) {
 		$scope.model = {};
-	
+		
 		$scope.init = function() {
 			$scope.id = $stateParams["id"];
 			$scope.model = angular.copy(FriendManager.getById($scope.id));
@@ -18,13 +18,22 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
 		}
 
 		$scope.onReceiveMessage = function() {
-        	$rootScope.$on('mqtt.notification', function(event, res) {
-            	$ionicScrollDelegate.scrollBottom(true);
+        	$rootScope.$on('receiveMessage', function(event, res) {
+        		if (res['message_type'] == "chat" && 
+        			(res['sender_phone'] == $scope.model.phone || 
+        				(res['send_myself'] && res['receiver_phone'] ==$scope.model.phone)))
+        		{
+        			$ionicScrollDelegate.scrollBottom(true);
+        		}
         	});
     	}
 
 		$scope.getMessageList = function() {
     		return MessageManager.getByPhone($scope.model.phone);
+    	};
+
+    	$scope.readMessage = function(mId) {
+    		acLabMessage.readMessage(mId);
     	};
 
     	$scope.backButton = [{

@@ -121,7 +121,26 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
             send.error(function(response, status, headers, config) {
                 console.log("發送失敗，原因:"+response);
             });
-        }
+        },
+        readMessage: function(mId) {
+            var messageData = {
+                m_id: mId
+            };
+            
+            var send = $http({
+                method: 'POST',
+                url: acLabServiceUrl + "read" + acLabServiceFormat,
+                data: messageData
+            });
+            
+            send.success(function(response, status, headers, config){
+                console.log("發送成功");
+            });
+            
+            send.error(function(response, status, headers, config) {
+                console.log("發送失敗，原因:"+response);
+            });
+        },
     };
 });
 

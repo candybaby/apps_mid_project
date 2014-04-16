@@ -27,7 +27,7 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	display:block;
 	float:left;
 	clear:both;
-	max-width:65%;
+	max-width:85%;
 	margin:0 0 1rem 0;
 	padding:0;
 }
@@ -36,18 +36,46 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	float:right;
 }
 
-.messages p {
+.messages table {
+	background: transparent;
+	padding:.6875rem;
+	margin:0;
+}
+
+.messages span.msg {
 	border-radius:.75rem;
 	background:#e6e5eb;
 	color:#383641;
 	padding:.6875rem;
-	margin:0;
 	font-size:.875rem;
+	display: block;
 }
 
-.messages li.source p {
+.messages span.read {
+	position: relative;
+	top: 0px;
+	left: 82px;
+	background: transparent;
+	font-size:.675rem;
+	display: block;
+}
+
+.messages span.time {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	background: transparent;
+	font-size:.675rem;
+	display: block;
+}
+
+.messages li.source span.msg {
 	background:#158ffe;
 	color:#fff;
+}
+
+.chatTableTd {
+	vertical-align: bottom;
 }
 
 .chatContent {

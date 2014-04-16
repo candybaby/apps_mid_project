@@ -123,6 +123,10 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             {
                 receiveMessage(message);
             }
+            else if (message['message_type'] == "read")
+            {
+                readMessage(message);
+            }
             
             console.log("mqtt onReceiveMqtt:" + res);
         });
@@ -146,6 +150,12 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         msgObj['mId'] = message['m_id'];
         msgObj['activityId'] = message['activity_id'];
         MessageManager.add(msgObj);
+        $rootScope.$broadcast('receiveMessage', message);
+    }
+
+    var readMessage = function(message) {
+        MessageManager.updateHasRead(message['message_id']);
+        console.log("readMessage:" + message['message_id']);
     }
     
     var GCMSENDERID = '568888441927';
