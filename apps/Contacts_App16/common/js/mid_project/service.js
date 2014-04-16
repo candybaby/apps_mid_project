@@ -6,7 +6,7 @@ app.factory('DBManager', function($window, PhoneGap) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT UNIQUE, email TEXT, birthday DATE, isMember BOOLEAN)", []);
         });
         db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, targetPhone TEXT, content TEXT, owner TEXT)", []);
+            tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, targetPhone TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER, activityId INTEGER)", []);
         });
     });
     
@@ -68,8 +68,8 @@ app.factory('DBManager', function($window, PhoneGap) {
         addMessage: function (message, onSuccess, onError) {
             PhoneGap.ready(function() {
                 db.transaction(function(tx) {
-                    tx.executeSql("INSERT INTO messages(targetPhone, content, owner) VALUES (?, ?, ?)",
-                        [message.targetPhone, message.content, message.owner],
+                    tx.executeSql("INSERT INTO messages(targetPhone, content, owner, dateTime, hasRead, mId, activityId) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        [message.targetPhone, message.content, message.owner, message.dateTime, false, message.mId, message.activityId],
                         function(tx, res) {
                             message.id = res.insertId;
                             (onSuccess || angular.noop)();

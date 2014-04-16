@@ -99,7 +99,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 //iLabMessage.resetCounter(host.phone);
             }, false);
         }
-        onReceiveMessage();
+        onReceiveMqtt();
     });
     
     $window.receiveMessage = function(message) {
@@ -115,17 +115,37 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         });
     };
     
-    var onReceiveMessage = function() {
+    var onReceiveMqtt = function() {
         $rootScope.$on('mqtt.notification', function(event, res) {
             // mqtt 傳幾則 收幾則 收到格式 json
             var message = JSON.parse(res);
-            var msgObj = {};
-            msgObj['targetPhone'] = message['sender_phone'];
-            msgObj['content'] = message['message'];
-            msgObj['owner'] = 'target';
-            MessageManager.add(msgObj);
-            console.log("mqtt onReceiveMessage:" + res);
+            if (message['message_type'] == "chat")
+            {
+                receiveMessage(message);
+            }
+            
+            console.log("mqtt onReceiveMqtt:" + res);
         });
+    }
+
+    var receiveMessage = function(message) {
+        var msgObj = {};
+        if (message['send_myself'] == true)
+        {
+            msgObj['owner'] = 'source';
+            msgObj['targetPhone'] = message['receiver_phone'];
+        }
+        else
+        {
+            msgObj['owner'] = 'target';
+            msgObj['targetPhone'] = message['sender_phone'];
+        }
+            
+        msgObj['content'] = message['message'];
+        msgObj['dateTime'] = message['date_time'];
+        msgObj['mId'] = message['m_id'];
+        msgObj['activityId'] = message['activity_id'];
+        MessageManager.add(msgObj);
     }
     
     var GCMSENDERID = '568888441927';

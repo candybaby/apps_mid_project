@@ -14,12 +14,7 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
 		};
 
 		$scope.sendMessage = function(msg) {
-			var msgObj = {};
-			msgObj['targetPhone'] = $scope.model.phone;
-			msgObj['content'] = msg;
-			msgObj['owner'] = 'source';
-			MessageManager.add(msgObj);
-			acLabMessage.sendMessage(SettingManager.getHost().phone, $scope.model.phone, msg);
+			acLabMessage.sendMessage(SettingManager.getHost().phone, $scope.model.phone, msg, 0);
 		}
 
 		$scope.onReceiveMessage = function() {

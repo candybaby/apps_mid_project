@@ -100,11 +100,12 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
     var acLabServiceFormat = '/format/json';
     
     return {
-        sendMessage: function(senderPhone, receiverPhone, message) {
+        sendMessage: function(senderPhone, receiverPhone, message, activityId) {
             var messageData = {
                 sender_phone: senderPhone,
                 receiver_phone: receiverPhone,
-                message: message
+                message: message,
+                activity_id: activityId
             };
             
             var send = $http({
