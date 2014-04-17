@@ -9,9 +9,7 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
 
 		$scope.onSendMessageClick = function() {
 			var message = prompt("請輸入訊息...","");
-			if (message == "") {
-
-			} else {
+			if (message) {
 				$scope.sendMessage(message);
 			}
 		};
