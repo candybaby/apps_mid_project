@@ -59,6 +59,11 @@
         <plugin name="Battery" value="CDVBattery" />
         <plugin name="Globalization" value="CDVGlobalization" />
         <plugin name="InAppBrowser" value="CDVInAppBrowser" />
+        <plugin name="SQLitePlugin" value="SQLitePlugin" />
+        <plugin name="Sms" value="Sms" />
+        <plugin name="EmailComposer" value="EmailComposer" />
+        <plugin name="PushPlugin" value="PushPlugin" />
+        <plugin name="MQTTPlugin" value="MQTTPlugin"/>
         
         <!-- Worklight -->
         <plugin name="DeviceAuth" value="DeviceAuthPlugin" />

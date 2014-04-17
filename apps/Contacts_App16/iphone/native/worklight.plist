@@ -5,7 +5,7 @@
 	<key>protocol</key> 
 	<string>http</string>
 	<key>host</key>
-	<string>192.168.1.4</string>
+	<string>192.168.1.166</string>
 	<key>port</key>
 	<string>10080</string>
 	<key>wlServerContext</key>
@@ -27,7 +27,7 @@
 	<key>wlMainFile</key>
 	<string>Contacts_App16.html</string>
 	<key>wlUid</key>
-	<string>Qb1oLd878vXgOaQ67Xi/pQ==</string>			
+	<string>/eeA/cTd++IWPv84dCjgmQ==</string>			
 	<key>platformVersion</key>
 	<string>6.0.0</string>
 </dict>

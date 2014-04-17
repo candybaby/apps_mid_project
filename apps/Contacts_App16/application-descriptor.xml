@@ -14,7 +14,7 @@
     <mainFile>Contacts_App16.html</mainFile>
     <features/>
     <thumbnailImage>common/images/thumbnail.png</thumbnailImage>
-    <iphone bundleId="com.ContactsApp16" version="1.0">
+    <iphone bundleId="org.ntut.BL" version="1.0">
         <worklightSettings include="true"/>
         <security>
             <encryptWebResources enabled="false"/>

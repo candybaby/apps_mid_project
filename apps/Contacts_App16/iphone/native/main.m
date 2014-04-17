@@ -18,6 +18,9 @@
 int main(int argc, char *argv[]) {
     
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    
+    signal(SIGPIPE, SIG_IGN);
+    
     int retVal = UIApplicationMain(argc, argv, nil, @"MyAppDelegate");
     [pool release];
     return retVal;

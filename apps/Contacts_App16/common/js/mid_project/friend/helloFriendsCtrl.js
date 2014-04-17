@@ -45,6 +45,7 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 		type: 'button-icon button-clear ion-minus',
 		tap: function() {
             $scope.showDeleteOption = !$scope.showDeleteOption;
+            FriendManager.updateIsMember();
         }
 	}];
 

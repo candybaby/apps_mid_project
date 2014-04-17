@@ -23,10 +23,6 @@
 #import "CDVPluginResult.h"
 #import "CDVViewController.h"
 
-// Worklight change start
-#define WORKLIGHT_SCHEME_PREFIX			@"worklight://"
-// Worklight change end
-
 @implementation CDVCommandDelegateImpl
 
 - (id)initWithViewController:(CDVViewController*)viewController
@@ -41,11 +37,6 @@
 
 - (NSString*)pathForResource:(NSString*)resourcepath
 {
-    // Worklight change start
-    if ([resourcepath hasPrefix:WORKLIGHT_SCHEME_PREFIX]) {
-        return [resourcepath substringFromIndex:[WORKLIGHT_SCHEME_PREFIX length]];
-    }
-    // Worklight change end
     NSBundle* mainBundle = [NSBundle mainBundle];
     NSMutableArray* directoryParts = [NSMutableArray arrayWithArray:[resourcepath componentsSeparatedByString:@"/"]];
     NSString* filename = [directoryParts lastObject];

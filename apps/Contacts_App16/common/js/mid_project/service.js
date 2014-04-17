@@ -44,6 +44,18 @@ app.factory('DBManager', function($window, PhoneGap) {
 	            });
         	});
         },
+
+        updateIsMemberByPhone: function (phone, isMember, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function (tx) {
+                    tx.executeSql("UPDATE friends SET isMember = ? where phone = ?",
+                        [isMember, phone],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
         
         deleteFriend: function (friend, onSuccess, onError) {
             db.transaction(function(tx) {
@@ -62,6 +74,18 @@ app.factory('DBManager', function($window, PhoneGap) {
                         onError
                     );
             	});
+            });
+        },
+
+        getFriendByPhone: function (phone, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("SELECT * FROM friends where phone = ?",
+                        [phone],
+                        onSuccess,
+                        onError
+                    );
+                });
             });
         },
 
@@ -136,7 +160,6 @@ app.factory('MessageManager', function(DBManager) {
     DBManager.getMessages(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexMessages[res.rows.item(i).id] = res.rows.item(i);
-            console.log("message mId:" + res.rows.item(i).mId + "  hasRead:" + res.rows.item(i).hasRead);
         }
     });
     return {
@@ -158,7 +181,6 @@ app.factory('MessageManager', function(DBManager) {
             DBManager.updateMessageHasRead(mId, function() {
                 DBManager.getMessageId(mId, function(tx, res) {
                     var hasReadId = res.rows.item(0).id;
-                    console.log("Message id:" + hasReadId);
                     idIndexMessages[hasReadId].hasRead = true;
                 });
             });
@@ -171,12 +193,12 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
     DBManager.getFriends(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexedFriends[res.rows.item(i).id] = res.rows.item(i);
-        } 
+        }
     });
     return {
         add: function(friend, onSuccess, onError) {
             acLabMember.isMember(friend.phone, function(response) {
-                friend.isMember = JSON.parse(response) ? 1 : 0;
+                friend.isMember = response.isMember ? 1 : 0;
                 DBManager.addFriend(friend, function() {
                     idIndexedFriends[friend.id] = friend;
                     (onSuccess || angular.noop)();
@@ -191,7 +213,7 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
         },
         edit: function(friend, onSuccess, onError) {
             acLabMember.isMember(friend.phone, function(response) {
-                friend.isMember = JSON.parse(response) ? 1 : 0;
+                friend.isMember = response.isMember ? 1 : 0;
                 DBManager.updateFriend(friend, function() {
                     idIndexedFriends[friend.id] = friend;
                     (onSuccess || angular.noop)();
@@ -263,22 +285,21 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
             return Object.keys(friends).length;
         },
         updateIsMember: function() {
-            // var tempIndexedFriends = angular.copy(idIndexedFriends);
-            // for (var id in tempIndexedFriends) {
-            // // 更新isMember
-            //     console.log("updateIsMember id:" + id);
-            //     var friend = tempIndexedFriends[id];
-            //     console.log("updateIsMember friendid:" + friend.id);
-            //     acLabMember.isMember(friend.phone, function(response) {
-            //         friend.isMember = JSON.parse(response) ? 1 : 0;
-            //         console.log("updateIsMember:" + friend.phone);
-            //         console.log("updateIsMember:" + friend.isMember);
-            //         DBManager.updateFriend(friend, function() {
-            //             idIndexedFriends[friend.id] = friend;
-            //             (onSuccess || angular.noop)();
-            //         });
-            //     });
-            // }
+            var tempIndexedFriends = angular.copy(idIndexedFriends);
+            for (var id in tempIndexedFriends) {
+                // 更新isMember
+                var friend = tempIndexedFriends[id];
+                acLabMember.isMember(friend.phone, function(response) {
+                    var phone = response.phone;
+                    var isMember = response.isMember ? 1 : 0;
+                    DBManager.updateIsMemberByPhone(phone, isMember, function() {
+                        DBManager.getFriendByPhone(phone, function(tx, res) {
+                            var friendId = res.rows.item(0).id;
+                            idIndexedFriends[friendId].isMember = isMember;
+                        });
+                    });
+                });
+            }
         }
     };
   
