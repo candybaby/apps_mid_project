@@ -1,25 +1,34 @@
 <ion-view title="'朋友訊息'" left-buttons="backButton" ng-init="init();">
-	<header class="bar bar-subheader">
+<!-- 	<header class="bar bar-subheader bar-stable">
   		<h2 class="title">{{model.name}}</h2>
-	</header>
+	</header> -->
 	<ion-content padding="true" class="chatContent">
   		<ol class="messages">
-  			<li ng-repeat="message in getMessageList()" ng-class="message.owner">
+  			<li ng-repeat="message in getMessageList()" ng-class="message.owner" ng-init="onMessageShow(message.id)">
 
   					<table>
-  						<tr>
-  							<td class="chatTableTd" ng-show="message.owner == 'source'">
-  								<span class="read" ng-show="message.hasRead">已讀</span>
-  								<span class="time">{{message.dateTime}}</span>
+  						<tr ng-show="message.owner == 'target'">
+  							<td>
+  								{{model.name}}：
   							</td>
-
+  						</tr>
+  						<tr  ng-show="message.owner == 'target'">
   							<td>
   								<span class="msg">{{message.content}}</span>
   							</td>
-  							<td class="chatTableTd" ng-show="message.owner == 'target'">
+  							<td class="chatTableTd">
+  								<!-- <span class="read" ng-show="message.hasRead">已讀</span>
+  								<span class="read" ng-show="!message.hasRead" ng-click="readMessage(message.mId)">未讀</span> -->
+  								<span class="time">{{message.time}}</span>
+  							</td>
+  						</tr>
+  						<tr ng-show="message.owner == 'source'">
+  							<td class="chatTableTd">
   								<span class="read" ng-show="message.hasRead">已讀</span>
-  								<span class="read" ng-hide="message.hasRead" ng-click="readMessage(message.mId)">未讀</span>
-  								<span class="time">{{message.dateTime}}</span>
+  								<span class="time">{{message.time}}</span>
+  							</td>
+  							<td>
+  								<span class="msg">{{message.content}}</span>
   							</td>
   						</tr>
   					</table>

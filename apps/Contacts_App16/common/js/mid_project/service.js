@@ -93,7 +93,7 @@ app.factory('DBManager', function($window, PhoneGap) {
             PhoneGap.ready(function() {
                 db.transaction(function(tx) {
                     tx.executeSql("INSERT INTO messages(targetPhone, content, owner, dateTime, hasRead, mId, activityId) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                        [message.targetPhone, message.content, message.owner, message.dateTime, false, message.mId, message.activityId],
+                        [message.targetPhone, message.content, message.owner, message.dateTime, 0, message.mId, message.activityId],
                         function(tx, res) {
                             message.id = res.insertId;
                             (onSuccess || angular.noop)();
@@ -133,7 +133,7 @@ app.factory('DBManager', function($window, PhoneGap) {
             PhoneGap.ready(function() {
                 db.transaction(function(tx) {
                     tx.executeSql("UPDATE messages SET hasRead = ? where mId = ?",
-                        [true, mId],
+                        [1, mId],
                         onSuccess,
                         onError
                     );
@@ -172,16 +172,22 @@ app.factory('MessageManager', function(DBManager) {
             var messagesByPhone = [];
             for (var id in idIndexMessages) {
                 if (idIndexMessages[id].targetPhone == phone) {
+                    var time = idIndexMessages[id].dateTime.split(" ");
+                    idIndexMessages[id].time = time[1];
+                    // time format
                     messagesByPhone.push(idIndexMessages[id]);
                 }
             }
             return messagesByPhone;
         },
+        getById: function(id) {
+            return idIndexMessages[id];
+        },
         updateHasRead: function(mId) {
             DBManager.updateMessageHasRead(mId, function() {
                 DBManager.getMessageId(mId, function(tx, res) {
                     var hasReadId = res.rows.item(0).id;
-                    idIndexMessages[hasReadId].hasRead = true;
+                    idIndexMessages[hasReadId].hasRead = 1;
                 });
             });
         }

@@ -50,13 +50,14 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	color:#383641;
 	padding:.6875rem;
 	font-size:.875rem;
+	word-break:break-all;
 	display: block;
 }
 
 .messages span.read {
 	position: relative;
 	top: 0px;
-	left: 82px;
+	left: 20px;
 	background: transparent;
 	font-size:.675rem;
 	display: block;
@@ -81,7 +82,7 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 }
 
 .chatContent {
-	margin-top:90px;
+	margin-top:45px;
 	margin-bottom:45px;
 }
 

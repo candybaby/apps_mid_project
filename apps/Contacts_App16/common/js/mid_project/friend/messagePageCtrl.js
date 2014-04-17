@@ -4,29 +4,43 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
 		$scope.init = function() {
 			$scope.id = $stateParams["id"];
 			$scope.model = angular.copy(FriendManager.getById($scope.id));
-			$scope.onReceiveMessage();
+			//$scope.onReceiveMessage();
 		};
 
 		$scope.onSendMessageClick = function() {
 			var message = prompt("請輸入訊息...","");
-			$scope.sendMessage(message);
-			$ionicScrollDelegate.scrollBottom(true);
+			if (message == "") {
+
+			} else {
+				$scope.sendMessage(message);
+			}
 		};
 
 		$scope.sendMessage = function(msg) {
+			// 已讀
 			acLabMessage.sendMessage(SettingManager.getHost().phone, $scope.model.phone, msg, 0);
 		}
 
-		$scope.onReceiveMessage = function() {
-        	$rootScope.$on('receiveMessage', function(event, res) {
-        		if (res['message_type'] == "chat" && 
-        			(res['sender_phone'] == $scope.model.phone || 
-        				(res['send_myself'] && res['receiver_phone'] ==$scope.model.phone)))
-        		{
-        			$ionicScrollDelegate.scrollBottom(true);
-        		}
-        	});
-    	}
+		// $scope.onReceiveMessage = function() {
+  //       	$rootScope.$on('receiveMessage', function(event, res) {
+  //       		if (res['message_type'] == "chat" && 
+  //       			(res['sender_phone'] == $scope.model.phone || 
+  //       				(res['send_myself'] && res['receiver_phone'] ==$scope.model.phone)))
+  //       		{
+  //       			$ionicScrollDelegate.scrollBottom(true);
+  //       		}
+  //       	});
+  //   	};
+
+    	$scope.onMessageShow = function(id) {
+    		var message = MessageManager.getById(id);
+
+    		if (!message.hasRead && message.owner == "target") {
+    		 	acLabMessage.readMessage(message.mId);
+    		}
+    		
+    		$ionicScrollDelegate.scrollBottom(true);
+    	};
 
 		$scope.getMessageList = function() {
     		return MessageManager.getByPhone($scope.model.phone);
