@@ -150,6 +150,25 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
     var acLabServiceFormat = '/format/json';
     
     return {
+        isMemberInputList: function(phoneList, onSuccess, onError) {
+            var data = {
+                phone: phoneList
+            };
+
+            var check = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'isExistInputList' + acLabServiceFormat,
+                data: data
+            });
+
+            check.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+            check.error(function (response, status, headers, config){
+                (onError || angular.noop)(false);
+            });
+        },
+
         isMember: function(phone, onSuccess, onError) {
             var data = {
                 phone: phone

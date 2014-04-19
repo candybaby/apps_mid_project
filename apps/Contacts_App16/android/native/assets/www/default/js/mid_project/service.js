@@ -294,20 +294,24 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
         },
         updateIsMember: function() {
             var tempIndexedFriends = angular.copy(idIndexedFriends);
+            var phoneList = [];
             for (var id in tempIndexedFriends) {
-                // 更新isMember
-                var friend = tempIndexedFriends[id];
-                acLabMember.isMember(friend.phone, function(response) {
-                    var phone = response.phone;
-                    var isMember = response.isMember ? 1 : 0;
-                    DBManager.updateIsMemberByPhone(phone, isMember, function() {
-                        DBManager.getFriendByPhone(phone, function(tx, res) {
-                            var friendId = res.rows.item(0).id;
-                            idIndexedFriends[friendId].isMember = isMember;
-                        });
-                    });
-                });
+                phoneList.push(tempIndexedFriends[id].phone)
             }
+
+            acLabMember.isMemberInputList(phoneList, function (response) {
+                for (var phone in response)
+                {
+                    var isMember = response[phone] ? 1 : 0;
+                    //console.log("test Res phone:" + phone + "isMember:" + isMember);
+                    DBManager.updateIsMemberByPhone(phone, isMember);
+                    DBManager.getFriendByPhone(phone, function(tx, res) {
+                        var friendId = res.rows.item(0).id;
+                        var isMember = res.rows.item(0).isMember;
+                        idIndexedFriends[friendId].isMember = isMember;
+                    });
+                } 
+            });
         }
     };
   
