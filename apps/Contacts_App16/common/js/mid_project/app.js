@@ -143,6 +143,13 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             msgObj['owner'] = 'target';
             msgObj['targetPhone'] = message['sender_phone'];
             FriendManager.addBadgeCount(message['sender_phone']);
+            // if sender_phone 不是好友 做一個inviteFriend
+            FriendManager.isExistByPhone(message['sender_phone'], null, function() {
+                var inviteFriend = {};
+                inviteFriend.phone = message['sender_phone'];
+                inviteFriend.name = message['sender_phone'];
+                InviteFriendManager.add(inviteFriend);
+            });
         }
             
         msgObj['content'] = message['message'];
@@ -151,13 +158,6 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         msgObj['activityId'] = message['activity_id'];
         MessageManager.add(msgObj);
         $rootScope.$broadcast('receiveMessage', message);
-        // if sender_phone 不是好友 做一個inviteFriend
-        FriendManager.isExistByPhone(message['sender_phone'], null, function() {
-            var inviteFriend = {};
-            inviteFriend.phone = message['sender_phone'];
-            inviteFriend.name = message['sender_phone'];
-            InviteFriendManager.add(inviteFriend);
-        });
     }
 
     var readMessage = function(message) {

@@ -39,7 +39,7 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
     		if (!message.hasRead && message.owner == "target") {
     		 	acLabMessage.readMessage(message.mId);
     		}
-    		
+    		FriendManager.clearBadgeCount($scope.model.phone);
     		$ionicScrollDelegate.scrollBottom(true);
     	};
 
