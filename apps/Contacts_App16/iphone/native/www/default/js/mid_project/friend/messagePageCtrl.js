@@ -6,6 +6,7 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
 		$scope.init = function() {
 			$scope.id = $stateParams["id"];
 			$scope.model = angular.copy(FriendManager.getById($scope.id));
+			FriendManager.clearBadgeCount($scope.model.phone);
 			//$scope.onReceiveMessage();
 		};
 

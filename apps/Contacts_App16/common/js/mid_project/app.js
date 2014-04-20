@@ -89,7 +89,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/tab/friends");
 });
 
-app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, MessageManager) {
+app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, MessageManager, FriendManager) {
     var host = SettingManager.getHost();
     
     PhoneGap.ready(function() {
@@ -143,6 +143,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         {
             msgObj['owner'] = 'target';
             msgObj['targetPhone'] = message['sender_phone'];
+            FriendManager.addBadgeCount(message['sender_phone']);
         }
             
         msgObj['content'] = message['message'];

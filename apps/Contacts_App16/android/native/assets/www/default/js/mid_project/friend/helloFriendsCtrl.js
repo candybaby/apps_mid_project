@@ -13,7 +13,7 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 
     $scope.checkAllIsMember = function() {
 		FriendManager.updateIsMember();
-		console.log("checkAllIsMember");
+		//console.log("checkAllIsMember");
     };
 
     $scope.getFriendList = function() {
@@ -69,6 +69,21 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 
 	$scope.getMembersCount = function() {
 		return FriendManager.countMember();
+	};
+
+	$scope.getMemberBadge = function(id) {
+		FriendManager.badgeCount(id);
+		console.log("id" + id);
+		return FriendManager.badgeCount(id);
+	};
+
+	$scope.getMemberBadgeText = function(id) {
+		var count = FriendManager.badgeCount(id);
+		if (count > 10) {
+			return "10+";
+		} else {
+			return count;
+		}
 	};
 
     var update = function() {};

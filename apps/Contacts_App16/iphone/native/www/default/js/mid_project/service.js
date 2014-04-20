@@ -5,7 +5,7 @@ app.factory('DBManager', function($window, PhoneGap) {
     PhoneGap.ready(function() {
         db = $window.sqlitePlugin.openDatabase({name: "BirthdayLineDB"});
         db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT UNIQUE, email TEXT, birthday DATE, isMember BOOLEAN)", []);
+            tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT UNIQUE, email TEXT, birthday DATE, isMember BOOLEAN, badgeCount INTEGER)", []);
         });
         db.transaction(function(tx) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, targetPhone TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER, activityId INTEGER)", []);
@@ -20,8 +20,8 @@ app.factory('DBManager', function($window, PhoneGap) {
                 if (friend.phone != null)
                     friend.phone = friend.phone.replace(/-/g, "").replace(/ /g, "");
 	            db.transaction(function(tx) {
-	                tx.executeSql("INSERT INTO friends(name, phone, email, birthday, isMember) VALUES (?, ?, ?, ?, ?)",
-	                    [friend.name, friend.phone, friend.email, friend.birthday, friend.isMember],
+	                tx.executeSql("INSERT INTO friends(name, phone, email, birthday, isMember, badgeCount) VALUES (?, ?, ?, ?, ?, ?)",
+	                    [friend.name, friend.phone, friend.email, friend.birthday, friend.isMember, friend.badgeCount],
 	                    function(tx, res) {
 	                		friend.id = res.insertId;
 	                        (onSuccess || angular.noop)();
@@ -38,13 +38,25 @@ app.factory('DBManager', function($window, PhoneGap) {
         updateFriend: function (friend, onSuccess, onError) {
         	PhoneGap.ready(function() {
                 db.transaction(function (tx) {
-                    tx.executeSql("UPDATE friends SET name = ?, phone = ?, email = ?, birthday = ?, isMember = ? where id = ?",
-                        [friend.name, friend.phone, friend.email, friend.birthday, friend.isMember, friend.id],
+                    tx.executeSql("UPDATE friends SET name = ?, phone = ?, email = ?, birthday = ?, isMember = ?, badgeCount = ? where id = ?",
+                        [friend.name, friend.phone, friend.email, friend.birthday, friend.isMember, friend.badgeCount, friend.id],
                         onSuccess,
                         onError
 	                );
 	            });
         	});
+        },
+
+        updateBadgeCountByPhone: function (phone, badgeCount, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function (tx) {
+                    tx.executeSql("UPDATE friends SET badgeCount = ? where phone = ?",
+                        [badgeCount, phone],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
         },
 
         updateIsMemberByPhone: function (phone, isMember, onSuccess, onError) {
@@ -203,16 +215,19 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
             idIndexedFriends[res.rows.item(i).id] = res.rows.item(i);
         }
     });
+
     return {
         add: function(friend, onSuccess, onError) {
             acLabMember.isMember(friend.phone, function(response) {
                 friend.isMember = response.isMember ? 1 : 0;
+                friend.badgeCount = 0;
                 DBManager.addFriend(friend, function() {
                     idIndexedFriends[friend.id] = friend;
                     (onSuccess || angular.noop)();
                 }, onError);
             }, function() {
                 friend.isMember = 0;
+                friend.badgeCount = 0;
                 DBManager.addFriend(friend, function() {
                     idIndexedFriends[friend.id] = friend;
                     (onSuccess || angular.noop)();
@@ -266,6 +281,26 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
                 }
             }
             return friends;
+        },
+        badgeCount: function(id) {
+            return idIndexedFriends[id].badgeCount;
+        },
+        addBadgeCount: function(phone) {
+            DBManager.getFriendByPhone(phone, function(tx, res) {
+                var friendId = res.rows.item(0).id;
+                var preCount = idIndexedFriends[friendId].badgeCount;
+                console.log("pre" + preCount);
+                DBManager.updateBadgeCountByPhone(phone, preCount + 1);
+                idIndexedFriends[friendId].badgeCount = preCount + 1;
+                console.log("count" + idIndexedFriends[friendId].badgeCount);
+            });
+        },
+        clearBadgeCount: function(phone) {
+            DBManager.updateBadgeCountByPhone(phone, 0);
+            DBManager.getFriendByPhone(phone, function(tx, res) {
+                var friendId = res.rows.item(0).id;
+                idIndexedFriends[friendId].badgeCount = 0;
+            });
         },
         count: function() {
             return Object.keys(idIndexedFriends).length;

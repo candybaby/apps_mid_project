@@ -26,9 +26,16 @@
                 		<h2 ng-class="friend.isMember ? 'member' : ''">{{friend.name}}</h2>
 	            		<p>{{friend.phone}}</p>
                     </div>
-                    <h2>
-                	<div ng-show="!showDeleteOption" class="col col-10 icon ion-ios7-arrow-right button button-clear button-dark"></div>
-                	</h2>
+
+                    <div class="col col-20" ng-show="!showDeleteOption&&friend.badgeCount > 0">
+                        <br/>
+                        <span class="badge badge-assertive" style="position: relative;">{{friend.badgeCount}}</span>
+                    </div>
+                    
+                    <!-- <h2>
+                	<div ng-show="!showDeleteOption&&getMemberBadge()==0" class="col col-10 icon ion-ios7-arrow-right button button-clear button-dark"></div>
+                	</h2> -->
+
                 </div>
 			</div>
 	    </div>
