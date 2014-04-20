@@ -332,6 +332,16 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
         getById: function(id) {
             return idIndexedFriends[id];
         },
+        isExistByPhone: function(phone, onExist, onNotExist) {
+            DBManager.getFriendByPhone(phone, function(tx, res) {
+                if (res.rows.length > 0) {
+                    console.log("length : "+res.rows.length);
+                    onExist();
+                } else {
+                    onNotExist();
+                }
+            });
+        },
         list: function() {
             return idIndexedFriends;
         },

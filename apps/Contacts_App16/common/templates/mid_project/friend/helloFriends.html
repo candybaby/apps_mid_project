@@ -8,10 +8,10 @@
 				右上方＋
 			</span>
 		</div>
-        <div class="item item-divider" ng-show="getInviteFriendsCount() != 0">
+        <div class="item item-divider" ng-show="getInviteFriendsCount() != 0" ng-click="showInviteFriendsList = !showInviteFriendsList;">
             你可能認識的人
         </div>
-        <div ng-show="getInviteFriendsCount() > 0">
+        <div ng-show="getInviteFriendsCount() > 0 && showInviteFriendsList">
             <div ng-repeat="friend in getInviteFriendList()" class="item">
                 <div class="row">
                     <div class="col col-20">
@@ -34,10 +34,10 @@
                 </div>
             </div>
         </div>
-        <div class="item item-divider" ng-show="getMembersCount() != 0">
+        <div class="item item-divider" ng-show="getMembersCount() != 0" ng-click="showMembersList = !showMembersList;">
             已加入 ActivityBook
         </div>
-		<div ng-show="getMembersCount() > 0">
+		<div ng-show="getMembersCount() > 0&&showMembersList">
             <div ng-repeat="friend in getMemberList()" class="item" ng-click="onFriendItemClick(friend.id);">
             	<div class="row">
             		<div ng-show="showDeleteOption" class="col col-20">
@@ -65,10 +65,10 @@
                 </div>
 			</div>
 	    </div>
-        <div class="item item-divider" ng-show="getFriendsCount() != 0">
+        <div class="item item-divider" ng-show="getFriendsCount() != 0" ng-click="showFriendsList = !showFriendsList;">
             未加入 ActivityBook
         </div>
-        <div ng-show="getFriendsCount() > 0">
+        <div ng-show="getFriendsCount() > 0&&showFriendsList">
             <div ng-repeat="friend in getFriendList()" class="item" ng-click="onFriendItemClick(friend.id);">
                 <div class="row">
                     <div ng-show="showDeleteOption" class="col col-20">

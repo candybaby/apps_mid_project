@@ -164,7 +164,9 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         var inviteFriend = {};
         inviteFriend.phone = message['sender_phone'];
         inviteFriend.name = message['sender_name'];
-        InviteFriendManager.add(inviteFriend);
+        FriendManager.isExistByPhone(inviteFriend.phone, null, function() {
+            InviteFriendManager.add(inviteFriend);
+        });
     }
     
     var GCMSENDERID = '568888441927';

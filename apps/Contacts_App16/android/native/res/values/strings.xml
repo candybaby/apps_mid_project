@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- PII admin facing -->
 <resources>
-  <string name="app_name">Contacts_App16</string>  
+  <string name="app_name">ActivityBook</string>  
   <string name="push_notification_title">Contacts_App16</string>
   
   <!-- General purpose strings -->

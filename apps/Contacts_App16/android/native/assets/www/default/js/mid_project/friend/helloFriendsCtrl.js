@@ -5,6 +5,9 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 	$scope.model = {};
 
 	$scope.showDeleteOption = false;
+	$scope.showInviteFriendsList = true;
+	$scope.showMembersList = true;
+	$scope.showFriendsList = true;
 	
 	$scope.init = function() {
 		// but 空的method
