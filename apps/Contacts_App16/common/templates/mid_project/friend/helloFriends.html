@@ -8,6 +8,32 @@
 				右上方＋
 			</span>
 		</div>
+        <div class="item item-divider" ng-show="getInviteFriendsCount() != 0">
+            你可能認識的人
+        </div>
+        <div ng-show="getInviteFriendsCount() > 0">
+            <div ng-repeat="friend in getInviteFriendList()" class="item">
+                <div class="row">
+                    <div class="col col-20">
+                        <img src="images/people_1.png" width="35"></img>
+                    </div>
+                    <div class="col col-60">
+                        <h2>{{friend.name}}</h2>
+                        <p>{{friend.phone}}</p>
+                    </div>
+
+                    <div class="col col-20">
+                        <button class="button button-clear button-positive" ng-show="!showDeleteOption" ng-click="onInviteFriendAcceptClick(friend.id);">
+                            加入
+                        </button>
+                        <button class="button button-clear button-assertive" ng-show="showDeleteOption" ng-click="onInviteFriendDeclineClick(friend.id);">
+                            拒絕
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <div class="item item-divider" ng-show="getMembersCount() != 0">
             已加入 ActivityBook
         </div>
@@ -29,7 +55,7 @@
 
                     <div class="col col-20" ng-show="!showDeleteOption&&friend.badgeCount > 0">
                         <br/>
-                        <span class="badge badge-assertive" style="position: relative;">{{friend.badgeCount}}</span>
+                        <span class="badge badge-assertive">{{getMemberBadgeText(friend.badgeCount)}}</span>
                     </div>
                     
                     <!-- <h2>

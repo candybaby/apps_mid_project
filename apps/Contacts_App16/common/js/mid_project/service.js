@@ -8,9 +8,54 @@ app.factory('DBManager', function($window, PhoneGap) {
         db.transaction(function(tx) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, targetPhone TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER, activityId INTEGER)", []);
         });
+        db.transaction(function(tx) {
+            tx.executeSql("CREATE TABLE IF NOT EXISTS invitefriends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT UNIQUE)", []);
+        });
     });
     
     return {
+        addInviteFriend: function (inviteFriend, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                if (inviteFriend.phone == "")
+                    inviteFriend.phone = null;
+                if (inviteFriend.phone != null)
+                    inviteFriend.phone = inviteFriend.phone.replace(/-/g, "").replace(/ /g, "");
+                db.transaction(function(tx) {
+                    tx.executeSql("INSERT INTO invitefriends(name, phone) VALUES (?, ?)",
+                        [inviteFriend.name, inviteFriend.phone],
+                        function(tx, res) {
+                            inviteFriend.id = res.insertId;
+                            (onSuccess || angular.noop)();
+                        }, function (e) {
+                            console.log('新增朋友失敗，原因: ' + e.message);
+                            console.log(JSON.stringify(inviteFriend));
+                            (onError || angular.noop)(e);
+                        }
+                    );
+                });
+            });
+        },
+
+        deleteInviteFriend: function (friend, onSuccess, onError) {
+            db.transaction(function(tx) {
+                tx.executeSql("delete from invitefriends where id = ?", [friend.id],
+                    onSuccess,
+                    onError
+                );
+            });
+        },
+
+        getInviteFriends: function (onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("SELECT * FROM invitefriends", [],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
         addFriend: function (friend, onSuccess, onError) {
         	PhoneGap.ready(function() {
                 if (friend.phone == "")
@@ -167,6 +212,36 @@ app.factory('DBManager', function($window, PhoneGap) {
     };
 });
 
+app.factory('InviteFriendManager', function(DBManager) {
+    var idIndexInviteFriends = {};
+    DBManager.getInviteFriends(function(tx, res) {
+        for (var i = 0, max = res.rows.length; i < max; i++) {
+            idIndexInviteFriends[res.rows.item(i).id] = res.rows.item(i);
+        }
+    });
+    return {
+        add: function(inviteFriend) {
+            DBManager.addInviteFriend(inviteFriend, function() {
+                idIndexInviteFriends[inviteFriend.id] = inviteFriend;
+            });
+        },
+        remove: function(inviteFriend, onSuccess, onError) {
+            DBManager.deleteInviteFriend(inviteFriend, function() {
+                delete idIndexInviteFriends[inviteFriend.id];
+            }, onError);
+        },
+        getById: function(id, onSuccess, onError) {
+            return idIndexInviteFriends[id];
+        },
+        list: function() {
+            return idIndexInviteFriends;
+        },
+        count: function() {
+            return Object.keys(idIndexInviteFriends).length;
+        }
+    }
+});
+
 app.factory('MessageManager', function(DBManager) {
     var idIndexMessages = {};
     DBManager.getMessages(function(tx, res) {
@@ -221,7 +296,7 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
                 friend.badgeCount = 0;
                 DBManager.addFriend(friend, function() {
                     idIndexedFriends[friend.id] = friend;
-                    (onSuccess || angular.noop)();
+                    (onSuccess || angular.noop)(friend.phone);
                 }, onError);
             }, function() {
                 friend.isMember = 0;
@@ -287,10 +362,10 @@ app.factory('FriendManager', function(DBManager, acLabMember) {
             DBManager.getFriendByPhone(phone, function(tx, res) {
                 var friendId = res.rows.item(0).id;
                 var preCount = idIndexedFriends[friendId].badgeCount;
-                console.log("pre" + preCount);
+                //console.log("pre" + preCount);
                 DBManager.updateBadgeCountByPhone(phone, preCount + 1);
                 idIndexedFriends[friendId].badgeCount = preCount + 1;
-                console.log("count" + idIndexedFriends[friendId].badgeCount);
+                //console.log("count" + idIndexedFriends[friendId].badgeCount);
             });
         },
         clearBadgeCount: function(phone) {

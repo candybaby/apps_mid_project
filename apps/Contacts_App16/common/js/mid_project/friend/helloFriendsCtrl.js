@@ -1,4 +1,4 @@
-app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, Notification, Contacts) {
+app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, Notification, Contacts, InviteFriendManager) {
 
 	$scope.model = {};
 
@@ -14,6 +14,10 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 		//console.log("checkAllIsMember");
     };
 
+    $scope.getInviteFriendList = function() {
+    	return InviteFriendManager.list();
+    };
+
     $scope.getFriendList = function() {
     	return FriendManager.listFriend();
     };
@@ -26,6 +30,20 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
     	if (!$scope.showDeleteOption) {
     		$location.url('tab/frienddetail?id=' + msg);
     	}
+    };
+
+	$scope.onInviteFriendAcceptClick = function(id) {
+    	var inviteFriend = InviteFriendManager.getById(id);
+    	InviteFriendManager.remove(inviteFriend);
+    	var friend = {};
+    	friend.name = inviteFriend.name ? inviteFriend.name : inviteFriend.phone;
+		friend.phone = inviteFriend.phone;
+		FriendManager.add(friend);
+    };
+
+    $scope.onInviteFriendDeclineClick = function(id) {
+    	var inviteFriend = InviteFriendManager.getById(id);
+    	InviteFriendManager.remove(inviteFriend);
     };
 	
 	$scope.onDeleteFriendClick = function(id) {
@@ -61,6 +79,10 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
         }
 	}];
 
+	$scope.getInviteFriendsCount = function() {
+		return InviteFriendManager.count();
+	};
+
 	$scope.getFriendsCount = function() {
 		return FriendManager.countFriend();
 	};
@@ -69,14 +91,8 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 		return FriendManager.countMember();
 	};
 
-	$scope.getMemberBadge = function(id) {
-		FriendManager.badgeCount(id);
-		console.log("id" + id);
-		return FriendManager.badgeCount(id);
-	};
-
-	$scope.getMemberBadgeText = function(id) {
-		var count = FriendManager.badgeCount(id);
+	$scope.getMemberBadgeText = function(count) {
+		//var count = FriendManager.badgeCount(id);
 		if (count > 10) {
 			return "10+";
 		} else {

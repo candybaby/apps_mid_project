@@ -91,7 +91,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/tab/friends");
 });
 
-app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, MessageManager, FriendManager) {
+app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, MessageManager, FriendManager, InviteFriendManager) {
     var host = SettingManager.getHost();
     
     PhoneGap.ready(function() {
@@ -121,13 +121,12 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         $rootScope.$on('mqtt.notification', function(event, res) {
             // mqtt 傳幾則 收幾則 收到格式 json
             var message = JSON.parse(res);
-            if (message['message_type'] == "chat")
-            {
+            if (message['message_type'] == "chat") {
                 receiveMessage(message);
-            }
-            else if (message['message_type'] == "read")
-            {
+            } else if (message['message_type'] == "read") {
                 readMessage(message);
+            } else if (message['message_type'] == "addFriend") {
+                addFriendMessage(message);
             }
             
             console.log("mqtt onReceiveMqtt:" + res);
@@ -159,6 +158,13 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     var readMessage = function(message) {
         MessageManager.updateHasRead(message['message_id']);
         console.log("readMessage:" + message['message_id']);
+    }
+
+    var addFriendMessage = function(message) {
+        var inviteFriend = {};
+        inviteFriend.phone = message['sender_phone'];
+        inviteFriend.name = message['sender_name'];
+        InviteFriendManager.add(inviteFriend);
     }
     
     var GCMSENDERID = '568888441927';
