@@ -157,7 +157,7 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
 
             var check = $http({
                 method: 'POST',
-                url: acLabServiceUrl + 'test' + acLabServiceFormat,
+                url: acLabServiceUrl + 'sendInvite' + acLabServiceFormat,
                 data: data
             });
 
