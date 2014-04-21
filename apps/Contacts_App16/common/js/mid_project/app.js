@@ -34,15 +34,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        // .state('tab.messagepage', {
-        //     url: "/messagepage?id",
-        //     views: {
-        //         'tab-friends': {
-        //             templateUrl: 'templates/mid_project/friend/messagePage.html',
-        //             controller: 'MessagePageCtrl'
-        //         }
-        //     }
-        // })
         .state('messagepage', {
             url: "/messagepage?id",
             templateUrl: 'templates/mid_project/friend/messagePage.html',
