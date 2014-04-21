@@ -40,7 +40,6 @@
 		360512441904D7BA0057C6AE /* libTLFLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71D6567217147FFC00219B1E /* libTLFLib.a */; };
 		3623003818FFA3E400D7B068 /* AppDelegate+notification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623001D18FFA3E400D7B068 /* AppDelegate+notification.m */; };
 		3623003918FFA3E400D7B068 /* CDVMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623001F18FFA3E400D7B068 /* CDVMainViewController.m */; };
-		3623003A18FFA3E400D7B068 /* CDVMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3623002018FFA3E400D7B068 /* CDVMainViewController.xib */; };
 		3623003B18FFA3E400D7B068 /* ContactsApp16.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002218FFA3E400D7B068 /* ContactsApp16.m */; };
 		3623003C18FFA3E400D7B068 /* EmailComposer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002418FFA3E400D7B068 /* EmailComposer.m */; };
 		3623003E18FFA3E400D7B068 /* MQTTClientWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002918FFA3E400D7B068 /* MQTTClientWrapper.m */; };
@@ -137,7 +136,6 @@
 		3623001D18FFA3E400D7B068 /* AppDelegate+notification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+notification.m"; sourceTree = "<group>"; };
 		3623001E18FFA3E400D7B068 /* CDVMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVMainViewController.h; sourceTree = "<group>"; };
 		3623001F18FFA3E400D7B068 /* CDVMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVMainViewController.m; sourceTree = "<group>"; };
-		3623002018FFA3E400D7B068 /* CDVMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDVMainViewController.xib; sourceTree = "<group>"; };
 		3623002118FFA3E400D7B068 /* ContactsApp16.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsApp16.h; sourceTree = "<group>"; };
 		3623002218FFA3E400D7B068 /* ContactsApp16.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsApp16.m; sourceTree = "<group>"; };
 		3623002318FFA3E400D7B068 /* EmailComposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailComposer.h; sourceTree = "<group>"; };
@@ -555,7 +553,6 @@
 				2710063116A09DEF0072351B /* Capture.bundle in Resources */,
 				470009E616BE4F3700E4EA3D /* config.xml in Resources */,
 				188F368417D5C74F00C50D85 /* Icon-40@2x.png in Resources */,
-				3623003A18FFA3E400D7B068 /* CDVMainViewController.xib in Resources */,
 				36B65C051904E1A2001024A4 /* CDVMainViewController.xib in Resources */,
 				71D6567517147FFC00219B1E /* TLFResources.bundle in Resources */,
 			);
