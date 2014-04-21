@@ -33,7 +33,7 @@
         <key>Key</key>
         <string>serverURL</string>
         <key>DefaultValue</key>
-        <string>http://192.168.1.108:10080/App16/</string>
+        <string>http://10.101.3.133:10080/App16/</string>
         <key>KeyboardType</key>
         <string>Alphabet</string>
       </dict>

@@ -11,7 +11,7 @@ app.controller('HelloFriendsCtrl', function($scope, $location, FriendManager, No
 	
 	$scope.init = function() {
 		// but 空的method
-		$scope.checkAllIsMember();
+		// $scope.checkAllIsMember();
     };
 
     $scope.checkAllIsMember = function() {

@@ -93,6 +93,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             }, false);
         }
         onReceiveMqtt();
+        FriendManager.updateIsMember();
     });
     
     $window.receiveMessage = function(message) {

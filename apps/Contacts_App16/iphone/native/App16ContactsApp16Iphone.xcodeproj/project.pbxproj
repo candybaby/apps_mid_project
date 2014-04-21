@@ -35,7 +35,9 @@
 		301BF5C3109A6A2B0062928A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 301BF5C2109A6A2B0062928A /* QuartzCore.framework */; };
 		301BF5C5109A6A2B0062928A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 301BF5C4109A6A2B0062928A /* SystemConfiguration.framework */; };
 		305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */; };
-		3623001818FFA10300D7B068 /* libMQTTV3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3623001718FFA10300D7B068 /* libMQTTV3.a */; };
+		360512411904C8240057C6AE /* libMQTTV3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 360512401904C8240057C6AE /* libMQTTV3.a */; };
+		360512431904D7690057C6AE /* libWorklightStaticLibProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C3102B714E1804D006D8917 /* libWorklightStaticLibProject.a */; };
+		360512441904D7BA0057C6AE /* libTLFLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71D6567217147FFC00219B1E /* libTLFLib.a */; };
 		3623003818FFA3E400D7B068 /* AppDelegate+notification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623001D18FFA3E400D7B068 /* AppDelegate+notification.m */; };
 		3623003918FFA3E400D7B068 /* CDVMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623001F18FFA3E400D7B068 /* CDVMainViewController.m */; };
 		3623003A18FFA3E400D7B068 /* CDVMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3623002018FFA3E400D7B068 /* CDVMainViewController.xib */; };
@@ -45,30 +47,27 @@
 		3623003F18FFA3E400D7B068 /* MQTTPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002D18FFA3E400D7B068 /* MQTTPlugin.m */; };
 		3623004018FFA3E400D7B068 /* PushPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002F18FFA3E400D7B068 /* PushPlugin.m */; };
 		3623004118FFA3E400D7B068 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623003118FFA3E400D7B068 /* Reachability.m */; };
-		3623004218FFA3E400D7B068 /* SimpleApp04.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623003318FFA3E400D7B068 /* SimpleApp04.m */; };
 		3623004318FFA3E400D7B068 /* Sms.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623003518FFA3E400D7B068 /* Sms.m */; };
 		3623004418FFA3E400D7B068 /* SQLitePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623003718FFA3E400D7B068 /* SQLitePlugin.m */; };
 		3623005618FFAE2B00D7B068 /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3623005318FFADDD00D7B068 /* libCordova.a */; };
 		3623FFEF18FFA02300D7B068 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3623FFEE18FFA02300D7B068 /* MessageUI.framework */; };
+		36B65C051904E1A2001024A4 /* CDVMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36B65C041904E1A2001024A4 /* CDVMainViewController.xib */; };
 		4255CFF6126B2ACD00B1C79C /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4255CFF5126B2ACD00B1C79C /* CoreData.framework */; };
 		428BCE071372799200AEB66F /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 428BCE011372799200AEB66F /* Default-Landscape~ipad.png */; };
 		428BCE081372799200AEB66F /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 428BCE021372799200AEB66F /* Default-Portrait~ipad.png */; };
 		428BCE091372799200AEB66F /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 428BCE031372799200AEB66F /* Default~iphone.png */; };
 		428BCE0A1372799200AEB66F /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 428BCE041372799200AEB66F /* Icon-72.png */; };
-		42B5EAC41250C4AF00DC666F /* ContactsApp16.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5EAC31250C4AF00DC666F /* ContactsApp16.m */; };
 		42D9944B12952AAC00E883AC /* worklight.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42D9944A12952AAC00E883AC /* worklight.plist */; };
 		42DB65D6141F483300EA8B09 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42DB65D5141F483300EA8B09 /* CoreMedia.framework */; };
 		470009E616BE4F3700E4EA3D /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 470009E516BE4F3700E4EA3D /* config.xml */; };
 		471100FD1640064200670C3C /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 471100FC1640064200670C3C /* Default-568h@2x~iphone.png */; };
 		47F3D1F41723E20B004534C9 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F3D1F31723E20B004534C9 /* AssetsLibrary.framework */; };
 		71B9C74F170B3D2D008197AE /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71B9C74E170B3D2D008197AE /* CoreTelephony.framework */; };
-		71D6567417147FFC00219B1E /* libTLFLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71D6567217147FFC00219B1E /* libTLFLib.a */; };
 		71D6567517147FFC00219B1E /* TLFResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 71D6567317147FFC00219B1E /* TLFResources.bundle */; };
 		8405DAED13D5AFC800B64489 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8405DAEC13D5AFC800B64489 /* Settings.bundle */; };
 		846D17A6145DC8F9008C9E10 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 846D17A5145DC8F9008C9E10 /* libz.dylib */; };
 		8497546F13F195D7002A55C1 /* buildtime.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8497546E13F195D7002A55C1 /* buildtime.sh */; };
 		920D631B1619F5B4007B7418 /* sqlcipher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920D631A1619F5B4007B7418 /* sqlcipher.framework */; };
-		9C3102BF14E1804E006D8917 /* libWorklightStaticLibProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C3102B714E1804D006D8917 /* libWorklightStaticLibProject.a */; };
 		9C3102C014E1804E006D8917 /* Cookies.mom in Resources */ = {isa = PBXBuildFile; fileRef = 9C3102B914E1804D006D8917 /* Cookies.mom */; };
 		9C3102C114E1804E006D8917 /* PleaseWaitViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C3102BA14E1804D006D8917 /* PleaseWaitViewController~iPad.xib */; };
 		9C3102C214E1804E006D8917 /* PleaseWaitViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C3102BB14E1804D006D8917 /* PleaseWaitViewController~iPhone.xib */; };
@@ -78,8 +77,6 @@
 		9C5B6E3F1535A10100AF1336 /* Entitlements-Release.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C5B6E3D1535A10100AF1336 /* Entitlements-Release.plist */; };
 		9C5B6E5D1535A43C00AF1336 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C5B6E5A1535A43200AF1336 /* Security.framework */; };
 		9C8D139015EA405B00392D18 /* VERSION in Resources */ = {isa = PBXBuildFile; fileRef = 9C8D138F15EA405B00392D18 /* VERSION */; };
-		9C8F9E35155FEB38008CFFA8 /* CDVMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C8F9E33155FEB38008CFFA8 /* CDVMainViewController.m */; };
-		9C8F9E36155FEB38008CFFA8 /* CDVMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C8F9E34155FEB38008CFFA8 /* CDVMainViewController.xib */; };
 		9C962E0C156D2CA100A8F385 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C962E0B156D2CA100A8F385 /* Icon-72@2x.png */; };
 		9CD1B08E152C7BB0009E4A91 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD1B08C152C7BB0009E4A91 /* Default-Landscape@2x~ipad.png */; };
 		9CD1B08F152C7BB0009E4A91 /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD1B08D152C7BB0009E4A91 /* Default-Portrait@2x~ipad.png */; };
@@ -135,7 +132,7 @@
 		301BF5C4109A6A2B0062928A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* App16ContactsApp16Iphone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App16ContactsApp16Iphone_Prefix.pch; sourceTree = "<group>"; };
-		3623001718FFA10300D7B068 /* libMQTTV3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMQTTV3.a; path = "../../../../../../../Downloads/07 queue/iOS/libMQTTV3.a"; sourceTree = "<group>"; };
+		360512401904C8240057C6AE /* libMQTTV3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMQTTV3.a; path = Frameworks/libMQTTV3.a; sourceTree = "<group>"; };
 		3623001C18FFA3E400D7B068 /* AppDelegate+notification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+notification.h"; sourceTree = "<group>"; };
 		3623001D18FFA3E400D7B068 /* AppDelegate+notification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+notification.m"; sourceTree = "<group>"; };
 		3623001E18FFA3E400D7B068 /* CDVMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVMainViewController.h; sourceTree = "<group>"; };
@@ -157,22 +154,19 @@
 		3623002F18FFA3E400D7B068 /* PushPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushPlugin.m; sourceTree = "<group>"; };
 		3623003018FFA3E400D7B068 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		3623003118FFA3E400D7B068 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		3623003218FFA3E400D7B068 /* SimpleApp04.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleApp04.h; sourceTree = "<group>"; };
-		3623003318FFA3E400D7B068 /* SimpleApp04.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleApp04.m; sourceTree = "<group>"; };
 		3623003418FFA3E400D7B068 /* Sms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sms.h; sourceTree = "<group>"; };
 		3623003518FFA3E400D7B068 /* Sms.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sms.m; sourceTree = "<group>"; };
 		3623003618FFA3E400D7B068 /* SQLitePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLitePlugin.h; sourceTree = "<group>"; };
 		3623003718FFA3E400D7B068 /* SQLitePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLitePlugin.m; sourceTree = "<group>"; };
 		3623004E18FFADDD00D7B068 /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = CordovaLib/CordovaLib.xcodeproj; sourceTree = "<group>"; };
 		3623FFEE18FFA02300D7B068 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		36B65C041904E1A2001024A4 /* CDVMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDVMainViewController.xib; sourceTree = "<group>"; };
 		4224A5B9129C1B3500C7341C /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		4255CFF5126B2ACD00B1C79C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		428BCE011372799200AEB66F /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "Resources/Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		428BCE021372799200AEB66F /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait~ipad.png"; path = "Resources/Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		428BCE031372799200AEB66F /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~iphone.png"; path = "Resources/Default~iphone.png"; sourceTree = "<group>"; };
 		428BCE041372799200AEB66F /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "Resources/Icon-72.png"; sourceTree = "<group>"; };
-		42B5EAC21250C4AF00DC666F /* ContactsApp16.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsApp16.h; sourceTree = "<group>"; };
-		42B5EAC31250C4AF00DC666F /* ContactsApp16.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsApp16.m; sourceTree = "<group>"; };
 		42D9944A12952AAC00E883AC /* worklight.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = worklight.plist; sourceTree = "<group>"; };
 		42DB65D5141F483300EA8B09 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		470009E516BE4F3700E4EA3D /* config.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
@@ -210,9 +204,6 @@
 		9C5B6E5A1535A43200AF1336 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		9C8D138F15EA405B00392D18 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = VERSION; path = CordovaLib/VERSION; sourceTree = "<group>"; };
 		9C8F9E31155FEAE1008CFFA8 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
-		9C8F9E32155FEB38008CFFA8 /* CDVMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVMainViewController.h; sourceTree = "<group>"; };
-		9C8F9E33155FEB38008CFFA8 /* CDVMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVMainViewController.m; sourceTree = "<group>"; };
-		9C8F9E34155FEB38008CFFA8 /* CDVMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDVMainViewController.xib; sourceTree = "<group>"; };
 		9C962E0B156D2CA100A8F385 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72@2x.png"; path = "Resources/Icon-72@2x.png"; sourceTree = "<group>"; };
 		9CD1AF1B1529A4E9009E4A91 /* CDVAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVAppDelegate.h; sourceTree = "<group>"; };
 		9CD1B08C152C7BB0009E4A91 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape@2x~ipad.png"; path = "Resources/Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
@@ -226,8 +217,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				360512441904D7BA0057C6AE /* libTLFLib.a in Frameworks */,
+				360512431904D7690057C6AE /* libWorklightStaticLibProject.a in Frameworks */,
+				360512411904C8240057C6AE /* libMQTTV3.a in Frameworks */,
 				3623005618FFAE2B00D7B068 /* libCordova.a in Frameworks */,
-				3623001818FFA10300D7B068 /* libMQTTV3.a in Frameworks */,
 				3623FFEF18FFA02300D7B068 /* MessageUI.framework in Frameworks */,
 				71B9C74F170B3D2D008197AE /* CoreTelephony.framework in Frameworks */,
 				920D631B1619F5B4007B7418 /* sqlcipher.framework in Frameworks */,
@@ -249,8 +242,6 @@
 				301BF5C5109A6A2B0062928A /* SystemConfiguration.framework in Frameworks */,
 				305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */,
 				4255CFF6126B2ACD00B1C79C /* CoreData.framework in Frameworks */,
-				9C3102BF14E1804E006D8917 /* libWorklightStaticLibProject.a in Frameworks */,
-				71D6567417147FFC00219B1E /* libTLFLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,12 +251,11 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				9C8F9E32155FEB38008CFFA8 /* CDVMainViewController.h */,
+				36B65C041904E1A2001024A4 /* CDVMainViewController.xib */,
 				3623001C18FFA3E400D7B068 /* AppDelegate+notification.h */,
 				3623001D18FFA3E400D7B068 /* AppDelegate+notification.m */,
 				3623001E18FFA3E400D7B068 /* CDVMainViewController.h */,
 				3623001F18FFA3E400D7B068 /* CDVMainViewController.m */,
-				3623002018FFA3E400D7B068 /* CDVMainViewController.xib */,
 				3623002118FFA3E400D7B068 /* ContactsApp16.h */,
 				3623002218FFA3E400D7B068 /* ContactsApp16.m */,
 				3623002318FFA3E400D7B068 /* EmailComposer.h */,
@@ -282,16 +272,10 @@
 				3623002F18FFA3E400D7B068 /* PushPlugin.m */,
 				3623003018FFA3E400D7B068 /* Reachability.h */,
 				3623003118FFA3E400D7B068 /* Reachability.m */,
-				3623003218FFA3E400D7B068 /* SimpleApp04.h */,
-				3623003318FFA3E400D7B068 /* SimpleApp04.m */,
 				3623003418FFA3E400D7B068 /* Sms.h */,
 				3623003518FFA3E400D7B068 /* Sms.m */,
 				3623003618FFA3E400D7B068 /* SQLitePlugin.h */,
 				3623003718FFA3E400D7B068 /* SQLitePlugin.m */,
-				9C8F9E33155FEB38008CFFA8 /* CDVMainViewController.m */,
-				9C8F9E34155FEB38008CFFA8 /* CDVMainViewController.xib */,
-				42B5EAC21250C4AF00DC666F /* ContactsApp16.h */,
-				42B5EAC31250C4AF00DC666F /* ContactsApp16.m */,
 			);
 			path = Classes;
 			sourceTree = SOURCE_ROOT;
@@ -359,7 +343,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3623001718FFA10300D7B068 /* libMQTTV3.a */,
+				360512401904C8240057C6AE /* libMQTTV3.a */,
 				3623FFEE18FFA02300D7B068 /* MessageUI.framework */,
 				71B9C74E170B3D2D008197AE /* CoreTelephony.framework */,
 				920D631A1619F5B4007B7418 /* sqlcipher.framework */,
@@ -564,7 +548,6 @@
 				9CD1B097152C7FEB009E4A91 /* Localizable.strings in Resources */,
 				9C5B6E3E1535A10100AF1336 /* Entitlements-Debug.plist in Resources */,
 				9C5B6E3F1535A10100AF1336 /* Entitlements-Release.plist in Resources */,
-				9C8F9E36155FEB38008CFFA8 /* CDVMainViewController.xib in Resources */,
 				9C962E0C156D2CA100A8F385 /* Icon-72@2x.png in Resources */,
 				188F368317D5C74F00C50D85 /* Icon-40.png in Resources */,
 				188F368917D5C74F00C50D85 /* Icon-76.png in Resources */,
@@ -573,6 +556,7 @@
 				470009E616BE4F3700E4EA3D /* config.xml in Resources */,
 				188F368417D5C74F00C50D85 /* Icon-40@2x.png in Resources */,
 				3623003A18FFA3E400D7B068 /* CDVMainViewController.xib in Resources */,
+				36B65C051904E1A2001024A4 /* CDVMainViewController.xib in Resources */,
 				71D6567517147FFC00219B1E /* TLFResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -617,15 +601,12 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				3623003918FFA3E400D7B068 /* CDVMainViewController.m in Sources */,
 				3623003F18FFA3E400D7B068 /* MQTTPlugin.m in Sources */,
-				42B5EAC41250C4AF00DC666F /* ContactsApp16.m in Sources */,
 				3623004018FFA3E400D7B068 /* PushPlugin.m in Sources */,
 				3623004318FFA3E400D7B068 /* Sms.m in Sources */,
-				9C8F9E35155FEB38008CFFA8 /* CDVMainViewController.m in Sources */,
 				3623003E18FFA3E400D7B068 /* MQTTClientWrapper.m in Sources */,
 				3623003818FFA3E400D7B068 /* AppDelegate+notification.m in Sources */,
 				3623003B18FFA3E400D7B068 /* ContactsApp16.m in Sources */,
 				3623004118FFA3E400D7B068 /* Reachability.m in Sources */,
-				3623004218FFA3E400D7B068 /* SimpleApp04.m in Sources */,
 				3623003C18FFA3E400D7B068 /* EmailComposer.m in Sources */,
 				3623004418FFA3E400D7B068 /* SQLitePlugin.m in Sources */,
 			);
@@ -647,8 +628,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				"ARCHS[sdk=iphoneos*]" = armv7;
-				"ARCHS[sdk=iphonesimulator*]" = i386;
 				CODE_SIGN_ENTITLEMENTS = "Entitlements-Debug.plist";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -676,7 +657,11 @@
 					"\"$(SRCROOT)/Tealeaf\"",
 					/Users/candy/Downloads/07,
 					queue/iOS,
+					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/WorklightSDK",
+					"$(PROJECT_DIR)/Tealeaf",
 				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = ContactsApp16;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -688,8 +673,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				"ARCHS[sdk=iphoneos*]" = armv7;
-				"ARCHS[sdk=iphonesimulator*]" = i386;
 				CODE_SIGN_ENTITLEMENTS = "Entitlements-Release.plist";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -715,6 +700,9 @@
 					"\"$(SRCROOT)/Tealeaf\"",
 					/Users/candy/Downloads/07,
 					queue/iOS,
+					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/WorklightSDK",
+					"$(PROJECT_DIR)/Tealeaf",
 				);
 				PRODUCT_NAME = ContactsApp16;
 				SDKROOT = iphoneos;
@@ -731,13 +719,14 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-Obj-C",
 				);
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5F82BBAB-2375-480D-83D3-BCBFA61C0A33";
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "armv7 i386";
+				VALID_ARCHS = armv7;
 			};
 			name = Distribution;
 		};
@@ -746,8 +735,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				"ARCHS[sdk=iphoneos*]" = armv7;
-				"ARCHS[sdk=iphonesimulator*]" = i386;
 				CODE_SIGN_ENTITLEMENTS = "Entitlements-Release.plist";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -773,6 +762,9 @@
 					"\"$(SRCROOT)/Tealeaf\"",
 					/Users/candy/Downloads/07,
 					queue/iOS,
+					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/WorklightSDK",
+					"$(PROJECT_DIR)/Tealeaf",
 				);
 				PRODUCT_NAME = ContactsApp16;
 				SDKROOT = iphoneos;
@@ -790,9 +782,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DDEBUG";
 				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
+				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -806,12 +800,13 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-Obj-C",
 				);
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "armv7 i386";
+				VALID_ARCHS = armv7;
 			};
 			name = Release;
 		};
