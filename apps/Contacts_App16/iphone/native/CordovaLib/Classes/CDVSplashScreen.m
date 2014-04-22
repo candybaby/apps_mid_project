@@ -42,7 +42,7 @@
 
 - (void)pageDidLoad
 {
-    id autoHideSplashScreenValue = [self.commandDelegate.settings objectForKey:[@"AutoHideSplashScreen" lowercaseString]];
+    id autoHideSplashScreenValue = [self.commandDelegate.settings objectForKey:@"AutoHideSplashScreen"];
 
     // if value is missing, default to yes
     if ((autoHideSplashScreenValue == nil) || [autoHideSplashScreenValue boolValue]) {
@@ -65,7 +65,7 @@
      *     gray       = UIActivityIndicatorViewStyleGray
      *
      */
-    NSString* topActivityIndicator = [self.commandDelegate.settings objectForKey:[@"TopActivityIndicator" lowercaseString]];
+    NSString* topActivityIndicator = [self.commandDelegate.settings objectForKey:@"TopActivityIndicator"];
     UIActivityIndicatorViewStyle topActivityIndicatorStyle = UIActivityIndicatorViewStyleGray;
 
     if ([topActivityIndicator isEqualToString:@"whiteLarge"]) {
@@ -88,7 +88,7 @@
     _imageView = [[UIImageView alloc] init];
     [parentView addSubview:_imageView];
 
-    id showSplashScreenSpinnerValue = [self.commandDelegate.settings objectForKey:[@"ShowSplashScreenSpinner" lowercaseString]];
+    id showSplashScreenSpinnerValue = [self.commandDelegate.settings objectForKey:@"ShowSplashScreenSpinner"];
     // backwards compatibility - if key is missing, default to true
     if ((showSplashScreenSpinnerValue == nil) || [showSplashScreenSpinnerValue boolValue]) {
         [parentView addSubview:_activityView];
@@ -152,12 +152,7 @@
         _curImageName = imageName;
     }
 
-    // Check that splash screen's image exists before updating bounds
-    if (_imageView.image) {
-        [self updateBounds];
-    } else {
-        NSLog(@"WARNING: The splashscreen image named %@ was not found", imageName);
-    }
+    [self updateBounds];
 }
 
 - (void)updateBounds
@@ -170,9 +165,7 @@
     // There's a special case when the image is the size of the screen.
     if (CGSizeEqualToSize(screenSize, imgBounds.size)) {
         CGRect statusFrame = [self.viewController.view convertRect:[UIApplication sharedApplication].statusBarFrame fromView:nil];
-        if (!(IsAtLeastiOSVersion(@"7.0"))) {
-            imgBounds.origin.y -= statusFrame.size.height;
-        }        
+        imgBounds.origin.y -= statusFrame.size.height;
     } else {
         CGRect viewBounds = self.viewController.view.bounds;
         CGFloat imgAspect = imgBounds.size.width / imgBounds.size.height;
@@ -198,8 +191,8 @@
     }
     _visible = visible;
 
-    id fadeSplashScreenValue = [self.commandDelegate.settings objectForKey:[@"FadeSplashScreen" lowercaseString]];
-    id fadeSplashScreenDuration = [self.commandDelegate.settings objectForKey:[@"FadeSplashScreenDuration" lowercaseString]];
+    id fadeSplashScreenValue = [self.commandDelegate.settings objectForKey:@"FadeSplashScreen"];
+    id fadeSplashScreenDuration = [self.commandDelegate.settings objectForKey:@"FadeSplashScreenDuration"];
 
     float fadeDuration = fadeSplashScreenDuration == nil ? kSplashScreenDurationDefault : [fadeSplashScreenDuration floatValue];
 

@@ -227,9 +227,10 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
     NSURL* testUri = [NSURL URLWithString:strUri];
     CDVPluginResult* result = nil;
 
-    if (!testUri) {
+    if (!testUri || ![testUri isFileURL]) {
+        // issue ENCODING_ERR
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:ENCODING_ERR];
-    } else if ([testUri isFileURL]) {
+    } else {
         NSFileManager* fileMgr = [[NSFileManager alloc] init];
         NSString* path = [testUri path];
         // NSLog(@"url path: %@", path);
@@ -261,13 +262,7 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
             // return NOT_FOUND_ERR
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:NOT_FOUND_ERR];
         }
-    } else if ([strUri hasPrefix:@"assets-library://"]) {
-        NSDictionary* fileSystem = [self getDirectoryEntry:strUri isDirectory:NO];
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:fileSystem];
-    } else {
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:ENCODING_ERR];
     }
-
     if (result != nil) {
         [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
     }
@@ -1132,7 +1127,7 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
     NSInteger end = [[command argumentAtIndex:3] integerValue];
 
     // TODO: implement
-    if ([@"UTF-8" caseInsensitiveCompare : encoding] != NSOrderedSame) {
+    if (![@"UTF-8" isEqualToString : encoding]) {
         NSLog(@"Only UTF-8 encodings are currently supported by readAsText");
         CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:ENCODING_ERR];
         [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
@@ -1303,7 +1298,7 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
  * IN:
  * NSArray* arguments
  *  0 - NSString* file path to write to
- *  1 - NSString* or NSData* data to write
+ *  1 - NSString* data to write
  *  2 - NSNumber* position to begin writing
  */
 - (void)write:(CDVInvokedUrlCommand*)command
@@ -1313,7 +1308,7 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
 
     // arguments
     NSString* argPath = [arguments objectAtIndex:0];
-    id argData = [arguments objectAtIndex:1];
+    NSString* argData = [arguments objectAtIndex:1];
     unsigned long long pos = (unsigned long long)[[arguments objectAtIndex:2] longLongValue];
 
     // text can't be written into assets-library files
@@ -1327,21 +1322,15 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
 
     [self truncateFile:fullPath atPosition:pos];
 
-    if ([argData isKindOfClass:[NSString class]]) {
-        [self writeToFile:fullPath withString:argData encoding:NSUTF8StringEncoding append:YES callback:callbackId];
-    } else if ([argData isKindOfClass:[NSData class]]) {
-        [self writeToFile:fullPath withData:argData append:YES callback:callbackId];
-    } else {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Invalid parameter type"];
-        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
-    }
+    [self writeToFile:fullPath withData:argData append:YES callback:callbackId];
 }
 
-- (void)writeToFile:(NSString*)filePath withData:(NSData*)encData append:(BOOL)shouldAppend callback:(NSString*)callbackId
+- (void)writeToFile:(NSString*)filePath withData:(NSString*)data append:(BOOL)shouldAppend callback:(NSString*)callbackId
 {
     CDVPluginResult* result = nil;
     CDVFileError errCode = INVALID_MODIFICATION_ERR;
     int bytesWritten = 0;
+    NSData* encData = [data dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
 
     if (filePath) {
         NSOutputStream* fileStream = [NSOutputStream outputStreamToFileAtPath:filePath append:shouldAppend];
@@ -1369,11 +1358,6 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:errCode];
     }
     [self.commandDelegate sendPluginResult:result callbackId:callbackId];
-}
-
-- (void)writeToFile:(NSString*)filePath withString:(NSString*)stringData encoding:(NSStringEncoding)encoding append:(BOOL)shouldAppend callback:(NSString*)callbackId
-{
-    [self writeToFile:filePath withData:[stringData dataUsingEncoding:encoding allowLossyConversion:YES] append:shouldAppend callback:callbackId];
 }
 
 - (void)testFileExists:(CDVInvokedUrlCommand*)command

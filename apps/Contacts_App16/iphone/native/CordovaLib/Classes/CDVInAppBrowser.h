@@ -17,29 +17,35 @@
  under the License.
  */
 
-#import <Cordova/CDVPlugin.h>
-#import <Cordova/CDVInvokedUrlCommand.h>
-#import <Cordova/CDVScreenOrientationDelegate.h>
-#import <Cordova/CDVWebViewDelegate.h>
+#import "CDVPlugin.h"
+#import "CDVInvokedUrlCommand.h"
+#import "CDVScreenOrientationDelegate.h"
+#import "CDVWebViewDelegate.h"
 
 @class CDVInAppBrowserViewController;
 
-@interface CDVInAppBrowser : CDVPlugin {
-    BOOL _injectedIframeBridge;
-}
+@protocol CDVInAppBrowserNavigationDelegate <NSObject>
+
+- (void)browserLoadStart:(NSURL*)url;
+- (void)browserLoadStop:(NSURL*)url;
+- (void)browserLoadError:(NSError*)error forUrl:(NSURL*)url;
+- (void)browserExit;
+
+@end
+
+@interface CDVInAppBrowser : CDVPlugin <CDVInAppBrowserNavigationDelegate>
 
 @property (nonatomic, retain) CDVInAppBrowserViewController* inAppBrowserViewController;
 @property (nonatomic, copy) NSString* callbackId;
 
 - (void)open:(CDVInvokedUrlCommand*)command;
 - (void)close:(CDVInvokedUrlCommand*)command;
-- (void)injectScriptCode:(CDVInvokedUrlCommand*)command;
-- (void)show:(CDVInvokedUrlCommand*)command;
 
 @end
 
 @interface CDVInAppBrowserViewController : UIViewController <UIWebViewDelegate>{
     @private
+    NSURL* _requestedURL;
     NSString* _userAgent;
     NSString* _prevUserAgent;
     NSInteger _userAgentLockToken;
@@ -55,14 +61,11 @@
 @property (nonatomic, strong) IBOutlet UIToolbar* toolbar;
 
 @property (nonatomic, weak) id <CDVScreenOrientationDelegate> orientationDelegate;
-@property (nonatomic, weak) CDVInAppBrowser* navigationDelegate;
-@property (nonatomic) NSURL* currentURL;
+@property (nonatomic, weak) id <CDVInAppBrowserNavigationDelegate> navigationDelegate;
 
 - (void)close;
 - (void)navigateTo:(NSURL*)url;
 - (void)showLocationBar:(BOOL)show;
-- (void)showToolBar:(BOOL)show;
-- (void)setCloseButtonTitle:(NSString*)title;
 
 - (id)initWithUserAgent:(NSString*)userAgent prevUserAgent:(NSString*)prevUserAgent;
 
@@ -71,9 +74,6 @@
 @interface CDVInAppBrowserOptions : NSObject {}
 
 @property (nonatomic, assign) BOOL location;
-@property (nonatomic, assign) BOOL toolbar;
-@property (nonatomic, copy) NSString* closebuttoncaption;
-
 @property (nonatomic, copy) NSString* presentationstyle;
 @property (nonatomic, copy) NSString* transitionstyle;
 
@@ -82,7 +82,6 @@
 @property (nonatomic, assign) BOOL allowinlinemediaplayback;
 @property (nonatomic, assign) BOOL keyboarddisplayrequiresuseraction;
 @property (nonatomic, assign) BOOL suppressesincrementalrendering;
-@property (nonatomic, assign) BOOL hidden;
 
 + (CDVInAppBrowserOptions*)parseOptions:(NSString*)options;
 

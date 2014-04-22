@@ -22,6 +22,7 @@
 {
     BOOL ret = [super application:application didFinishLaunchingWithOptions:launchOptions];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didFinishWLNativeInit:) name:@"didFinishWLNativeInit" object:nil];
+    [self registerNetworkStatusObserver];
     return ret;
 }
 

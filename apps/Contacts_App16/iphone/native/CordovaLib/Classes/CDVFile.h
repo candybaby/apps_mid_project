@@ -90,8 +90,7 @@ extern NSString* const kCDVAssetsLibraryPrefix;
 
 // - (BOOL) fileExists:(NSString*)fileName;
 // - (BOOL) directoryExists:(NSString*)dirName;
-- (void)writeToFile:(NSString*)fileName withData:(NSData*)data append:(BOOL)shouldAppend callback:(NSString*)callbackId;
-- (void)writeToFile:(NSString*)fileName withString:(NSString*)data encoding:(NSStringEncoding)encoding append:(BOOL)shouldAppend callback:(NSString*)callbackId;
+- (void)writeToFile:(NSString*)fileName withData:(NSString*)data append:(BOOL)shouldAppend callback:(NSString*)callbackId;
 - (unsigned long long)truncateFile:(NSString*)filePath atPosition:(unsigned long long)pos;
 
 @property (nonatomic, strong) NSString* appDocsPath;

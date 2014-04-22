@@ -128,7 +128,7 @@
 
 - (void)keyboardWillShowOrHide:(NSNotification*)notif
 {
-    if (![@"true" isEqualToString :[self settingForKey:@"KeyboardShrinksView"]]) {
+    if (![@"true" isEqualToString:self.settings[@"KeyboardShrinksView"]]) {
         return;
     }
     BOOL showEvent = [notif.name isEqualToString:UIKeyboardWillShowNotification];
@@ -226,7 +226,8 @@
     NSURL* appURL = nil;
     NSString* loadErr = nil;
 
-    if ([self.startPage rangeOfString:@"://"].location != NSNotFound) {
+    if ([self.startPage rangeOfString:@"://"].location != NSNotFound &&
+    /*worklight change start*/![self.startPage hasPrefix:@"worklight://"]/*worklight change end*/){
         appURL = [NSURL URLWithString:self.startPage];
     } else if ([self.wwwFolderName rangeOfString:@"://"].location != NSNotFound) {
         appURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", self.wwwFolderName, self.startPage]];
@@ -246,11 +247,11 @@
 
     NSString* backupWebStorageType = @"cloud"; // default value
 
-    id backupWebStorage = [self settingForKey:@"BackupWebStorage"];
+    id backupWebStorage = self.settings[@"BackupWebStorage"];
     if ([backupWebStorage isKindOfClass:[NSString class]]) {
         backupWebStorageType = backupWebStorage;
     }
-    [self setSetting:backupWebStorageType forKey:@"BackupWebStorage"];
+    self.settings[@"BackupWebStorage"] = backupWebStorageType;
 
     if (IsAtLeastiOSVersion(@"5.1")) {
         [CDVLocalStorage __fixupDatabaseLocationsWithBackupType:backupWebStorageType];
@@ -262,16 +263,16 @@
 
     // /////////////////
 
-    NSNumber* enableLocation = [self settingForKey:@"EnableLocation"];
-    NSString* enableViewportScale = [self settingForKey:@"EnableViewportScale"];
-    NSNumber* allowInlineMediaPlayback = [self settingForKey:@"AllowInlineMediaPlayback"];
+    NSNumber* enableLocation = [self.settings objectForKey:@"EnableLocation"];
+    NSString* enableViewportScale = [self.settings objectForKey:@"EnableViewportScale"];
+    NSNumber* allowInlineMediaPlayback = [self.settings objectForKey:@"AllowInlineMediaPlayback"];
     BOOL mediaPlaybackRequiresUserAction = YES;  // default value
-    if ([self settingForKey:@"MediaPlaybackRequiresUserAction"]) {
-        mediaPlaybackRequiresUserAction = [(NSNumber*)[self settingForKey:@"MediaPlaybackRequiresUserAction"] boolValue];
+    if ([self.settings objectForKey:@"MediaPlaybackRequiresUserAction"]) {
+        mediaPlaybackRequiresUserAction = [(NSNumber*)[settings objectForKey:@"MediaPlaybackRequiresUserAction"] boolValue];
     }
     BOOL hideKeyboardFormAccessoryBar = NO;  // default value
-    if ([self settingForKey:@"HideKeyboardFormAccessoryBar"]) {
-        hideKeyboardFormAccessoryBar = [(NSNumber*)[self settingForKey:@"HideKeyboardFormAccessoryBar"] boolValue];
+    if ([self.settings objectForKey:@"HideKeyboardFormAccessoryBar"]) {
+        hideKeyboardFormAccessoryBar = [(NSNumber*)[settings objectForKey:@"HideKeyboardFormAccessoryBar"] boolValue];
     }
 
     self.webView.scalesPageToFit = [enableViewportScale boolValue];
@@ -290,18 +291,18 @@
         [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
                                                           object:nil
                                                            queue:[NSOperationQueue mainQueue]
-                                                      usingBlock:^(NSNotification* notification) {
-            // we can't hide it here because the accessory bar hasn't been created yet, so we delay on the queue
-            [weakSelf performSelector:@selector(hideKeyboardFormAccessoryBar) withObject:nil afterDelay:0];
-        }];
+                                                      usingBlock:^(NSNotification * notification) {
+                // we can't hide it here because the accessory bar hasn't been created yet, so we delay on the queue
+                [weakSelf performSelector:@selector(hideKeyboardFormAccessoryBar) withObject:nil afterDelay:0];
+            }];
     }
 
     /*
      * Fire up CDVLocalStorage to work-around WebKit storage limitations: on all iOS 5.1+ versions for local-only backups, but only needed on iOS 5.1 for cloud backup.
      */
-    if (IsAtLeastiOSVersion(@"5.1") && (([backupWebStorageType isEqualToString:@"local"]) ||
-        ([backupWebStorageType isEqualToString:@"cloud"] && !IsAtLeastiOSVersion(@"6.0")))) {
-        [self registerPlugin:[[CDVLocalStorage alloc] initWithWebView:self.webView] withClassName:NSStringFromClass([CDVLocalStorage class])];
+    if (IsAtLeastiOSVersion (@"5.1") && (([backupWebStorageType isEqualToString:@"local"]) ||
+            ([backupWebStorageType isEqualToString:@"cloud"] && !IsAtLeastiOSVersion (@"6.0")))) {
+        [self registerPlugin:[[CDVLocalStorage alloc] initWithWebView:self.webView] withClassName:NSStringFromClass ([CDVLocalStorage class])];
     }
 
     /*
@@ -317,9 +318,9 @@
     // By default, overscroll bouncing is allowed.
     // UIWebViewBounce has been renamed to DisallowOverscroll, but both are checked.
     BOOL bounceAllowed = YES;
-    NSNumber* disallowOverscroll = [self settingForKey:@"DisallowOverscroll"];
+    NSNumber* disallowOverscroll = [self.settings objectForKey:@"DisallowOverscroll"];
     if (disallowOverscroll == nil) {
-        NSNumber* bouncePreference = [self settingForKey:@"UIWebViewBounce"];
+        NSNumber* bouncePreference = [self.settings objectForKey:@"UIWebViewBounce"];
         bounceAllowed = (bouncePreference == nil || [bouncePreference boolValue]);
     } else {
         bounceAllowed = ![disallowOverscroll boolValue];
@@ -342,11 +343,11 @@
     /*
      * iOS 6.0 UIWebView properties
      */
-    if (IsAtLeastiOSVersion(@"6.0")) {
+    if (IsAtLeastiOSVersion (@"6.0")) {
         BOOL keyboardDisplayRequiresUserAction = YES; // KeyboardDisplayRequiresUserAction - defaults to YES
-        if ([self settingForKey:@"KeyboardDisplayRequiresUserAction"] != nil) {
-            if ([self settingForKey:@"KeyboardDisplayRequiresUserAction"]) {
-                keyboardDisplayRequiresUserAction = [(NSNumber*)[self settingForKey:@"KeyboardDisplayRequiresUserAction"] boolValue];
+        if ([self.settings objectForKey:@"KeyboardDisplayRequiresUserAction"] != nil) {
+            if ([self.settings objectForKey:@"KeyboardDisplayRequiresUserAction"]) {
+                keyboardDisplayRequiresUserAction = [(NSNumber*)[self.settings objectForKey:@"KeyboardDisplayRequiresUserAction"] boolValue];
             }
         }
 
@@ -356,9 +357,9 @@
         }
 
         BOOL suppressesIncrementalRendering = NO; // SuppressesIncrementalRendering - defaults to NO
-        if ([self settingForKey:@"SuppressesIncrementalRendering"] != nil) {
-            if ([self settingForKey:@"SuppressesIncrementalRendering"]) {
-                suppressesIncrementalRendering = [(NSNumber*)[self settingForKey:@"SuppressesIncrementalRendering"] boolValue];
+        if ([self.settings objectForKey:@"SuppressesIncrementalRendering"] != nil) {
+            if ([self.settings objectForKey:@"SuppressesIncrementalRendering"]) {
+                suppressesIncrementalRendering = [(NSNumber*)[self.settings objectForKey:@"SuppressesIncrementalRendering"] boolValue];
             }
         }
 
@@ -368,16 +369,8 @@
         }
     }
 
-    if ([self.startupPluginNames count] > 0) {
-        [CDVTimer start:@"TotalPluginStartup"];
-
-        for (NSString* pluginName in self.startupPluginNames) {
-            [CDVTimer start:pluginName];
-            [self getCommandInstance:pluginName];
-            [CDVTimer stop:pluginName];
-        }
-
-        [CDVTimer stop:@"TotalPluginStartup"];
+    for (NSString* pluginName in self.startupPluginNames) {
+        [self getCommandInstance:pluginName];
     }
 
     // TODO: Remove this explicit instantiation once we move to cordova-CLI.
@@ -387,26 +380,16 @@
 
     // /////////////////
     [CDVUserAgentUtil acquireLock:^(NSInteger lockToken) {
-        _userAgentLockToken = lockToken;
-        [CDVUserAgentUtil setUserAgent:self.userAgent lockToken:lockToken];
-        if (!loadErr) {
-            NSURLRequest* appReq = [NSURLRequest requestWithURL:appURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20.0];
-            [self.webView loadRequest:appReq];
-        } else {
-            NSString* html = [NSString stringWithFormat:@"<html><body> %@ </body></html>", loadErr];
-            [self.webView loadHTMLString:html baseURL:nil];
-        }
-    }];
-}
-
-- (id)settingForKey:(NSString*)key
-{
-    return [[self settings] objectForKey:[key lowercaseString]];
-}
-
-- (void)setSetting:(id)setting forKey:(NSString*)key
-{
-    [[self settings] setObject:setting forKey:[key lowercaseString]];
+            _userAgentLockToken = lockToken;
+            [CDVUserAgentUtil setUserAgent:self.userAgent lockToken:lockToken];
+            if (!loadErr) {
+                NSURLRequest* appReq = [NSURLRequest requestWithURL:appURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20.0];
+                [self.webView loadRequest:appReq];
+            } else {
+                NSString* html = [NSString stringWithFormat:@"<html><body> %@ </body></html>", loadErr];
+                [self.webView loadHTMLString:html baseURL:nil];
+            }
+        }];
 }
 
 - (void)hideKeyboardFormAccessoryBar
@@ -625,6 +608,12 @@
     // It's safe to release the lock even if this is just a sub-frame that's finished loading.
     [CDVUserAgentUtil releaseLock:&_userAgentLockToken];
 
+    // The .onNativeReady().fire() will work when cordova.js is already loaded.
+    // The _nativeReady = true; is used when this is run before cordova.js is loaded.
+    NSString* nativeReady = @"try{cordova.require('cordova/channel').onNativeReady.fire();}catch(e){window._nativeReady = true;}";
+    // Don't use [commandDelegate evalJs] here since it relies on cordova.js being loaded already.
+    [self.webView stringByEvaluatingJavaScriptFromString:nativeReady];
+
     /*
      * Hide the Top Activity THROBBER in the Battery Bar
      */
@@ -795,7 +784,7 @@
 
     id obj = [self.pluginObjects objectForKey:className];
     if (!obj) {
-        obj = [[NSClassFromString(className)alloc] initWithWebView:webView];
+        obj = [[NSClassFromString (className)alloc] initWithWebView:webView];
 
         if (obj != nil) {
             [self registerPlugin:obj withClassName:className];

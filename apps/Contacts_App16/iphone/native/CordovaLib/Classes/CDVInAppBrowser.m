@@ -18,9 +18,8 @@
  */
 
 #import "CDVInAppBrowser.h"
-#import <Cordova/CDVPluginResult.h>
-#import <Cordova/CDVUserAgentUtil.h>
-#import <Cordova/CDVJSON.h>
+#import "CDVPluginResult.h"
+#import "CDVUserAgentUtil.h"
 
 #define    kInAppBrowserTargetSelf @"_self"
 #define    kInAppBrowserTargetSystem @"_system"
@@ -31,11 +30,6 @@
 #define    FOOTER_HEIGHT ((TOOLBAR_HEIGHT) + (LOCATIONBAR_HEIGHT))
 
 #pragma mark CDVInAppBrowser
-
-@interface CDVInAppBrowser () {
-    UIStatusBarStyle _previousStatusBarStyle;
-}
-@end
 
 @implementation CDVInAppBrowser
 
@@ -64,15 +58,6 @@
     self.callbackId = nil;
 }
 
-- (BOOL) isSystemUrl:(NSURL*)url
-{
-	if ([[url host] isEqualToString:@"itunes.apple.com"]) {
-		return YES;
-	}
-	
-	return NO;
-}
-
 - (void)open:(CDVInvokedUrlCommand*)command
 {
     CDVPluginResult* pluginResult;
@@ -86,11 +71,6 @@
     if (url != nil) {
         NSURL* baseUrl = [self.webView.request URL];
         NSURL* absoluteUrl = [[NSURL URLWithString:url relativeToURL:baseUrl] absoluteURL];
-        
-        if ([self isSystemUrl:absoluteUrl]) {
-            target = kInAppBrowserTargetSystem;
-        }
-
         if ([target isEqualToString:kInAppBrowserTargetSelf]) {
             [self openInCordovaWebView:absoluteUrl withOptions:options];
         } else if ([target isEqualToString:kInAppBrowserTargetSystem]) {
@@ -120,20 +100,15 @@
         }
     }
 
-    _previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-
     CDVInAppBrowserOptions* browserOptions = [CDVInAppBrowserOptions parseOptions:options];
     [self.inAppBrowserViewController showLocationBar:browserOptions.location];
-    [self.inAppBrowserViewController showToolBar:browserOptions.toolbar];
-    if (browserOptions.closebuttoncaption != nil) {
-        [self.inAppBrowserViewController setCloseButtonTitle:browserOptions.closebuttoncaption];
-    }
+
     // Set Presentation Style
     UIModalPresentationStyle presentationStyle = UIModalPresentationFullScreen; // default
     if (browserOptions.presentationstyle != nil) {
-        if ([[browserOptions.presentationstyle lowercaseString] isEqualToString:@"pagesheet"]) {
+        if ([browserOptions.presentationstyle isEqualToString:@"pagesheet"]) {
             presentationStyle = UIModalPresentationPageSheet;
-        } else if ([[browserOptions.presentationstyle lowercaseString] isEqualToString:@"formsheet"]) {
+        } else if ([browserOptions.presentationstyle isEqualToString:@"formsheet"]) {
             presentationStyle = UIModalPresentationFormSheet;
         }
     }
@@ -142,15 +117,14 @@
     // Set Transition Style
     UIModalTransitionStyle transitionStyle = UIModalTransitionStyleCoverVertical; // default
     if (browserOptions.transitionstyle != nil) {
-        if ([[browserOptions.transitionstyle lowercaseString] isEqualToString:@"fliphorizontal"]) {
+        if ([browserOptions.transitionstyle isEqualToString:@"fliphorizontal"]) {
             transitionStyle = UIModalTransitionStyleFlipHorizontal;
-        } else if ([[browserOptions.transitionstyle lowercaseString] isEqualToString:@"crossdissolve"]) {
+        } else if ([browserOptions.transitionstyle isEqualToString:@"crossdissolve"]) {
             transitionStyle = UIModalTransitionStyleCrossDissolve;
         }
     }
     self.inAppBrowserViewController.modalTransitionStyle = transitionStyle;
 
-  
     // UIWebView options
     self.inAppBrowserViewController.webView.scalesPageToFit = browserOptions.enableviewportscale;
     self.inAppBrowserViewController.webView.mediaPlaybackRequiresUserAction = browserOptions.mediaplaybackrequiresuseraction;
@@ -159,31 +133,11 @@
         self.inAppBrowserViewController.webView.keyboardDisplayRequiresUserAction = browserOptions.keyboarddisplayrequiresuseraction;
         self.inAppBrowserViewController.webView.suppressesIncrementalRendering = browserOptions.suppressesincrementalrendering;
     }
-  
-    if (! browserOptions.hidden) {
-        
-        UINavigationController* nav = [[UINavigationController alloc]
-                                       initWithRootViewController:self.inAppBrowserViewController];
-        nav.navigationBarHidden = YES;
-        
-      if (self.viewController.modalViewController != self.inAppBrowserViewController) {
-          [self.viewController presentModalViewController:nav animated:YES];
-      }
+
+    if (self.viewController.modalViewController != self.inAppBrowserViewController) {
+        [self.viewController presentModalViewController:self.inAppBrowserViewController animated:YES];
     }
     [self.inAppBrowserViewController navigateTo:url];
-}
-
-- (void)show:(CDVInvokedUrlCommand*)command
-{
-    if ([self.inAppBrowserViewController isViewLoaded] && self.inAppBrowserViewController.view.window)
-        return;
-    
-    _previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-    
-    UINavigationController* nav = [[UINavigationController alloc]
-                                   initWithRootViewController:self.inAppBrowserViewController];
-    nav.navigationBarHidden = YES;
-    [self.viewController presentModalViewController:nav animated:YES];
 }
 
 - (void)openInCordovaWebView:(NSURL*)url withOptions:(NSString*)options
@@ -205,162 +159,35 @@
     }
 }
 
-// This is a helper method for the inject{Script|Style}{Code|File} API calls, which
-// provides a consistent method for injecting JavaScript code into the document.
-//
-// If a wrapper string is supplied, then the source string will be JSON-encoded (adding
-// quotes) and wrapped using string formatting. (The wrapper string should have a single
-// '%@' marker).
-//
-// If no wrapper is supplied, then the source string is executed directly.
+#pragma mark CDVInAppBrowserNavigationDelegate
 
-- (void)injectDeferredObject:(NSString*)source withWrapper:(NSString*)jsWrapper
+- (void)browserLoadStart:(NSURL*)url
 {
-    if (!_injectedIframeBridge) {
-        _injectedIframeBridge = YES;
-        // Create an iframe bridge in the new document to communicate with the CDVInAppBrowserViewController
-        [self.inAppBrowserViewController.webView stringByEvaluatingJavaScriptFromString:@"(function(d){var e = _cdvIframeBridge = d.createElement('iframe');e.style.display='none';d.body.appendChild(e);})(document)"];
-    }
-
-    if (jsWrapper != nil) {
-        NSString* sourceArrayString = [@[source] JSONString];
-        if (sourceArrayString) {
-            NSString* sourceString = [sourceArrayString substringWithRange:NSMakeRange(1, [sourceArrayString length] - 2)];
-            NSString* jsToInject = [NSString stringWithFormat:jsWrapper, sourceString];
-            [self.inAppBrowserViewController.webView stringByEvaluatingJavaScriptFromString:jsToInject];
-        }
-    } else {
-        [self.inAppBrowserViewController.webView stringByEvaluatingJavaScriptFromString:source];
-    }
-}
-
-- (void)injectScriptCode:(CDVInvokedUrlCommand*)command
-{
-    NSString* jsWrapper = nil;
-
-    if ((command.callbackId != nil) && ![command.callbackId isEqualToString:@"INVALID"]) {
-        jsWrapper = [NSString stringWithFormat:@"_cdvIframeBridge.src='gap-iab://%@/'+window.escape(JSON.stringify([eval(%%@)]));", command.callbackId];
-    }
-    [self injectDeferredObject:[command argumentAtIndex:0] withWrapper:jsWrapper];
-}
-
-- (void)injectScriptFile:(CDVInvokedUrlCommand*)command
-{
-    NSString* jsWrapper;
-
-    if ((command.callbackId != nil) && ![command.callbackId isEqualToString:@"INVALID"]) {
-        jsWrapper = [NSString stringWithFormat:@"(function(d) { var c = d.createElement('script'); c.src = %%@; c.onload = function() { _cdvIframeBridge.src='gap-iab://%@'; }; d.body.appendChild(c); })(document)", command.callbackId];
-    } else {
-        jsWrapper = @"(function(d) { var c = d.createElement('script'); c.src = %@; d.body.appendChild(c); })(document)";
-    }
-    [self injectDeferredObject:[command argumentAtIndex:0] withWrapper:jsWrapper];
-}
-
-- (void)injectStyleCode:(CDVInvokedUrlCommand*)command
-{
-    NSString* jsWrapper;
-
-    if ((command.callbackId != nil) && ![command.callbackId isEqualToString:@"INVALID"]) {
-        jsWrapper = [NSString stringWithFormat:@"(function(d) { var c = d.createElement('style'); c.innerHTML = %%@; c.onload = function() { _cdvIframeBridge.src='gap-iab://%@'; }; d.body.appendChild(c); })(document)", command.callbackId];
-    } else {
-        jsWrapper = @"(function(d) { var c = d.createElement('style'); c.innerHTML = %@; d.body.appendChild(c); })(document)";
-    }
-    [self injectDeferredObject:[command argumentAtIndex:0] withWrapper:jsWrapper];
-}
-
-- (void)injectStyleFile:(CDVInvokedUrlCommand*)command
-{
-    NSString* jsWrapper;
-
-    if ((command.callbackId != nil) && ![command.callbackId isEqualToString:@"INVALID"]) {
-        jsWrapper = [NSString stringWithFormat:@"(function(d) { var c = d.createElement('link'); c.rel='stylesheet'; c.type='text/css'; c.href = %%@; c.onload = function() { _cdvIframeBridge.src='gap-iab://%@'; }; d.body.appendChild(c); })(document)", command.callbackId];
-    } else {
-        jsWrapper = @"(function(d) { var c = d.createElement('link'); c.rel='stylesheet', c.type='text/css'; c.href = %@; d.body.appendChild(c); })(document)";
-    }
-    [self injectDeferredObject:[command argumentAtIndex:0] withWrapper:jsWrapper];
-}
-
-/**
- * The iframe bridge provided for the InAppBrowser is capable of executing any oustanding callback belonging
- * to the InAppBrowser plugin. Care has been taken that other callbacks cannot be triggered, and that no
- * other code execution is possible.
- *
- * To trigger the bridge, the iframe (or any other resource) should attempt to load a url of the form:
- *
- * gap-iab://<callbackId>/<arguments>
- *
- * where <callbackId> is the string id of the callback to trigger (something like "InAppBrowser0123456789")
- *
- * If present, the path component of the special gap-iab:// url is expected to be a URL-escaped JSON-encoded
- * value to pass to the callback. [NSURL path] should take care of the URL-unescaping, and a JSON_EXCEPTION
- * is returned if the JSON is invalid.
- */
-- (BOOL)webView:(UIWebView*)theWebView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    NSURL* url = request.URL;
-    BOOL isTopLevelNavigation = [request.URL isEqual:[request mainDocumentURL]];
-
-    // See if the url uses the 'gap-iab' protocol. If so, the host should be the id of a callback to execute,
-    // and the path, if present, should be a JSON-encoded value to pass to the callback.
-    if ([[url scheme] isEqualToString:@"gap-iab"]) {
-        NSString* scriptCallbackId = [url host];
-        CDVPluginResult* pluginResult = nil;
-
-        if ([scriptCallbackId hasPrefix:@"InAppBrowser"]) {
-            NSString* scriptResult = [url path];
-            NSError* __autoreleasing error = nil;
-
-            // The message should be a JSON-encoded array of the result of the script which executed.
-            if ((scriptResult != nil) && ([scriptResult length] > 1)) {
-                scriptResult = [scriptResult substringFromIndex:1];
-                NSData* decodedResult = [NSJSONSerialization JSONObjectWithData:[scriptResult dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
-                if ((error == nil) && [decodedResult isKindOfClass:[NSArray class]]) {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:(NSArray*)decodedResult];
-                } else {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION];
-                }
-            } else {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:@[]];
-            }
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:scriptCallbackId];
-            return NO;
-        }
-    } else if ((self.callbackId != nil) && isTopLevelNavigation) {
-        // Send a loadstart event for each top-level navigation (includes redirects).
+    if (self.callbackId != nil) {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsDictionary:@{@"type":@"loadstart", @"url":[url absoluteString]}];
         [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
     }
-
-    return YES;
 }
 
-- (void)webViewDidStartLoad:(UIWebView*)theWebView
-{
-    _injectedIframeBridge = NO;
-}
-
-- (void)webViewDidFinishLoad:(UIWebView*)theWebView
+- (void)browserLoadStop:(NSURL*)url
 {
     if (self.callbackId != nil) {
-        // TODO: It would be more useful to return the URL the page is actually on (e.g. if it's been redirected).
-        NSString* url = [self.inAppBrowserViewController.currentURL absoluteString];
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsDictionary:@{@"type":@"loadstop", @"url":url}];
+                                                      messageAsDictionary:@{@"type":@"loadstop", @"url":[url absoluteString]}];
         [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
     }
 }
 
-- (void)webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error
+- (void)browserLoadError:(NSError*)error forUrl:(NSURL*)url
 {
     if (self.callbackId != nil) {
-        NSString* url = [self.inAppBrowserViewController.currentURL absoluteString];
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                      messageAsDictionary:@{@"type":@"loaderror", @"url":url, @"code": [NSNumber numberWithInt:error.code], @"message": error.localizedDescription}];
+                                                      messageAsDictionary:@{@"type":@"loaderror", @"url":[url absoluteString], @"code": [NSNumber numberWithInt:error.code], @"message": error.localizedDescription}];
         [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
@@ -379,10 +206,6 @@
     // Don't recycle the ViewController since it may be consuming a lot of memory.
     // Also - this is required for the PDF/User-Agent bug work-around.
     self.inAppBrowserViewController = nil;
-    
-    if (IsAtLeastiOSVersion(@"7.0")) {
-        [[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle];
-    }
 }
 
 @end
@@ -390,8 +213,6 @@
 #pragma mark CDVInAppBrowserViewController
 
 @implementation CDVInAppBrowserViewController
-
-@synthesize currentURL;
 
 - (id)initWithUserAgent:(NSString*)userAgent prevUserAgent:(NSString*)prevUserAgent
 {
@@ -450,6 +271,9 @@
 
     self.closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close)];
     self.closeButton.enabled = YES;
+    self.closeButton.imageInsets = UIEdgeInsetsZero;
+    self.closeButton.style = UIBarButtonItemStylePlain;
+    self.closeButton.width = 32.000;
 
     UIBarButtonItem* flexibleSpaceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
@@ -513,132 +337,32 @@
     [self.view addSubview:self.spinner];
 }
 
-- (void)setCloseButtonTitle:(NSString*)title
-{
-    // the advantage of using UIBarButtonSystemItemDone is the system will localize it for you automatically
-    // but, if you want to set this yourself, knock yourself out (we can't set the title for a system Done button, so we have to create a new one)
-    self.closeButton = nil;
-    self.closeButton = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleBordered target:self action:@selector(close)];
-    self.closeButton.enabled = YES;
-    self.closeButton.tintColor = [UIColor colorWithRed:60.0 / 255.0 green:136.0 / 255.0 blue:230.0 / 255.0 alpha:1];
-
-    NSMutableArray* items = [self.toolbar.items mutableCopy];
-    [items replaceObjectAtIndex:0 withObject:self.closeButton];
-    [self.toolbar setItems:items];
-}
-
 - (void)showLocationBar:(BOOL)show
 {
-    CGRect locationbarFrame = self.addressLabel.frame;
-
-    BOOL toolbarVisible = !self.toolbar.hidden;
+    CGRect addressLabelFrame = self.addressLabel.frame;
+    BOOL locationBarVisible = (addressLabelFrame.size.height > 0);
 
     // prevent double show/hide
-    if (show == !(self.addressLabel.hidden)) {
+    if (locationBarVisible == show) {
         return;
     }
 
     if (show) {
-        self.addressLabel.hidden = NO;
+        CGRect webViewBounds = self.view.bounds;
+        webViewBounds.size.height -= FOOTER_HEIGHT;
+        self.webView.frame = webViewBounds;
 
-        if (toolbarVisible) {
-            // toolBar at the bottom, leave as is
-            // put locationBar on top of the toolBar
-
-            CGRect webViewBounds = self.view.bounds;
-            webViewBounds.size.height -= FOOTER_HEIGHT;
-            self.webView.frame = webViewBounds;
-
-            locationbarFrame.origin.y = webViewBounds.size.height;
-            self.addressLabel.frame = locationbarFrame;
-        } else {
-            // no toolBar, so put locationBar at the bottom
-
-            CGRect webViewBounds = self.view.bounds;
-            webViewBounds.size.height -= LOCATIONBAR_HEIGHT;
-            self.webView.frame = webViewBounds;
-
-            locationbarFrame.origin.y = webViewBounds.size.height;
-            self.addressLabel.frame = locationbarFrame;
-        }
+        CGRect addressLabelFrame = self.addressLabel.frame;
+        addressLabelFrame.size.height = LOCATIONBAR_HEIGHT;
+        self.addressLabel.frame = addressLabelFrame;
     } else {
-        self.addressLabel.hidden = YES;
+        CGRect webViewBounds = self.view.bounds;
+        webViewBounds.size.height -= TOOLBAR_HEIGHT;
+        self.webView.frame = webViewBounds;
 
-        if (toolbarVisible) {
-            // locationBar is on top of toolBar, hide locationBar
-
-            // webView take up whole height less toolBar height
-            CGRect webViewBounds = self.view.bounds;
-            webViewBounds.size.height -= TOOLBAR_HEIGHT;
-            self.webView.frame = webViewBounds;
-        } else {
-            // no toolBar, expand webView to screen dimensions
-
-            CGRect webViewBounds = self.view.bounds;
-            self.webView.frame = webViewBounds;
-        }
-    }
-}
-
-- (void)showToolBar:(BOOL)show
-{
-    CGRect toolbarFrame = self.toolbar.frame;
-    CGRect locationbarFrame = self.addressLabel.frame;
-
-    BOOL locationbarVisible = !self.addressLabel.hidden;
-
-    // prevent double show/hide
-    if (show == !(self.toolbar.hidden)) {
-        return;
-    }
-
-    if (show) {
-        self.toolbar.hidden = NO;
-
-        if (locationbarVisible) {
-            // locationBar at the bottom, move locationBar up
-            // put toolBar at the bottom
-
-            CGRect webViewBounds = self.view.bounds;
-            webViewBounds.size.height -= FOOTER_HEIGHT;
-            self.webView.frame = webViewBounds;
-
-            locationbarFrame.origin.y = webViewBounds.size.height;
-            self.addressLabel.frame = locationbarFrame;
-
-            toolbarFrame.origin.y = (webViewBounds.size.height + LOCATIONBAR_HEIGHT);
-            self.toolbar.frame = toolbarFrame;
-        } else {
-            // no locationBar, so put toolBar at the bottom
-
-            CGRect webViewBounds = self.view.bounds;
-            webViewBounds.size.height -= TOOLBAR_HEIGHT;
-            self.webView.frame = webViewBounds;
-
-            toolbarFrame.origin.y = webViewBounds.size.height;
-            self.toolbar.frame = toolbarFrame;
-        }
-    } else {
-        self.toolbar.hidden = YES;
-
-        if (locationbarVisible) {
-            // locationBar is on top of toolBar, hide toolBar
-            // put locationBar at the bottom
-
-            // webView take up whole height less locationBar height
-            CGRect webViewBounds = self.view.bounds;
-            webViewBounds.size.height -= LOCATIONBAR_HEIGHT;
-            self.webView.frame = webViewBounds;
-
-            // move locationBar down
-            locationbarFrame.origin.y = webViewBounds.size.height;
-            self.addressLabel.frame = locationbarFrame;
-        } else {
-            // no locationBar, expand webView to screen dimensions
-
-            CGRect webViewBounds = self.view.bounds;
-            self.webView.frame = webViewBounds;
-        }
+        CGRect addressLabelFrame = self.addressLabel.frame;
+        addressLabelFrame.size.height = 0;
+        self.addressLabel.frame = addressLabelFrame;
     }
 }
 
@@ -653,11 +377,6 @@
     [CDVUserAgentUtil releaseLock:&_userAgentLockToken];
     [super viewDidUnload];
 }
-    
-- (UIStatusBarStyle)preferredStatusBarStyle
-{
-    return UIStatusBarStyleDefault;
-}
 
 - (void)close
 {
@@ -669,8 +388,6 @@
         [[self parentViewController] dismissModalViewControllerAnimated:YES];
     }
 
-    self.currentURL = nil;
-
     if ((self.navigationDelegate != nil) && [self.navigationDelegate respondsToSelector:@selector(browserExit)]) {
         [self.navigationDelegate browserExit];
     }
@@ -679,6 +396,8 @@
 - (void)navigateTo:(NSURL*)url
 {
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
+
+    _requestedURL = url;
 
     if (_userAgentLockToken != 0) {
         [self.webView loadRequest:request];
@@ -700,15 +419,6 @@
 {
     [self.webView goForward];
 }
-    
-- (void)viewWillAppear:(BOOL)animated
-{
-    if (IsAtLeastiOSVersion(@"7.0")) {
-        [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle]];
-    }
-    
-    [super viewWillAppear:animated];
-}
 
 #pragma mark UIWebViewDelegate
 
@@ -721,25 +431,25 @@
     self.forwardButton.enabled = theWebView.canGoForward;
 
     [self.spinner startAnimating];
-
-    return [self.navigationDelegate webViewDidStartLoad:theWebView];
 }
 
-- (BOOL)webView:(UIWebView*)theWebView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType
+- (BOOL)webView:(UIWebView*)theWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    BOOL isTopLevelNavigation = [request.URL isEqual:[request mainDocumentURL]];
-
-    if (isTopLevelNavigation) {
-        self.currentURL = request.URL;
+    if ((self.navigationDelegate != nil) && [self.navigationDelegate respondsToSelector:@selector(browserLoadStart:)]) {
+        NSURL* url = request.URL;
+        if (url == nil) {
+            url = _requestedURL;
+        }
+        [self.navigationDelegate browserLoadStart:url];
     }
-    return [self.navigationDelegate webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
+    return YES;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView*)theWebView
 {
     // update url, stop spinner, update back/forward
 
-    self.addressLabel.text = [self.currentURL absoluteString];
+    self.addressLabel.text = theWebView.request.URL.absoluteString;
     self.backButton.enabled = theWebView.canGoBack;
     self.forwardButton.enabled = theWebView.canGoForward;
 
@@ -761,7 +471,10 @@
         [CDVUserAgentUtil setUserAgent:_prevUserAgent lockToken:_userAgentLockToken];
     }
 
-    [self.navigationDelegate webViewDidFinishLoad:theWebView];
+    if ((self.navigationDelegate != nil) && [self.navigationDelegate respondsToSelector:@selector(browserLoadStop:)]) {
+        NSURL* url = theWebView.request.URL;
+        [self.navigationDelegate browserLoadStop:url];
+    }
 }
 
 - (void)webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error
@@ -775,7 +488,10 @@
 
     self.addressLabel.text = @"Load Error";
 
-    [self.navigationDelegate webView:theWebView didFailLoadWithError:error];
+    if ((self.navigationDelegate != nil) && [self.navigationDelegate respondsToSelector:@selector(browserLoadError:forUrl:)]) {
+        NSURL* url = theWebView.request.URL;
+        [self.navigationDelegate browserLoadError:error forUrl:url];
+    }
 }
 
 #pragma mark CDVScreenOrientationDelegate
@@ -815,15 +531,12 @@
     if (self = [super init]) {
         // default values
         self.location = YES;
-        self.toolbar = YES;
-        self.closebuttoncaption = nil;
 
         self.enableviewportscale = NO;
         self.mediaplaybackrequiresuseraction = NO;
         self.allowinlinemediaplayback = NO;
         self.keyboarddisplayrequiresuseraction = YES;
         self.suppressesincrementalrendering = NO;
-        self.hidden = NO;
     }
 
     return self;
@@ -842,20 +555,19 @@
 
         if ([keyvalue count] == 2) {
             NSString* key = [[keyvalue objectAtIndex:0] lowercaseString];
-            NSString* value = [keyvalue objectAtIndex:1];
-            NSString* value_lc = [value lowercaseString];
+            NSString* value = [[keyvalue objectAtIndex:1] lowercaseString];
 
-            BOOL isBoolean = [value_lc isEqualToString:@"yes"] || [value_lc isEqualToString:@"no"];
+            BOOL isBoolean = [value isEqualToString:@"yes"] || [value isEqualToString:@"no"];
             NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];
             [numberFormatter setAllowsFloats:YES];
-            BOOL isNumber = [numberFormatter numberFromString:value_lc] != nil;
+            BOOL isNumber = [numberFormatter numberFromString:value] != nil;
 
             // set the property according to the key name
             if ([obj respondsToSelector:NSSelectorFromString(key)]) {
                 if (isNumber) {
-                    [obj setValue:[numberFormatter numberFromString:value_lc] forKey:key];
+                    [obj setValue:[numberFormatter numberFromString:value] forKey:key];
                 } else if (isBoolean) {
-                    [obj setValue:[NSNumber numberWithBool:[value_lc isEqualToString:@"yes"]] forKey:key];
+                    [obj setValue:[NSNumber numberWithBool:[value isEqualToString:@"yes"]] forKey:key];
                 } else {
                     [obj setValue:value forKey:key];
                 }

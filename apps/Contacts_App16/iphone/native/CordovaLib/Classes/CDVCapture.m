@@ -18,8 +18,8 @@
  */
 
 #import "CDVCapture.h"
-#import <Cordova/CDVJSON.h>
-#import <Cordova/CDVAvailability.h>
+#import "CDVJSON.h"
+#import "CDVAvailability.h"
 
 #define kW3CMediaFormatHeight @"height"
 #define kW3CMediaFormatWidth @"width"
@@ -43,27 +43,6 @@
     }
 
     return UIAccessibilityTraitNone;
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
-
-- (UIViewController*)childViewControllerForStatusBarHidden
-{
-    return nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    SEL sel = NSSelectorFromString(@"setNeedsStatusBarAppearanceUpdate");
-
-    if ([self respondsToSelector:sel]) {
-        [self performSelector:sel withObject:nil afterDelay:0];
-    }
-
-    [super viewWillAppear:animated];
 }
 
 @end
@@ -109,11 +88,9 @@
 
         self.inUse = YES;
 
-        SEL selector = NSSelectorFromString(@"presentViewController:animated:completion:");
-        if ([self.viewController respondsToSelector:selector]) {
+        if ([self.viewController respondsToSelector:@selector(presentViewController:::)]) {
             [self.viewController presentViewController:navController animated:YES completion:nil];
         } else {
-            // deprecated as of iOS >= 6.0
             [self.viewController presentModalViewController:navController animated:YES];
         }
     }
@@ -131,6 +108,7 @@
     if ([options isKindOfClass:[NSNull class]]) {
         options = [NSDictionary dictionary];
     }
+    NSString* mode = [options objectForKey:@"mode"];
 
     // options could contain limit and mode neither of which are supported at this time
     // taking more than one picture (limit) is only supported if provide own controls via cameraOverlayView property
@@ -161,12 +139,11 @@
         }*/
         // CDVImagePicker specific property
         pickerController.callbackId = callbackId;
+        pickerController.mimeType = mode;
 
-        SEL selector = NSSelectorFromString(@"presentViewController:animated:completion:");
-        if ([self.viewController respondsToSelector:selector]) {
+        if ([self.viewController respondsToSelector:@selector(presentViewController:::)]) {
             [self.viewController presentViewController:pickerController animated:YES completion:nil];
         } else {
-            // deprecated as of iOS >= 6.0
             [self.viewController presentModalViewController:pickerController animated:YES];
         }
     }
@@ -229,9 +206,9 @@
         options = [NSDictionary dictionary];
     }
 
-    // options could contain limit, duration and mode
+    // options could contain limit, duration and mode, only duration is supported (but is not due to apple bug)
     // taking more than one video (limit) is only supported if provide own controls via cameraOverlayView property
-    NSNumber* duration = [options objectForKey:@"duration"];
+    // NSNumber* duration = [options objectForKey:@"duration"];
     NSString* mediaType = nil;
 
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -263,12 +240,12 @@
         // iOS 3.0
         pickerController.mediaTypes = [NSArray arrayWithObjects:mediaType, nil];
 
-        if ([mediaType isEqualToString:(NSString*)kUTTypeMovie]) {
+        /*if ([mediaType isEqualToString:(NSString*)kUTTypeMovie]){
             if (duration) {
                 pickerController.videoMaximumDuration = [duration doubleValue];
             }
-            // NSLog(@"pickerController.videoMaximumDuration = %f", pickerController.videoMaximumDuration);
-        }
+            //NSLog(@"pickerController.videoMaximumDuration = %f", pickerController.videoMaximumDuration);
+        }*/
 
         // iOS 4.0
         if ([pickerController respondsToSelector:@selector(cameraCaptureMode)]) {
@@ -280,11 +257,9 @@
         // CDVImagePicker specific property
         pickerController.callbackId = callbackId;
 
-        SEL selector = NSSelectorFromString(@"presentViewController:animated:completion:");
-        if ([self.viewController respondsToSelector:selector]) {
+        if ([self.viewController respondsToSelector:@selector(presentViewController:::)]) {
             [self.viewController presentViewController:pickerController animated:YES completion:nil];
         } else {
-            // deprecated as of iOS >= 6.0
             [self.viewController presentModalViewController:pickerController animated:YES];
         }
     }
@@ -601,10 +576,6 @@
 
 - (void)loadView
 {
-    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
-
     // create view and display
     CGRect viewRect = [[UIScreen mainScreen] applicationFrame];
     UIView* tmp = [[UIView alloc] initWithFrame:viewRect];
@@ -646,12 +617,7 @@
     // timerLabel.autoresizingMask = reSizeMask;
     [self.timerLabel setBackgroundColor:[UIColor clearColor]];
     [self.timerLabel setTextColor:[UIColor whiteColor]];
-#ifdef __IPHONE_6_0
-        [self.timerLabel setTextAlignment:NSTextAlignmentCenter];
-#else
-        // for iOS SDK < 6.0
-        [self.timerLabel setTextAlignment:UITextAlignmentCenter];
-#endif
+    [self.timerLabel setTextAlignment:UITextAlignmentCenter];
     [self.timerLabel setText:@"0:00"];
     [self.timerLabel setAccessibilityHint:NSLocalizedString(@"recorded time in minutes and seconds", nil)];
     self.timerLabel.accessibilityTraits |= UIAccessibilityTraitUpdatesFrequently;
@@ -754,46 +720,25 @@
         [self.recordButton setImage:stopRecordImage forState:UIControlStateNormal];
         self.recordButton.accessibilityTraits &= ~[self accessibilityTraits];
         [self.recordingView setHidden:NO];
-        __block NSError* error = nil;
-
-        void (^startRecording)(void) = ^{
-            [self.avSession setCategory:AVAudioSessionCategoryRecord error:&error];
-            [self.avSession setActive:YES error:&error];
-            if (error) {
-                // can't continue without active audio session
-                self.errorCode = CAPTURE_INTERNAL_ERR;
-                [self dismissAudioView:nil];
-            } else {
-                if (self.duration) {
-                    self.isTimed = true;
-                    [self.avRecorder recordForDuration:[duration doubleValue]];
-                } else {
-                    [self.avRecorder record];
-                }
-                [self.timerLabel setText:@"0.00"];
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
-                self.doneButton.enabled = NO;
-            }
-            UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil);
-        };
-
-        SEL rrpSel = NSSelectorFromString(@"requestRecordPermission:");
-        if ([self.avSession respondsToSelector:rrpSel]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            [self.avSession performSelector:rrpSel withObject:^(BOOL granted) {
-                if (granted) {
-                    startRecording();
-                } else {
-                    NSLog(@"Error creating audio session, microphone permission denied.");
-                    self.errorCode = CAPTURE_INTERNAL_ERR;
-                    [self dismissAudioView:nil];
-                }
-            }];
-#pragma clang diagnostic pop
+        NSError* error = nil;
+        [self.avSession setCategory:AVAudioSessionCategoryRecord error:&error];
+        [self.avSession setActive:YES error:&error];
+        if (error) {
+            // can't continue without active audio session
+            self.errorCode = CAPTURE_INTERNAL_ERR;
+            [self dismissAudioView:nil];
         } else {
-            startRecording();
+            if (self.duration) {
+                self.isTimed = true;
+                [self.avRecorder recordForDuration:[duration doubleValue]];
+            } else {
+                [self.avRecorder record];
+            }
+            [self.timerLabel setText:@"0.00"];
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
+            self.doneButton.enabled = NO;
         }
+        UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil);
     }
 }
 

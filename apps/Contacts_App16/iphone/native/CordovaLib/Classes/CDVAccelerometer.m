@@ -17,13 +17,10 @@
  under the License.
  */
 
-#import <CoreMotion/CoreMotion.h>
 #import "CDVAccelerometer.h"
 
 @interface CDVAccelerometer () {}
 @property (readwrite, assign) BOOL isRunning;
-@property (readwrite, assign) BOOL haveReturnedResult;
-@property (readwrite, strong) CMMotionManager* motionManager;
 @end
 
 @implementation CDVAccelerometer
@@ -31,7 +28,7 @@
 @synthesize callbackId, isRunning;
 
 // defaults to 10 msec
-#define kAccelerometerInterval 10
+#define kAccelerometerInterval 40
 // g constant: -9.81 m/s^2
 #define kGravitationalConstant -9.81
 
@@ -45,8 +42,6 @@
         timestamp = 0;
         self.callbackId = nil;
         self.isRunning = NO;
-        self.haveReturnedResult = YES;
-        self.motionManager = nil;
     }
     return self;
 }
@@ -58,31 +53,17 @@
 
 - (void)start:(CDVInvokedUrlCommand*)command
 {
-    self.haveReturnedResult = NO;
-    self.callbackId = command.callbackId;
+    NSString* cbId = command.callbackId;
+    NSTimeInterval desiredFrequency_num = kAccelerometerInterval;
+    UIAccelerometer* pAccel = [UIAccelerometer sharedAccelerometer];
 
-    if (!self.motionManager)
-    {
-        self.motionManager = [[CMMotionManager alloc] init];
+    // accelerometer expects fractional seconds, but we have msecs
+    pAccel.updateInterval = desiredFrequency_num / 1000;
+    self.callbackId = cbId;
+    if (!self.isRunning) {
+        pAccel.delegate = self;
+        self.isRunning = YES;
     }
-
-    if ([self.motionManager isAccelerometerAvailable] == YES) {
-        // Assign the update interval to the motion manager and start updates
-        [self.motionManager setAccelerometerUpdateInterval:kAccelerometerInterval/1000];  // expected in seconds
-        __weak CDVAccelerometer* weakSelf = self;
-        [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
-            x = accelerometerData.acceleration.x;
-            y = accelerometerData.acceleration.y;
-            z = accelerometerData.acceleration.z;
-            timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
-            [weakSelf returnAccelInfo];
-        }];
-
-        if (!self.isRunning) {
-            self.isRunning = YES;
-        }
-    }
-    
 }
 
 - (void)onReset
@@ -92,14 +73,24 @@
 
 - (void)stop:(CDVInvokedUrlCommand*)command
 {
-    if ([self.motionManager isAccelerometerAvailable] == YES) {
-        if (self.haveReturnedResult == NO){
-            // block has not fired before stop was called, return whatever result we currently have
-            [self returnAccelInfo];
-        }
-        [self.motionManager stopAccelerometerUpdates];
-    }
+    UIAccelerometer* theAccelerometer = [UIAccelerometer sharedAccelerometer];
+
+    theAccelerometer.delegate = nil;
     self.isRunning = NO;
+}
+
+/**
+ * Picks up accel updates from device and stores them in this class
+ */
+- (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
+{
+    if (self.isRunning) {
+        x = acceleration.x;
+        y = acceleration.y;
+        z = acceleration.z;
+        timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
+        [self returnAccelInfo];
+    }
 }
 
 - (void)returnAccelInfo
@@ -115,7 +106,6 @@
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:accelProps];
     [result setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
-    self.haveReturnedResult = YES;
 }
 
 // TODO: Consider using filtering to isolate instantaneous data vs. gravity data -jm

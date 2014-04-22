@@ -7,7 +7,7 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
 			$scope.id = $stateParams["id"];
 			$scope.model = angular.copy(FriendManager.getById($scope.id));
 			FriendManager.clearBadgeCount($scope.model.phone);
-			//$scope.onReceiveMessage();
+			$scope.onReceiveMessage();
 		};
 
 		$scope.onSendMessageClick = function() {
@@ -22,16 +22,11 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
 			acLabMessage.sendMessage(SettingManager.getHost().phone, $scope.model.phone, msg, 0);
 		}
 
-		// $scope.onReceiveMessage = function() {
-  //       	$rootScope.$on('receiveMessage', function(event, res) {
-  //       		if (res['message_type'] == "chat" && 
-  //       			(res['sender_phone'] == $scope.model.phone || 
-  //       				(res['send_myself'] && res['receiver_phone'] ==$scope.model.phone)))
-  //       		{
-  //       			$ionicScrollDelegate.scrollBottom(true);
-  //       		}
-  //       	});
-  //   	};
+		$scope.onReceiveMessage = function() {
+        	$rootScope.$on('receiveMessage', function(event, res) {
+        		$scope.$apply();
+        	});
+    	};
 
     	$scope.onMessageShow = function(id) {
     		var message = MessageManager.getById(id);

@@ -150,8 +150,9 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         msgObj['dateTime'] = message['date_time'];
         msgObj['mId'] = message['m_id'];
         msgObj['activityId'] = message['activity_id'];
-        MessageManager.add(msgObj);
-        $rootScope.$broadcast('receiveMessage', message);
+        MessageManager.add(msgObj, function() {
+            $rootScope.$broadcast('receiveMessage', message);
+        });
     }
 
     var readMessage = function(message) {

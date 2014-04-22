@@ -250,9 +250,10 @@ app.factory('MessageManager', function(DBManager) {
         }
     });
     return {
-        add: function(message) {
+        add: function(message, onSuccess) {
             DBManager.addMessage(message, function() {
                 idIndexMessages[message.id] = message;
+                (onSuccess || angular.noop)();
             });
         },
         getByPhone: function(phone) {

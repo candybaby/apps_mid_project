@@ -17,11 +17,16 @@
  under the License.
  */
 
-#import <Foundation/Foundation.h>
+//  Bridge implementation file for using Cordova > 1.5 plugins in 1.5.0.
+//
 
-@interface CDVTimer : NSObject
+#import <Cordova/CDV.h>
 
-+ (void)start:(NSString*)name;
-+ (void)stop:(NSString*)name;
-
-@end
+/*
+ Returns YES if it is at least version specified as NSString(X)
+ Usage:
+ if (IsAtLeastiOSVersion(@"5.1")) {
+ // do something for iOS 5.1 or greater
+ }
+ */
+#define IsAtLeastiOSVersion(X) ([[[UIDevice currentDevice] systemVersion] compare:X options:NSNumericSearch] != NSOrderedAscending)

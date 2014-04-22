@@ -42,14 +42,14 @@
 		3623003918FFA3E400D7B068 /* CDVMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623001F18FFA3E400D7B068 /* CDVMainViewController.m */; };
 		3623003B18FFA3E400D7B068 /* ContactsApp16.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002218FFA3E400D7B068 /* ContactsApp16.m */; };
 		3623003C18FFA3E400D7B068 /* EmailComposer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002418FFA3E400D7B068 /* EmailComposer.m */; };
-		3623003E18FFA3E400D7B068 /* MQTTClientWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002918FFA3E400D7B068 /* MQTTClientWrapper.m */; };
-		3623003F18FFA3E400D7B068 /* MQTTPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002D18FFA3E400D7B068 /* MQTTPlugin.m */; };
 		3623004018FFA3E400D7B068 /* PushPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623002F18FFA3E400D7B068 /* PushPlugin.m */; };
 		3623004118FFA3E400D7B068 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623003118FFA3E400D7B068 /* Reachability.m */; };
 		3623004318FFA3E400D7B068 /* Sms.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623003518FFA3E400D7B068 /* Sms.m */; };
 		3623004418FFA3E400D7B068 /* SQLitePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3623003718FFA3E400D7B068 /* SQLitePlugin.m */; };
 		3623005618FFAE2B00D7B068 /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3623005318FFADDD00D7B068 /* libCordova.a */; };
 		3623FFEF18FFA02300D7B068 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3623FFEE18FFA02300D7B068 /* MessageUI.framework */; };
+		3676E290190635C100994F7A /* MQTTClientWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3676E28B190635C100994F7A /* MQTTClientWrapper.m */; };
+		3676E291190635C100994F7A /* MQTTPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3676E28F190635C100994F7A /* MQTTPlugin.m */; };
 		36B65C051904E1A2001024A4 /* CDVMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36B65C041904E1A2001024A4 /* CDVMainViewController.xib */; };
 		4255CFF6126B2ACD00B1C79C /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4255CFF5126B2ACD00B1C79C /* CoreData.framework */; };
 		428BCE071372799200AEB66F /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 428BCE011372799200AEB66F /* Default-Landscape~ipad.png */; };
@@ -140,14 +140,6 @@
 		3623002218FFA3E400D7B068 /* ContactsApp16.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsApp16.m; sourceTree = "<group>"; };
 		3623002318FFA3E400D7B068 /* EmailComposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailComposer.h; sourceTree = "<group>"; };
 		3623002418FFA3E400D7B068 /* EmailComposer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailComposer.m; sourceTree = "<group>"; };
-		3623002618FFA3E400D7B068 /* MQTTClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTClient.h; sourceTree = "<group>"; };
-		3623002718FFA3E400D7B068 /* MQTTClientPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTClientPersistence.h; sourceTree = "<group>"; };
-		3623002818FFA3E400D7B068 /* MQTTClientWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTClientWrapper.h; sourceTree = "<group>"; };
-		3623002918FFA3E400D7B068 /* MQTTClientWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTClientWrapper.m; sourceTree = "<group>"; };
-		3623002A18FFA3E400D7B068 /* MQTTConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTConstant.h; sourceTree = "<group>"; };
-		3623002B18FFA3E400D7B068 /* MQTTListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTListener.h; sourceTree = "<group>"; };
-		3623002C18FFA3E400D7B068 /* MQTTPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTPlugin.h; sourceTree = "<group>"; };
-		3623002D18FFA3E400D7B068 /* MQTTPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTPlugin.m; sourceTree = "<group>"; };
 		3623002E18FFA3E400D7B068 /* PushPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushPlugin.h; sourceTree = "<group>"; };
 		3623002F18FFA3E400D7B068 /* PushPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushPlugin.m; sourceTree = "<group>"; };
 		3623003018FFA3E400D7B068 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -158,6 +150,14 @@
 		3623003718FFA3E400D7B068 /* SQLitePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLitePlugin.m; sourceTree = "<group>"; };
 		3623004E18FFADDD00D7B068 /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = CordovaLib/CordovaLib.xcodeproj; sourceTree = "<group>"; };
 		3623FFEE18FFA02300D7B068 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		3676E288190635C100994F7A /* MQTTClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTClient.h; sourceTree = "<group>"; };
+		3676E289190635C100994F7A /* MQTTClientPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTClientPersistence.h; sourceTree = "<group>"; };
+		3676E28A190635C100994F7A /* MQTTClientWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTClientWrapper.h; sourceTree = "<group>"; };
+		3676E28B190635C100994F7A /* MQTTClientWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTClientWrapper.m; sourceTree = "<group>"; };
+		3676E28C190635C100994F7A /* MQTTConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTConstant.h; sourceTree = "<group>"; };
+		3676E28D190635C100994F7A /* MQTTListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTListener.h; sourceTree = "<group>"; };
+		3676E28E190635C100994F7A /* MQTTPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTPlugin.h; sourceTree = "<group>"; };
+		3676E28F190635C100994F7A /* MQTTPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTPlugin.m; sourceTree = "<group>"; };
 		36B65C041904E1A2001024A4 /* CDVMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDVMainViewController.xib; sourceTree = "<group>"; };
 		4224A5B9129C1B3500C7341C /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		4255CFF5126B2ACD00B1C79C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -249,6 +249,14 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3676E288190635C100994F7A /* MQTTClient.h */,
+				3676E289190635C100994F7A /* MQTTClientPersistence.h */,
+				3676E28A190635C100994F7A /* MQTTClientWrapper.h */,
+				3676E28B190635C100994F7A /* MQTTClientWrapper.m */,
+				3676E28C190635C100994F7A /* MQTTConstant.h */,
+				3676E28D190635C100994F7A /* MQTTListener.h */,
+				3676E28E190635C100994F7A /* MQTTPlugin.h */,
+				3676E28F190635C100994F7A /* MQTTPlugin.m */,
 				36B65C041904E1A2001024A4 /* CDVMainViewController.xib */,
 				3623001C18FFA3E400D7B068 /* AppDelegate+notification.h */,
 				3623001D18FFA3E400D7B068 /* AppDelegate+notification.m */,
@@ -258,14 +266,6 @@
 				3623002218FFA3E400D7B068 /* ContactsApp16.m */,
 				3623002318FFA3E400D7B068 /* EmailComposer.h */,
 				3623002418FFA3E400D7B068 /* EmailComposer.m */,
-				3623002618FFA3E400D7B068 /* MQTTClient.h */,
-				3623002718FFA3E400D7B068 /* MQTTClientPersistence.h */,
-				3623002818FFA3E400D7B068 /* MQTTClientWrapper.h */,
-				3623002918FFA3E400D7B068 /* MQTTClientWrapper.m */,
-				3623002A18FFA3E400D7B068 /* MQTTConstant.h */,
-				3623002B18FFA3E400D7B068 /* MQTTListener.h */,
-				3623002C18FFA3E400D7B068 /* MQTTPlugin.h */,
-				3623002D18FFA3E400D7B068 /* MQTTPlugin.m */,
 				3623002E18FFA3E400D7B068 /* PushPlugin.h */,
 				3623002F18FFA3E400D7B068 /* PushPlugin.m */,
 				3623003018FFA3E400D7B068 /* Reachability.h */,
@@ -597,13 +597,13 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				3623003918FFA3E400D7B068 /* CDVMainViewController.m in Sources */,
-				3623003F18FFA3E400D7B068 /* MQTTPlugin.m in Sources */,
 				3623004018FFA3E400D7B068 /* PushPlugin.m in Sources */,
 				3623004318FFA3E400D7B068 /* Sms.m in Sources */,
-				3623003E18FFA3E400D7B068 /* MQTTClientWrapper.m in Sources */,
 				3623003818FFA3E400D7B068 /* AppDelegate+notification.m in Sources */,
 				3623003B18FFA3E400D7B068 /* ContactsApp16.m in Sources */,
+				3676E290190635C100994F7A /* MQTTClientWrapper.m in Sources */,
 				3623004118FFA3E400D7B068 /* Reachability.m in Sources */,
+				3676E291190635C100994F7A /* MQTTPlugin.m in Sources */,
 				3623003C18FFA3E400D7B068 /* EmailComposer.m in Sources */,
 				3623004418FFA3E400D7B068 /* SQLitePlugin.m in Sources */,
 			);
@@ -649,15 +649,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)",
+					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/WorklightSDK\"",
 					"\"$(SRCROOT)/Tealeaf\"",
-					/Users/candy/Downloads/07,
-					queue/iOS,
-					"$(PROJECT_DIR)/Frameworks",
-					"$(PROJECT_DIR)/WorklightSDK",
-					"$(PROJECT_DIR)/Tealeaf",
+					"$(PROJECT_DIR)",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = ContactsApp16;
 				SDKROOT = iphoneos;
@@ -692,15 +689,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)",
+					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/WorklightSDK\"",
 					"\"$(SRCROOT)/Tealeaf\"",
-					/Users/candy/Downloads/07,
-					queue/iOS,
-					"$(PROJECT_DIR)/Frameworks",
-					"$(PROJECT_DIR)/WorklightSDK",
-					"$(PROJECT_DIR)/Tealeaf",
+					"$(PROJECT_DIR)",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ContactsApp16;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -754,15 +748,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)",
+					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/WorklightSDK\"",
 					"\"$(SRCROOT)/Tealeaf\"",
-					/Users/candy/Downloads/07,
-					queue/iOS,
-					"$(PROJECT_DIR)/Frameworks",
-					"$(PROJECT_DIR)/WorklightSDK",
-					"$(PROJECT_DIR)/Tealeaf",
+					"$(PROJECT_DIR)",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ContactsApp16;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
