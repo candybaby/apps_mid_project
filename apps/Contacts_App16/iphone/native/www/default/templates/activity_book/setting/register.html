@@ -1,0 +1,40 @@
+<ion-view title="'設定'" ng-init="init()">
+	<ion-content has-header="true" padding="true">
+		<div class="card" ng-show="state == UNREGISTERED">
+			<form name="registerForm" class="item item-text-wrap">
+				<label class="item item-input item-stacked-label">
+			    	<span class="input-label">帳號: </span>
+			    	<i class="icon ion-ios7-information assertive" ng-show="registerForm.emailInput.$error.email">格式不符</i>
+			    	<input type="email" ng-model="host.account" name="emailInput">
+				</label>
+				<label class="item item-input item-stacked-label">
+			    	<span class="input-label">姓名: </span>
+			    	<input type="text" ng-model="host.name">
+				</label>
+				<label class="item item-input item-stacked-label">
+			    	<span class="input-label">電話: </span>
+			    	<input type="tel" ng-model="host.phone">
+				</label>
+				<button ng-click="onNextClick()" ng-disabled="!host.account || !host.name || !host.phone" class="button button-block button-positive">下一步</button>
+			</form>
+		</div>
+
+		<div class="card" ng-show="state == AUTH">
+			<form name="authForm" class="item item-text-wrap">
+				<label class="item item-input item-stacked-label">
+			    	<span class="input-label">認證碼: </span>
+			    	<input type="text" ng-model="authText.content">
+				</label>
+				<button ng-click="onSubmitClick()" class="button button-block button-positive">送出</button>
+				<button ng-click="onReSendAuthClick()" class="button button-block button-positive">重寄認證碼</button>
+			</form>
+		</div>
+
+		<div class="card" ng-show="state == REGISTERED">
+			<label class="item item-stacked-label">
+			    註冊成功
+			</label>
+		</div>
+
+	</ion-content>
+</ion-view>
