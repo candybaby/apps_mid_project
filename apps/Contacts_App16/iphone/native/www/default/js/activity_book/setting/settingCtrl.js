@@ -1,6 +1,6 @@
 
-/* JavaScript content from js/activity_book/setting/registerCtrl.js in folder common */
-app.controller('RegisterCtrl',function($scope, $window, SettingManager, $ionicLoading, $location, Notification, acLabMember){
+/* JavaScript content from js/activity_book/setting/settingCtrl.js in folder common */
+app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoading, $location, Notification, acLabMember){
 	$scope.UNREGISTERED = 0;
 	$scope.AUTH = 1;
 	$scope.REGISTERED = 2;

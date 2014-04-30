@@ -9,12 +9,10 @@ app.controller('HelloFriendsCtrl', function($scope, $state, SettingManager) {
 		$scope.host = SettingManager.getHost();
 		if ($scope.host.registered) {
 			$scope.state = $scope.REGISTERED;
-		} else {
-			//$state.go('tab.register');
 		}
     };
 
     $scope.onRegisterClick = function() {
-    	$state.go('tab.register');
+    	$state.go('tab.setting');
     }
 });

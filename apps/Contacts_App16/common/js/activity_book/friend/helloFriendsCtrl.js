@@ -11,6 +11,6 @@ app.controller('HelloFriendsCtrl', function($scope, $state, SettingManager) {
     };
 
     $scope.onRegisterClick = function() {
-    	$state.go('tab.register');
+    	$state.go('tab.setting');
     }
 });

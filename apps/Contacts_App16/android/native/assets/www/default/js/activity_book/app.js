@@ -9,12 +9,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
 	        abstract: true,
 	        templateUrl: "templates/activity_book/tab.html"
 	    })
-        .state('tab.register', {
-            url: '/register',
+        .state('tab.setting', {
+            url: '/setting',
             views: {
                 'tab-setting': {
-                    templateUrl: 'templates/activity_book/setting/register.html',
-                    controller: 'RegisterCtrl'
+                    templateUrl: 'templates/activity_book/setting/setting.html',
+                    controller: 'SettingCtrl'
                 }
             }
         })
