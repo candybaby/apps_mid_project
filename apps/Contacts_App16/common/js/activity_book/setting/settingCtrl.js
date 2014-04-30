@@ -8,10 +8,6 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
 	
 	$scope.init = function() {
 		$scope.host = SettingManager.getHost();
-        console.log("init - ");
-        for (var attrName in $scope.host) {
-             console.log("init - "+attrName+" : "+$scope.host[attrName]);
-        }
 		if ($scope.host.registered) {
 			$scope.state = $scope.REGISTERED;
             //$window.navigator.app.exitApp();

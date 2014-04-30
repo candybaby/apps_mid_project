@@ -25,6 +25,24 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('tab.chat', {
+            url: '/chat',
+            views: {
+                'tab-chat': {
+                    templateUrl: 'templates/activity_book/chat/chat.html',
+                    controller: 'ChatCtrl'
+                }
+            }
+        })
+        .state('tab.activity', {
+            url: '/activity',
+            views: {
+                'tab-activity': {
+                    templateUrl: 'templates/activity_book/activity/activity.html',
+                    controller: 'ActivityCtrl'
+                }
+            }
+        })
         ;
     $urlRouterProvider.otherwise("/tab/friends");
 });

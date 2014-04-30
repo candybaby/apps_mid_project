@@ -1,0 +1,15 @@
+<ion-view title="'訊息列表'" ng-init="init()">
+    <ion-content has-header="true" has-tabs="true">
+        <div class="item"  ng-show="state == UNREGISTERED">
+            <button ng-click="onRegisterClick()" class="button button-block button-positive">註冊</button>
+        </div>
+		<div class="item item-icon-left" ng-show="state == REGISTERED">
+			<i class="icon ion-person-stalker"></i>
+			   	訊息
+			<span class="item-note">
+				測試
+			</span>
+		</div>
+               
+    </ion-content>
+</ion-view>
