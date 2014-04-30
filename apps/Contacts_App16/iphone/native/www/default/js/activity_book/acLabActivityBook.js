@@ -218,9 +218,9 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
             });
         },
         
-        unregister: function(phone, onSuccess, onError) {
+        unregister: function(account, onSuccess, onError) {
             var data = {
-                phone: phone
+                account: account
             };
 
             var remove = $http({
@@ -233,8 +233,56 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
                 (onSuccess || angular.noop)(response);
             });
             remove.error(function (response, status, headers, config){
-                (onError || angular.noop)(false);
+                (onError || angular.noop)(response);
+            });
+        }
+    };
+})
+.factory('acLabFriend', function ($rootScope, $window, $http) {
+    var acLabServiceUrl = 'http://140.124.181.70/web/service/friend/';
+    var acLabServiceFormat = '/format/json';
+    
+    return {
+        search: function(text, onSuccess, onError) {
+            console.log("search" + text);
+            var data = {
+                text: text
+            };
+
+            var search = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'search' + acLabServiceFormat,
+                data: data
+            });
+                
+            search.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+                
+            search.error(function (response, status, headers, config){
+                (onError || angular.noop)(response);
+            });
+        },
+
+        add: function(account, friendAccount, onSuccess, onError) {
+            var data = {
+                account: account,
+                friend_account: friendAccount
+            };
+
+            var add = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'add' + acLabServiceFormat,
+                data: data
+            });
+
+            add.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+            add.error(function (response, status, headers, config){
+                (onError || angular.noop)(response);
             });
         }
     };
 });
+

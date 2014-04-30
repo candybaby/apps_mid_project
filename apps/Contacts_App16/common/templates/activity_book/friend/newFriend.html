@@ -1,0 +1,20 @@
+<ion-view title="'尋找朋友'" ng-init="init()">
+	<ion-content has-header="true" padding="true">
+		<div class="list">
+  			<div class="item item-input-inset">
+    			<label class="item-input-wrapper">
+      				<input type="text" placeholder="姓名、手機、信箱" ng-model="search.text">
+    			</label>
+    			<button class="button button-small" ng-click="onSearchClick()">搜尋</button>
+  			</div>
+		</div>
+		<div class="card">
+			<button ng-click="onSearchClick()" class="button button-block button-positive">搜尋</button>
+		</div>
+		<div ng-repeat="candidate in candidates" class="item item-icon-left">
+			<i class="icon ion-person-stalker"></i>
+            	{{candidate.name}}
+    			<span class="badge badge-assertive" ng-click="onAddClick(candidate.account)">加朋友</span>
+		</div>
+	</ion-content>
+</ion-view>

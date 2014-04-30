@@ -90,3 +90,11 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	margin-bottom:45px;
 }
 
+.hasHeaderContent {
+	margin-top:45px;
+}
+
+.hasFooterContent {
+	margin-bottom:45px;
+}
+

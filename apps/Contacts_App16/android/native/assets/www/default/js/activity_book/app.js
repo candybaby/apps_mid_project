@@ -27,6 +27,15 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('tab.newfriend', {
+            url: "/newfriend",
+            views: {
+                'tab-friends': {
+                    templateUrl: 'templates/activity_book/friend/newFriend.html',
+                    controller: 'NewFriendCtrl'
+                }
+            }
+        })
         .state('tab.chat', {
             url: '/chat',
             views: {

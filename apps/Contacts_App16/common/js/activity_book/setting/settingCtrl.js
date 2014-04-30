@@ -59,6 +59,22 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
     	});
 	};
 
+    $scope.onDeleteClick = function() {
+        $scope.show();
+        acLabMember.unregister($scope.host.account, function(response) {
+            $scope.host.name = "";
+            $scope.host.phone = "";
+            $scope.host.account = "";
+            $scope.host.registered = false;
+            SettingManager.setHost($scope.host);
+            $scope.hide();
+            $scope.state = $scope.UNREGISTERED;
+        }, function() {
+            $scope.hide();
+            Notification.alert('刪除失敗', null, "警告");
+        });
+    };
+
     $scope.show = function() {
         $scope.loading = $ionicLoading.show({
           content: "<i class='ion-loading-b'></i>",

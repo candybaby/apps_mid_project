@@ -10,10 +10,6 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
 	
 	$scope.init = function() {
 		$scope.host = SettingManager.getHost();
-        console.log("init - ");
-        for (var attrName in $scope.host) {
-             console.log("init - "+attrName+" : "+$scope.host[attrName]);
-        }
 		if ($scope.host.registered) {
 			$scope.state = $scope.REGISTERED;
             //$window.navigator.app.exitApp();
@@ -64,6 +60,22 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
     		Notification.alert('帳號已經有人使用', null, "警告");
     	});
 	};
+
+    $scope.onDeleteClick = function() {
+        $scope.show();
+        acLabMember.unregister($scope.host.account, function(response) {
+            $scope.host.name = "";
+            $scope.host.phone = "";
+            $scope.host.account = "";
+            $scope.host.registered = false;
+            SettingManager.setHost($scope.host);
+            $scope.hide();
+            $scope.state = $scope.UNREGISTERED;
+        }, function() {
+            $scope.hide();
+            Notification.alert('刪除失敗', null, "警告");
+        });
+    };
 
     $scope.show = function() {
         $scope.loading = $ionicLoading.show({
