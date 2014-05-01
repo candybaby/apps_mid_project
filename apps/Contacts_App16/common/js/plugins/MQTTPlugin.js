@@ -17,8 +17,8 @@ function MQTT_SEND_MSG(onSuccess, onError, topic, msg){
  */
 function MQTTPlugin(){}
 
-MQTTPlugin.prototype.CONNECT = function(onSuccess, onFailure, clientID,topic){
-	cordova.exec(onSuccess, onFailure, "MQTTPlugin", "CONNECT", [clientID,topic]);
+MQTTPlugin.prototype.CONNECT = function(onSuccess, onFailure, clientID, topic){
+	cordova.exec(onSuccess, onFailure, "MQTTPlugin", "CONNECT", [clientID, topic]);
 };
 
 MQTTPlugin.prototype.SEND_MSG = function(onSuccess, onFailure, topic, msg){

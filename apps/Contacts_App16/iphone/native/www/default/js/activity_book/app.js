@@ -58,7 +58,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/tab/friends");
 });
 
-app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope) {
+app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager) {
     var host = SettingManager.getHost();
     
     PhoneGap.ready(function() {
@@ -80,7 +80,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     
     if (host.registered) {
         PhoneGap.ready(function() {     
-            $window.plugins.MQTTPlugin.CONNECT(angular.noop, angular.noop, host.phone, host.phone);
+            $window.plugins.MQTTPlugin.CONNECT(angular.noop, angular.noop, host.phone, host.account);
             console.log("MQTTPlugin.CONNECT:" + host.account);
         });
     };
@@ -96,7 +96,8 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             } else if (message['message_type'] == "addFriend") {
                 //addFriendMessage(message);
             } else if (message['message_type'] == "inviteFriend") {
-                console.log("inviteFriend");
+                receiveInvitedFriendMessage(message);
+                //console.log("inviteFriend");
             }
             
             console.log("mqtt onReceiveMqtt:" + res);
@@ -145,6 +146,17 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         // FriendManager.isExistByPhone(inviteFriend.phone, null, function() {
         //     InviteFriendManager.add(inviteFriend);
         // });
+    }
+
+    var receiveInvitedFriendMessage = function(message) {
+        var friend = {};
+        friend.name = message['name'];
+        friend.phone = message['phone'];
+        friend.account = message['account'];
+        friend.isActive = 1;
+        FriendManager.addInvitedFriend(friend);
+        // MessageManager.updateHasRead(message['message_id']);
+        // console.log("readMessage:" + message['message_id']);
     }
     
     var GCMSENDERID = '568888441927';

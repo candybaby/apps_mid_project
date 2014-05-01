@@ -34,7 +34,7 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
     				$scope.host.registered = true;
     				Notification.alert('註冊成功', null, "通知");
     				SettingManager.setHost($scope.host);
-    				$window.plugins.MQTTPlugin.CONNECT(angular.noop, angular.noop, $scope.host.account, $scope.host.account);
+    				$window.plugins.MQTTPlugin.CONNECT(angular.noop, angular.noop, $scope.host.phone, $scope.host.account);
     				$scope.state = $scope.REGISTERED;
     			}, function(res) {
      				$scope.hide();
@@ -65,6 +65,7 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
             $scope.host.name = "";
             $scope.host.phone = "";
             $scope.host.account = "";
+            $scope.host.topic = "";
             $scope.host.registered = false;
             SettingManager.setHost($scope.host);
             $scope.hide();
