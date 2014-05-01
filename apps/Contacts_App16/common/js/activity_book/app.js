@@ -162,7 +162,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         var account = message['account'];
         // update friend isWaitingAccept = 0
         var friend = FriendManager.getByAccount(account);
-        friend.isInvited = 0;
+        friend.isWaitingAccept = 0;
         FriendManager.update(friend);
         // FriendManager.addInvitedFriend(friend);
     }
