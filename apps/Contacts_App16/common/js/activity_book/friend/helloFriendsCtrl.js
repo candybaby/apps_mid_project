@@ -1,4 +1,4 @@
-app.controller('HelloFriendsCtrl', function($scope, $state, SettingManager, Notification) {
+app.controller('HelloFriendsCtrl', function($scope, $state, SettingManager, Notification, FriendManager) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
 	$scope.state = $scope.UNREGISTERED;
@@ -8,6 +8,18 @@ app.controller('HelloFriendsCtrl', function($scope, $state, SettingManager, Noti
 		if ($scope.host.registered) {
 			$scope.state = $scope.REGISTERED;
 		}
+    };
+
+    $scope.getFriendList = function() {
+    	return FriendManager.listFriends();
+    };
+
+    $scope.getIsWaitingFriendList = function() {
+    	return FriendManager.listWaitingFriends();
+    };
+
+    $scope.getIsInvitedFriendList = function() {
+    	return FriendManager.listInvitedFriends();
     };
 
     $scope.newFriendsButton = [{

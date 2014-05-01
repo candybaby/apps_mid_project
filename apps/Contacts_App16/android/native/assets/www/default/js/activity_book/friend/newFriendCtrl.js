@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/activity_book/friend/newFriendCtrl.js in folder common */
-app.controller('NewFriendCtrl', function($scope, $location,$state, Notification, acLabFriend, SettingManager) {
+app.controller('NewFriendCtrl', function($scope, $location,$state, Notification, acLabFriend, SettingManager, FriendManager) {
 	$scope.candidates = {};
 	$scope.search = {};
 
@@ -26,10 +26,11 @@ app.controller('NewFriendCtrl', function($scope, $location,$state, Notification,
 
 	$scope.onAddClick = function(account) {
 		acLabFriend.add($scope.host.account, account, function() {
+			var friend = angular.copy($scope.candidates[account]);
 			delete $scope.candidates[account];
+			FriendManager.addWaitingAcceptFriend(friend);
 			Notification.alert('邀請已送出', null, "提示");
 		}, $scope.addError);
-		Notification.alert(account, null, "提示");
 	};
 	$scope.addError = function() {
 		Notification.alert('邀請失敗', null, "提示");

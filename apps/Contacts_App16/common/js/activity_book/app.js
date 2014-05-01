@@ -86,16 +86,18 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     var onReceiveMqtt = function() {
         $rootScope.$on('mqtt.notification', function(event, res) {
             // mqtt 傳幾則 收幾則 收到格式 json
-            // var message = JSON.parse(res);
-            // if (message['message_type'] == "chat") {
-            //     receiveMessage(message);
-            // } else if (message['message_type'] == "read") {
-            //     readMessage(message);
-            // } else if (message['message_type'] == "addFriend") {
-            //     addFriendMessage(message);
-            // }
+            var message = JSON.parse(res);
+            if (message['message_type'] == "chat") {
+                //receiveMessage(message);
+            } else if (message['message_type'] == "read") {
+                //readMessage(message);
+            } else if (message['message_type'] == "addFriend") {
+                //addFriendMessage(message);
+            } else if (message['message_type'] == "inviteFriend") {
+                console.log("inviteFriend");
+            }
             
-            // console.log("mqtt onReceiveMqtt:" + res);
+            console.log("mqtt onReceiveMqtt:" + res);
         });
     }
 

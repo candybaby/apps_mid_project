@@ -5,56 +5,12 @@ app.factory('DBManager', function($window, PhoneGap) {
     PhoneGap.ready(function() {
         db = $window.sqlitePlugin.openDatabase({name: "ActivityBookDB"});
         db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT UNIQUE, account TEXT UNIQUE, isActive BOOLEAN)", []);
-        });
-        db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS invitefriends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT UNIQUE, account TEXT UNIQUE, isActive BOOLEAN)", []);
+            tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT, account TEXT UNIQUE, isActive BOOLEAN, isWaitingAccept BOOLEAN, isInvited BOOLEAN)", []);
         });
     });
     
     return {
-        addInviteFriend: function (inviteFriend, onSuccess, onError) {
-            PhoneGap.ready(function() {
-                if (inviteFriend.phone == "")
-                    inviteFriend.phone = null;
-                if (inviteFriend.phone != null)
-                    inviteFriend.phone = inviteFriend.phone.replace(/-/g, "").replace(/ /g, "");
-                db.transaction(function(tx) {
-                    tx.executeSql("INSERT INTO invitefriends(name, phone, account, isActive) VALUES (?, ?, ?, ?)",
-                        [inviteFriend.name, inviteFriend.phone, inviteFriend.account, inviteFriend.isActive],
-                        function(tx, res) {
-                            inviteFriend.id = res.insertId;
-                            (onSuccess || angular.noop)();
-                        }, function (e) {
-                            console.log('新增朋友失敗，原因: ' + e.message);
-                            console.log(JSON.stringify(inviteFriend));
-                            (onError || angular.noop)(e);
-                        }
-                    );
-                });
-            });
-        },
-
-        deleteInviteFriend: function (friend, onSuccess, onError) {
-            db.transaction(function(tx) {
-                tx.executeSql("delete from invitefriends where id = ?", [friend.id],
-                    onSuccess,
-                    onError
-                );
-            });
-        },
-
-        getInviteFriends: function (onSuccess, onError) {
-            PhoneGap.ready(function() {
-                db.transaction(function(tx) {
-                    tx.executeSql("SELECT * FROM invitefriends", [],
-                        onSuccess,
-                        onError
-                    );
-                });
-            });
-        },
-
+        // 加入加朋友的 朋友資訊
         addFriend: function (friend, onSuccess, onError) {
         	PhoneGap.ready(function() {
                 if (friend.phone == "")
@@ -62,8 +18,8 @@ app.factory('DBManager', function($window, PhoneGap) {
                 if (friend.phone != null)
                     friend.phone = friend.phone.replace(/-/g, "").replace(/ /g, "");
 	            db.transaction(function(tx) {
-	                tx.executeSql("INSERT INTO friends(name, phone, account, isActive) VALUES (?, ?, ?, ?)",
-	                    [friend.name, friend.phone, friend.account, friend.isActive],
+	                tx.executeSql("INSERT INTO friends(name, phone, account, isActive, isWaitingAccept, isInvited) VALUES (?, ?, ?, ?, ?, ?)",
+	                    [friend.name, friend.phone, friend.account, friend.isActive, friend.isWaitingAccept, friend.isInvited],
 	                    function(tx, res) {
 	                		friend.id = res.insertId;
 	                        (onSuccess || angular.noop)();
@@ -80,8 +36,8 @@ app.factory('DBManager', function($window, PhoneGap) {
         updateFriend: function (friend, onSuccess, onError) {
         	PhoneGap.ready(function() {
                 db.transaction(function (tx) {
-                    tx.executeSql("UPDATE friends SET name = ?, phone = ?, account = ?, isActive = ? where id = ?",
-                        [friend.name, friend.phone, friend.account, friend.isActive, friend.id],
+                    tx.executeSql("UPDATE friends SET name = ?, phone = ?, account = ?, isActive = ?, isWaitingAccept = ?, isInvited = ? where id = ?",
+                        [friend.name, friend.phone, friend.account, friend.isActive, friend.isWaitingAccept, friend.isInvited, friend.id],
                         onSuccess,
                         onError
 	                );
@@ -119,10 +75,90 @@ app.factory('DBManager', function($window, PhoneGap) {
                     );
                 });
             });
+        },
+
+         getFriendByAccount: function (account, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("SELECT * FROM friends where account = ?",
+                        [account],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
         }
 
     };
 });
+
+app.factory('FriendManager', function(DBManager) {
+    var idIndexFriends = {};
+    DBManager.getFriends(function(tx, res) {
+        for (var i = 0, max = res.rows.length; i < max; i++) {
+            idIndexFriends[res.rows.item(i).id] = res.rows.item(i);
+        }
+    });
+    return {
+        addWaitingAcceptFriend: function(friend) {
+            friend.isWaitingAccept = 1;
+            friend.isInvited = 0;
+            DBManager.addFriend(friend, function() {
+                idIndexFriends[friend.id] = friend;
+            });
+        },
+        addInvitedFriend: function(friend) {
+            friend.isWaitingAccept = 0;
+            friend.isInvited = 1;
+            DBManager.addFriend(friend, function() {
+                idIndexFriends[friend.id] = friend;
+            });
+        },
+        remove: function(friend, onSuccess, onError) {
+            DBManager.deleteFriend(friend, function() {
+                delete idIndexFriends[friend.id];
+            }, onError);
+        },
+        getById: function(id, onSuccess, onError) {
+            return idIndexFriends[id];
+        },
+        listWaitingFriends: function() {
+            var waitingFriends = {};
+            for (var id in idIndexFriends) {
+                if (idIndexFriends[id].isWaitingAccept && idIndexFriends[id].isActive)
+                {
+                    waitingFriends[id] = idIndexFriends[id];
+                }
+            }
+            return waitingFriends;
+        },
+        listFriends: function() {
+            var friends = {};
+            for (var id in idIndexFriends) {
+                if (!idIndexFriends[id].isInvited && !idIndexFriends[id].isWaitingAccept && idIndexFriends[id].isActive)
+                {
+                    friends[id] = idIndexFriends[id];
+                }
+            }
+            return friends;
+        },
+        listInvitedFriends: function() {
+            var invitedFriends = {};
+            for (var id in idIndexFriends) {
+                if (idIndexFriends[id].isInvited && idIndexFriends[id].isActive)
+                {
+                    invitedFriends[id] = idIndexFriends[id];
+                }
+            }
+            return invitedFriends;
+        },
+        count: function() {
+            return Object.keys(idIndexFriends).length;
+        }
+    }
+});
+
+
 
 app.factory('SettingManager', function($window) {
     console.log("SettingManager");
