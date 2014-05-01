@@ -64,31 +64,6 @@ app.factory('DBManager', function($window, PhoneGap) {
             	});
             });
         },
-
-        getFriendByPhone: function (phone, onSuccess, onError) {
-            PhoneGap.ready(function() {
-                db.transaction(function(tx) {
-                    tx.executeSql("SELECT * FROM friends where phone = ?",
-                        [phone],
-                        onSuccess,
-                        onError
-                    );
-                });
-            });
-        },
-
-         getFriendByAccount: function (account, onSuccess, onError) {
-            PhoneGap.ready(function() {
-                db.transaction(function(tx) {
-                    tx.executeSql("SELECT * FROM friends where account = ?",
-                        [account],
-                        onSuccess,
-                        onError
-                    );
-                });
-            });
-        }
-
     };
 });
 
@@ -114,10 +89,26 @@ app.factory('FriendManager', function(DBManager) {
                 idIndexFriends[friend.id] = friend;
             });
         },
+        update: function(friend, onSuccess, onError) {
+            DBManager.updateFriend(friend, function() {
+                idIndexFriends[friend.id] = friend;
+                (onSuccess || angular.noop)();
+            }, onError);
+        },
         remove: function(friend, onSuccess, onError) {
             DBManager.deleteFriend(friend, function() {
                 delete idIndexFriends[friend.id];
+                (onSuccess || angular.noop)();
             }, onError);
+        },
+        getByAccount: function(account, onSuccess, onError) {
+            var friend;
+            for (var id in idIndexFriends) {
+                if (idIndexFriends[id].account == account) {
+                    friend = idIndexFriends[id];
+                }
+            }
+            return friend;
         },
         getById: function(id, onSuccess, onError) {
             return idIndexFriends[id];

@@ -97,7 +97,10 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 //addFriendMessage(message);
             } else if (message['message_type'] == "inviteFriend") {
                 receiveInvitedFriendMessage(message);
-                //console.log("inviteFriend");
+            } else if (message['message_type'] == "acceptFriend") {
+                receiveAcceptInvitedFriendMessage(message);
+            } else if (message['message_type'] == "refuseFriend") {
+                receiveRefuseInvitedFriendMessage(message);
             }
             
             console.log("mqtt onReceiveMqtt:" + res);
@@ -155,8 +158,23 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         friend.account = message['account'];
         friend.isActive = 1;
         FriendManager.addInvitedFriend(friend);
-        // MessageManager.updateHasRead(message['message_id']);
-        // console.log("readMessage:" + message['message_id']);
+    }
+
+    var receiveAcceptInvitedFriendMessage = function(message) {
+        var account = message['account'];
+        // update friend isWaitingAccept = 0
+        var friend = FriendManager.getByAccount(account);
+        friend.isInvited = 0;
+        FriendManager.update(friend);
+        // FriendManager.addInvitedFriend(friend);
+    }
+
+    var receiveRefuseInvitedFriendMessage = function(message) {
+        var account = message['account'];
+        // delete friend
+        var friend = FriendManager.getByAccount(account);
+        FriendManager.remove(friend);
+        // FriendManager.remove(friend);
     }
     
     var GCMSENDERID = '568888441927';
