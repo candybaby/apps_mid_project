@@ -100,6 +100,15 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	margin-bottom:45px;
 }
 
+.item span.badge {
+	position: relative;
+	top: -10px;
+	left: 0px;
+}
+
+.testB {
+	background-color: yellow;
+}
 
 /* Stylesheet content from css/Contacts_App16.css in folder iphone */
 
