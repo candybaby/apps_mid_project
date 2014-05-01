@@ -39,6 +39,8 @@
                 <p>isActive : {{friend.isActive}}</p>
                 <p>isWaitingAccept : {{friend.isWaitingAccept}}</p>
                 <p>isInvited : {{friend.isInvited}}</p>
+                <button class="button button-block button-positive" ng-click="onAcceptClick(friend.account)">接受</button>
+                <button class="button button-block button-positive" ng-click="onRefuseClick(friend.account)">拒絕</button>
             </div>
 
 		</div>
