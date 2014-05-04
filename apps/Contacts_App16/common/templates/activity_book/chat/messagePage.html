@@ -1,0 +1,42 @@
+<ion-view title="chatName" left-buttons="backButton" ng-init="init();">
+<!-- 	<header class="bar bar-subheader bar-stable">
+  		<h2 class="title">{{model.name}}</h2>
+	</header> -->
+	<ion-content padding="true" class="chatContent">
+  		<ol class="messages">
+  			<li ng-repeat="message in getMessageList()" ng-class="message.owner" ng-init="onMessageShow(message.id)">
+
+  					<table>
+  						<tr ng-show="message.owner == 'target'">
+  							<td colspan="2">
+  								{{model.name}}：
+  							</td>
+  						</tr>
+  						<tr  ng-show="message.owner == 'target'">
+  							<td>
+  								<span class="msg">{{message.content}}</span>
+  							</td>
+  							<td class="chatTableTd">
+  								<!-- <span class="read" ng-show="message.hasRead">已讀</span>
+  								<span class="read" ng-show="!message.hasRead" ng-click="readMessage(message.mId)">未讀</span> -->
+  								<span class="time">{{message.dateTime | fromNow}}</span>
+  							</td>
+  						</tr>
+  						<tr ng-show="message.owner == 'source'">
+  							<td class="chatTableTd">
+  								<span class="read" ng-show="message.hasRead">已讀</span><br/>
+  								<span class="time">{{message.dateTime | fromNow}}</span>
+  							</td>
+  							<td>
+  								<span class="msg">{{message.content}}</span>
+  							</td>
+  						</tr>
+  					</table>
+
+  			</li>
+		</ol>
+    </ion-content>
+	<ion-footer-bar class="bar-positive" ng-click="onSendMessageClick()">
+  		<h2 class="title">傳送訊息</h2>
+	</ion-footer-bar>
+</ion-view>

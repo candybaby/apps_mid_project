@@ -43,6 +43,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('messagepage', {
+            url: "/messagepage?account",
+            templateUrl: 'templates/activity_book/chat/messagePage.html',
+            controller: 'MessagePageCtrl'      
+        })
         .state('tab.activity', {
             url: '/activity',
             views: {
@@ -56,7 +61,13 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/tab/friends");
 });
 
-app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager) {
+app.filter('fromNow', function() {
+    return function(dateString) {
+        return moment(dateString).fromNow();
+    };
+});
+
+app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager, MessageManager, ChatManager) {
     var host = SettingManager.getHost();
     
     PhoneGap.ready(function() {
@@ -88,11 +99,9 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             // mqtt 傳幾則 收幾則 收到格式 json
             var message = JSON.parse(res);
             if (message['message_type'] == "chat") {
-                //receiveMessage(message);
+                receiveMessage(message);
             } else if (message['message_type'] == "read") {
-                //readMessage(message);
-            } else if (message['message_type'] == "addFriend") {
-                //addFriendMessage(message);
+                readMessage(message);
             } else if (message['message_type'] == "inviteFriend") {
                 receiveInvitedFriendMessage(message);
             } else if (message['message_type'] == "acceptFriend") {
@@ -106,47 +115,50 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     }
 
     var receiveMessage = function(message) {
-        // var msgObj = {};
-        // if (message['send_myself'] == true)
-        // {
-        //     msgObj['owner'] = 'source';
-        //     msgObj['targetPhone'] = message['receiver_phone'];
-        // }
-        // else
-        // {
-        //     msgObj['owner'] = 'target';
-        //     msgObj['targetPhone'] = message['sender_phone'];
-        //     FriendManager.addBadgeCount(message['sender_phone']);
-        //     // if sender_phone 不是好友 做一個inviteFriend
-        //     FriendManager.isExistByPhone(message['sender_phone'], null, function() {
-        //         var inviteFriend = {};
-        //         inviteFriend.phone = message['sender_phone'];
-        //         inviteFriend.name = message['sender_phone'];
-        //         InviteFriendManager.add(inviteFriend);
-        //     });
-        // }
+        var msgObj = {};
+        if (message['send_myself'] == true)
+        {
+            msgObj['owner'] = 'source';
+            msgObj['fromAccount'] = message['receiverAccount'];
+        }
+        else
+        {
+            msgObj['owner'] = 'target';
+            msgObj['fromAccount'] = message['senderAccount'];
+            // if sender_phone 不是好友 做一個inviteFriend
+        }
             
-        // msgObj['content'] = message['message'];
-        // msgObj['dateTime'] = message['date_time'];
-        // msgObj['mId'] = message['m_id'];
-        // msgObj['activityId'] = message['activity_id'];
-        // MessageManager.add(msgObj, function() {
-        //     $rootScope.$broadcast('receiveMessage', message);
-        // });
+        msgObj['content'] = message['message'];
+        msgObj['dateTime'] = message['date_time'];
+        msgObj['mId'] = message['m_id'];
+        msgObj['groupId'] = message['group_id'] ? message['group_id'] : 0;
+        MessageManager.add(msgObj, function(messagesId) {
+            var chat = {};
+            var name = FriendManager.getByAccount(msgObj['fromAccount'])['name'];
+            chat['fromAccount'] = msgObj['fromAccount'];
+            chat['groupId'] = msgObj['groupId'];
+            chat['title'] = name;
+            chat['whoTalk'] = message['send_myself'] ? "我" : name;
+            chat['message'] = msgObj['content'];
+            chat['dateTime'] = msgObj['dateTime'];
+            var isExist = ChatManager.isExist(chat['fromAccount'], chat['groupId']);
+            if (isExist != false) {
+                chat.id = isExist;
+                var badge = ChatManager.getById(chat.id).badge;
+                chat['badge'] = badge + 1;
+                ChatManager.update(chat);
+                console.log("chat update : " + isExist);
+            } else {
+                ChatManager.add(chat);
+                console.log("chat add");
+            }
+            $rootScope.$broadcast('receiveMessage', message);
+        });
     }
 
     var readMessage = function(message) {
-        // MessageManager.updateHasRead(message['message_id']);
+        MessageManager.updateHasRead(message['message_id']);
         // console.log("readMessage:" + message['message_id']);
-    }
-
-    var addFriendMessage = function(message) {
-        // var inviteFriend = {};
-        // inviteFriend.phone = message['sender_phone'];
-        // inviteFriend.name = message['sender_name'];
-        // FriendManager.isExistByPhone(inviteFriend.phone, null, function() {
-        //     InviteFriendManager.add(inviteFriend);
-        // });
     }
 
     var receiveInvitedFriendMessage = function(message) {
@@ -187,4 +199,6 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             host.type = 1;
         SettingManager.setHost(host);
     });
+
+    moment.lang('zh-tw');
 });

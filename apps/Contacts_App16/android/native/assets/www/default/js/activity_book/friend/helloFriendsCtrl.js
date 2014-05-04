@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/activity_book/friend/helloFriendsCtrl.js in folder common */
-app.controller('HelloFriendsCtrl', function($scope, $state, $ionicLoading, SettingManager, Notification, FriendManager, acLabFriend) {
+app.controller('HelloFriendsCtrl', function($scope, $state, $ionicLoading, $location, SettingManager, Notification, FriendManager, acLabFriend) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
 	$scope.state = $scope.UNREGISTERED;
@@ -35,6 +35,10 @@ app.controller('HelloFriendsCtrl', function($scope, $state, $ionicLoading, Setti
         }
 	}];
 
+	$scope.onFriendClick = function(account) {
+		console.log("onFriendClick account:" + account);
+		$location.url('messagepage?account=' + account);
+	};
 
 	$scope.onAcceptClick = function(account) {
         var friend = FriendManager.getByAccount(account);

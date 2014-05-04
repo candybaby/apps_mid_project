@@ -7,6 +7,12 @@ app.factory('DBManager', function($window, PhoneGap) {
         db.transaction(function(tx) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT, account TEXT UNIQUE, isActive BOOLEAN, isWaitingAccept BOOLEAN, isInvited BOOLEAN)", []);
         });
+        db.transaction(function(tx) {
+            tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER, groupId INTEGER)", []);
+        });
+        db.transaction(function(tx) {
+            tx.executeSql("CREATE TABLE IF NOT EXISTS chat(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, groupId INTEGER, title TEXT, whoTalk TEXT, message TEXT, dateTime DATETIME, badge INTEGER)", []);
+        });
     });
     
     return {
@@ -64,7 +70,211 @@ app.factory('DBManager', function($window, PhoneGap) {
             	});
             });
         },
+
+        addMessage: function (message, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("INSERT INTO messages(fromAccount, content, owner, dateTime, hasRead, mId, groupId) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        [message.fromAccount, message.content, message.owner, message.dateTime, 0, message.mId, message.groupId],
+                        function(tx, res) {
+                            message.id = res.insertId;
+                            (onSuccess || angular.noop)();
+                        }, function (e) {
+                            console.log('新增訊息失敗，原因: ' + e.message);
+                            console.log(JSON.stringify(message));
+                            (onError || angular.noop)(e);
+                        }
+                    );
+                });
+            });
+        },
+
+        getMessages: function (onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("SELECT * FROM messages", [],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
+        updateMessageHasRead: function (mId, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("UPDATE messages SET hasRead = ? where mId = ?",
+                        [1, mId],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
+        getMessageId: function (mId, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("SELECT * FROM messages where mId = ?",
+                        [mId],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
+        addChat: function (chat, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("INSERT INTO chat(fromAccount, groupId, title, whoTalk, message, dateTime, badge) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        [chat.fromAccount, chat.groupId, chat.title, chat.whoTalk, chat.message, chat.dateTime, 1],
+                        function(tx, res) {
+                            chat.id = res.insertId;
+                            (onSuccess || angular.noop)();
+                        }, function (e) {
+                            console.log('新增訊息失敗，原因: ' + e.message);
+                            console.log(JSON.stringify(message));
+                            (onError || angular.noop)(e);
+                        }
+                    );
+                });
+            });
+        },
+
+        getChats: function (onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("SELECT * FROM chat", [],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
+        updateChat: function (chat, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("UPDATE chat SET whoTalk = ?, message = ?, dateTime = ? where id = ?",
+                        [chat.whoTalk, chat.message, chat.dateTime, chat.id],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
+        updateChatBadge: function (badge, chatId, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                console.log("badge db : " + badge);
+                db.transaction(function(tx) {
+                    tx.executeSql("UPDATE chat SET badge = ? where id = ?",
+                        [badge, chatId],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
     };
+});
+
+app.factory('ChatManager', function(DBManager) {
+    var idIndexChats = {};
+    DBManager.getChats(function(tx, res) {
+        for (var i = 0, max = res.rows.length; i < max; i++) {
+            idIndexChats[res.rows.item(i).id] = res.rows.item(i);
+            for (var attrName in res.rows.item(i)) {
+                console.log("ChatManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            }
+        }
+    });
+    return {
+        add: function(chat, onSuccess) {
+            DBManager.addChat(chat, function() {
+                idIndexChats[chat.id] = chat;
+                (onSuccess || angular.noop)(chat.id);
+            });
+        },
+        list: function() {
+            return idIndexChats;
+        },
+        getById: function(id) {
+            return idIndexChats[id];
+        },
+        isExist: function(account, groupId) {
+            if (groupId != 0) {
+                for (var id in idIndexChats) {
+                    if (idIndexChats[id].groupId == groupId) {
+                        return id;
+                    }
+                }
+                return false;
+            } else {
+                for (var id in idIndexChats) {
+                    if (idIndexChats[id].fromAccount == account) {
+                        return id;
+                    }
+                }
+                return false;
+            }
+        },
+        update: function(chat, onSuccess) {
+            DBManager.updateChat(chat, function() {
+                idIndexChats[chat.id] = chat;
+                (onSuccess || angular.noop)();
+            });
+        },
+        resetBadge: function(id) {
+            DBManager.updateChatBadge(0, id, function() {
+                idIndexChats[id].badge = 0;
+            });
+        }
+    }
+});
+
+app.factory('MessageManager', function(DBManager) {
+    var idIndexMessages = {};
+    DBManager.getMessages(function(tx, res) {
+        for (var i = 0, max = res.rows.length; i < max; i++) {
+            idIndexMessages[res.rows.item(i).id] = res.rows.item(i);
+        }
+    });
+    return {
+        add: function(message, onSuccess) {
+            DBManager.addMessage(message, function() {
+                idIndexMessages[message.id] = message;
+                (onSuccess || angular.noop)(message.id);
+            });
+        },
+        getByAccount: function(account) {
+            var messagesByAccount = [];
+            for (var id in idIndexMessages) {
+                if (idIndexMessages[id].fromAccount == account) {
+                    // var time = idIndexMessages[id].dateTime.split(" ");
+                    // idIndexMessages[id].time = time[1];
+                    // time format
+                    messagesByAccount.push(idIndexMessages[id]);
+                }
+            }
+            return messagesByAccount;
+        },
+        list: function() {
+            return idIndexMessages;
+        },
+        getById: function(id) {
+            return idIndexMessages[id];
+        },
+        updateHasRead: function(mId) {
+            DBManager.updateMessageHasRead(mId, function() {
+                DBManager.getMessageId(mId, function(tx, res) {
+                    var hasReadId = res.rows.item(0).id;
+                    idIndexMessages[hasReadId].hasRead = 1;
+                });
+            });
+        }
+    }
 });
 
 app.factory('FriendManager', function(DBManager) {

@@ -96,16 +96,16 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
     };
 })
 .factory('acLabMessage', function ($http, $window, PhoneGap, $rootScope) {
-    var acLabServiceUrl = 'http://140.124.181.70/web/api/message/';
+    var acLabServiceUrl = 'http://140.124.181.70/web/service/message/';
     var acLabServiceFormat = '/format/json';
     
     return {
-        sendMessage: function(senderPhone, receiverPhone, message, activityId) {
+        sendMessage: function(senderAccount, receiverAccount, message, groupId) {
             var messageData = {
-                sender_phone: senderPhone,
-                receiver_phone: receiverPhone,
+                sender_account: senderAccount,
+                receiver_account: receiverAccount,
                 message: message,
-                activity_id: activityId
+                group_id: groupId
             };
             
             var send = $http({

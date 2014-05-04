@@ -55,18 +55,15 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 }
 
 .messages span.read {
-	position: relative;
-	top: 0px;
-	left: 20px;
+
+	float:right;
 	background: transparent;
 	font-size:.675rem;
 	display: block;
 }
 
 .messages span.time {
-	position: relative;
-	top: 0px;
-	left: 0px;
+	float:right;
 	background: transparent;
 	font-size:.675rem;
 	display: block;

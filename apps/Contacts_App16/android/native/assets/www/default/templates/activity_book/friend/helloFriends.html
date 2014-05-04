@@ -8,7 +8,7 @@
             <div class="item item-divider">
             朋友
             </div>
-            <div ng-repeat="friend in getFriendList()" class="item">
+            <div ng-repeat="friend in getFriendList()" class="item" ng-click="onFriendClick(friend.account)">
                 <h2>{{friend.name}}</h2>
                 <p>{{friend.phone}}</p>
                 <p>{{friend.account}}</p>
