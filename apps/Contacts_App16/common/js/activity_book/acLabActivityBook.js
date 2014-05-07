@@ -98,12 +98,12 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
     var acLabServiceFormat = '/format/json';
     
     return {
-        sendMessage: function(senderAccount, receiverAccount, message, groupId) {
+        sendMessage: function(senderAccount, receiverAccount, message, activityId) {
             var messageData = {
                 sender_account: senderAccount,
                 receiver_account: receiverAccount,
                 message: message,
-                group_id: groupId
+                activity_id: activityId
             };
             
             var send = $http({
@@ -231,6 +231,25 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
                 (onSuccess || angular.noop)(response);
             });
             remove.error(function (response, status, headers, config){
+                (onError || angular.noop)(response);
+            });
+        },
+
+        resetBadge: function(account, onSuccess, onError) {
+            var data = {
+                account: account
+            };
+
+            var reset = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'resetBadge' + acLabServiceFormat,
+                data: data
+            });
+
+            reset.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+            reset.error(function (response, status, headers, config){
                 (onError || angular.noop)(response);
             });
         }

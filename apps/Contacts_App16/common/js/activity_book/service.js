@@ -6,10 +6,10 @@ app.factory('DBManager', function($window, PhoneGap) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT, account TEXT UNIQUE, isActive BOOLEAN, isWaitingAccept BOOLEAN, isInvited BOOLEAN)", []);
         });
         db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER, groupId INTEGER)", []);
+            tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER, activityId INTEGER)", []);
         });
         db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS chat(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, groupId INTEGER, title TEXT, whoTalk TEXT, message TEXT, dateTime DATETIME, badge INTEGER)", []);
+            tx.executeSql("CREATE TABLE IF NOT EXISTS chat(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, activityId INTEGER, title TEXT, whoTalk TEXT, message TEXT, dateTime DATETIME, badge INTEGER)", []);
         });
     });
     
@@ -72,8 +72,8 @@ app.factory('DBManager', function($window, PhoneGap) {
         addMessage: function (message, onSuccess, onError) {
             PhoneGap.ready(function() {
                 db.transaction(function(tx) {
-                    tx.executeSql("INSERT INTO messages(fromAccount, content, owner, dateTime, hasRead, mId, groupId) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                        [message.fromAccount, message.content, message.owner, message.dateTime, 0, message.mId, message.groupId],
+                    tx.executeSql("INSERT INTO messages(fromAccount, content, owner, dateTime, hasRead, mId, activityId) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        [message.fromAccount, message.content, message.owner, message.dateTime, 0, message.mId, message.activityId],
                         function(tx, res) {
                             message.id = res.insertId;
                             (onSuccess || angular.noop)();
@@ -125,8 +125,8 @@ app.factory('DBManager', function($window, PhoneGap) {
         addChat: function (chat, onSuccess, onError) {
             PhoneGap.ready(function() {
                 db.transaction(function(tx) {
-                    tx.executeSql("INSERT INTO chat(fromAccount, groupId, title, whoTalk, message, dateTime, badge) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                        [chat.fromAccount, chat.groupId, chat.title, chat.whoTalk, chat.message, chat.dateTime, 1],
+                    tx.executeSql("INSERT INTO chat(fromAccount, activityId, title, whoTalk, message, dateTime, badge) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        [chat.fromAccount, chat.activityId, chat.title, chat.whoTalk, chat.message, chat.dateTime, 1],
                         function(tx, res) {
                             chat.id = res.insertId;
                             (onSuccess || angular.noop)();
@@ -183,9 +183,9 @@ app.factory('ChatManager', function(DBManager) {
     DBManager.getChats(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexChats[res.rows.item(i).id] = res.rows.item(i);
-            for (var attrName in res.rows.item(i)) {
-                console.log("ChatManager - "+attrName+" : "+res.rows.item(i)[attrName]);
-            }
+            // for (var attrName in res.rows.item(i)) {
+            //     console.log("ChatManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            // }
         }
     });
     return {
@@ -201,10 +201,10 @@ app.factory('ChatManager', function(DBManager) {
         getById: function(id) {
             return idIndexChats[id];
         },
-        isExist: function(account, groupId) {
-            if (groupId != 0) {
+        isExist: function(account, activityId) {
+            if (activityId != 0) {
                 for (var id in idIndexChats) {
-                    if (idIndexChats[id].groupId == groupId) {
+                    if (idIndexChats[id].activityId == activityId) {
                         return id;
                     }
                 }

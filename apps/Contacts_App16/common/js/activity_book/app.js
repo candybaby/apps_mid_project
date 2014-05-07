@@ -67,14 +67,19 @@ app.filter('fromNow', function() {
     };
 });
 
-app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager, MessageManager, ChatManager) {
+app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager, MessageManager, ChatManager, acLabMember) {
     var host = SettingManager.getHost();
     
     PhoneGap.ready(function() {
         if(host.phone) {
             $window.document.addEventListener("pause", function() {
                 console.log("**** pause time ****");
-                //iLabMessage.resetCounter(host.phone);
+                acLabMember.resetBadge(host.account);
+            }, false);
+            $window.document.addEventListener("backbutton", function() {
+                console.log("**** backbutton time ****");
+                // 不是很好 應該在離開app的時候 清空 但抓不到event
+                acLabMember.resetBadge(host.account);
             }, false);
         }
         onReceiveMqtt();
@@ -131,17 +136,17 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         msgObj['content'] = message['message'];
         msgObj['dateTime'] = message['date_time'];
         msgObj['mId'] = message['m_id'];
-        msgObj['groupId'] = message['group_id'] ? message['group_id'] : 0;
+        msgObj['activityId'] = message['activity_id'] ? message['activity_id'] : 0;
         MessageManager.add(msgObj, function(messagesId) {
             var chat = {};
             var name = FriendManager.getByAccount(msgObj['fromAccount'])['name'];
             chat['fromAccount'] = msgObj['fromAccount'];
-            chat['groupId'] = msgObj['groupId'];
+            chat['activityId'] = msgObj['activityId'];
             chat['title'] = name;
             chat['whoTalk'] = message['send_myself'] ? "我" : name;
             chat['message'] = msgObj['content'];
             chat['dateTime'] = msgObj['dateTime'];
-            var isExist = ChatManager.isExist(chat['fromAccount'], chat['groupId']);
+            var isExist = ChatManager.isExist(chat['fromAccount'], chat['activityId']);
             if (isExist != false) {
                 chat.id = isExist;
                 var badge = ChatManager.getById(chat.id).badge;

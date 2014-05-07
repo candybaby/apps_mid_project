@@ -2,14 +2,16 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
 	$scope.model = {};
 	$scope.account = $stateParams["account"];
 	$scope.model = angular.copy(FriendManager.getByAccount($scope.account));
-	$scope.groupId = 0;
-	$scope.chatName = ($scope.groupId)? "groupName112233445566778899001122663344" : $scope.model.name;
+	$scope.activityId = 0;
+	$scope.chatName = ($scope.activityId)? "groupName112233445566778899001122663344" : $scope.model.name;
 	$scope.$on('receivedMessage', function(res, message) {
+		var cId = ChatManager.isExist($scope.account, $scope.activityId);
+		ChatManager.resetBadge(cId);
 		$scope.$apply();
 	});
 
 	$scope.init = function() {
-		var cId = ChatManager.isExist($scope.account, $scope.groupId);
+		var cId = ChatManager.isExist($scope.account, $scope.activityId);
 		ChatManager.resetBadge(cId);
 		//FriendManager.clearBadgeCount($scope.model.phone);
 	};
@@ -32,8 +34,7 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $ionicScrollDel
     	if (!message.hasRead && message.owner == "target") {
     	 	acLabMessage.readMessage(message.mId);
     	}
-    	var cId = ChatManager.isExist($scope.account, $scope.groupId);
-		ChatManager.resetBadge(cId);
+
     	$ionicScrollDelegate.scrollBottom(true);
     };
 
