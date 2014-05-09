@@ -3,7 +3,7 @@
         <div class="item"  ng-show="state == UNREGISTERED">
             <button ng-click="onRegisterClick()" class="button button-block button-positive">註冊</button>
         </div>
-		<div class="item" ng-show="state == REGISTERED">
+		<div ng-show="state == REGISTERED">
             <div class="list">
                 <div ng-repeat="chat in getChatList()" class="item item-avatar" ng-click="onFriendChatClick(chat.fromAccount)">
                     <img src="images/people_1.png"></img>

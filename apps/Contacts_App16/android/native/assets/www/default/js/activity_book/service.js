@@ -184,9 +184,9 @@ app.factory('ChatManager', function(DBManager) {
     DBManager.getChats(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexChats[res.rows.item(i).id] = res.rows.item(i);
-            for (var attrName in res.rows.item(i)) {
-                console.log("ChatManager - "+attrName+" : "+res.rows.item(i)[attrName]);
-            }
+            // for (var attrName in res.rows.item(i)) {
+            //     console.log("ChatManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            // }
         }
     });
     return {

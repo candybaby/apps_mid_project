@@ -174,7 +174,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             if (isExist != false) {
                 chat.id = isExist;
                 var badge = ChatManager.getById(chat.id).badge;
-                chat['badge'] = badge + 1;
+                chat['badge'] = message['send_myself'] ? badge : badge + 1;
                 ChatManager.update(chat);
                 console.log("chat update : " + isExist);
             } else {
