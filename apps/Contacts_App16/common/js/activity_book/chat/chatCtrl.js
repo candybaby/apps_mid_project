@@ -18,10 +18,6 @@ app.controller('ChatCtrl', function($scope, $state, $location, SettingManager, C
     	return ChatManager.list();
     };
 
-    $scope.onTestClick = function() {
-    	ChatManager.addBadge(1);
-    };
-
     $scope.onFriendChatClick = function(account) {
     	//alert("onFriendChatClick" + account);
     	$location.url('messagepage?account=' + account);//friend id

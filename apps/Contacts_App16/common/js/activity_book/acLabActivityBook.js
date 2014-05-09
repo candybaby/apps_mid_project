@@ -1,20 +1,29 @@
 angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', function ($http, $window, PhoneGap, $rootScope) {
-	var acLabServiceUrl = 'http://140.124.181.70/web/api/activity/';
+	var acLabServiceUrl = 'http://140.124.181.70/web/service/activity/';
     var acLabServiceFormat = '/format/json';
 	
 	return {
-        createActivity: function(activity) {
-            var check = $http({
+        add: function(activity) {
+            var messageData = {
+                name: activity.name,
+                describe: activity.describe,
+                startTime: activity.startTime,
+                endTime: activity.endTime,
+                place: activity.place,
+                owner: activity.owner,
+                latlng: activity.latlng
+            };
+            var add = $http({
                 method: 'POST',
-                url: acLabServiceUrl + 'newActivity' + acLabServiceFormat,
+                url: acLabServiceUrl + 'add' + acLabServiceFormat,
                 data: activity
             });
             
-            check.success(function(response, status, headers, config){
+            add.success(function(response, status, headers, config){
                 console.log("createActivity success");
             });
             
-            check.error(function(response, status, headers, config) {
+            add.error(function(response, status, headers, config) {
                 console.log("createActivity error，原因:"+response);
             });
         },
@@ -260,10 +269,11 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
     var acLabServiceFormat = '/format/json';
     
     return {
-        search: function(text, onSuccess, onError) {
+        search: function(text, account, onSuccess, onError) {
             console.log("search" + text);
             var data = {
-                text: text
+                text: text,
+                account: account
             };
 
             var search = $http({

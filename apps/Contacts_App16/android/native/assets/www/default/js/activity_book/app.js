@@ -59,6 +59,15 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('tab.newactivity', {
+            url: '/newactivity',
+            views: {
+                'tab-activity': {
+                    templateUrl: 'templates/activity_book/activity/newActivity.html',
+                    controller: 'NewActivityCtrl'
+                }
+            }
+        })
         ;
     $urlRouterProvider.otherwise("/tab/friends");
 });

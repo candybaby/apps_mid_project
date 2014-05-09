@@ -2,7 +2,7 @@
 	<ion-content has-header="true" has-footer="true" padding="true">
   		<div class="item item-input-inset">
     		<label class="item-input-wrapper">
-      			<input type="text" placeholder="姓名、手機、信箱" ng-model="search.text">
+      			<input type="text" placeholder="姓名、手機、信箱" ng-model="search.text" ng-focus="clearText()">
     		</label>
     		<button class="button button-small" ng-click="onSearchClick()">搜尋</button>
   		</div>

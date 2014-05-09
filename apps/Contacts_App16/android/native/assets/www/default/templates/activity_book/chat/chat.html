@@ -3,14 +3,18 @@
         <div class="item"  ng-show="state == UNREGISTERED">
             <button ng-click="onRegisterClick()" class="button button-block button-positive">註冊</button>
         </div>
-		<div class="item item-icon-left" ng-show="state == REGISTERED">
-            <div ng-repeat="chat in getChatList()" class="item" ng-click="onFriendChatClick(chat.fromAccount)">
-                <h2>{{chat.title}}</h2>
-                <p>{{chat.whoTalk}} : {{chat.message}}</p>
-                <p>time : {{chat.dateTime}}</p>
-                <p>badge : {{chat.badge}}</p>
+		<div class="item" ng-show="state == REGISTERED">
+            <div class="list">
+                <div ng-repeat="chat in getChatList()" class="item item-avatar" ng-click="onFriendChatClick(chat.fromAccount)">
+                    <img src="images/people_1.png"></img>
+                    <h2>{{chat.title}}</h2>
+                    <span class="time">{{chat.dateTime | fromNow}}</span>
+                    <span class="badge badge-assertive">{{chat.badge}}</span>
+                    <span class="message">{{chat.whoTalk}} : {{chat.message}}</span>
+                    
+                    
+                </div>
             </div>
         <div>
-        	<button ng-click="onTestClick()" class="button button-block button-positive">TEST</button>
     </ion-content>
 </ion-view>

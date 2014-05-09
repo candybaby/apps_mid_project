@@ -10,13 +10,20 @@ app.controller('NewFriendCtrl', function($scope, $location,$state, Notification,
 		} 
     };
 
+    $scope.clearText = function() {
+    	$scope.search.text = "";
+    };
+
 	$scope.onSearchClick = function() {
 		$scope.candidates = {};
-		acLabFriend.search($scope.search.text, $scope.searchSuccess, $scope.searchError);
+		acLabFriend.search($scope.search.text, $scope.host.account, $scope.searchSuccess, $scope.searchError);
 	};
 	$scope.searchSuccess = function(res) {
 		console.log("search:" + res);
 		$scope.candidates = res;
+		if(Object.keys($scope.candidates).length == 0) {
+			Notification.alert('無結果，請輸入其他尋條件！', null, "提示");
+		}
 	};
 	$scope.searchError = function() {
 		Notification.alert('搜尋失敗', null, "提示");

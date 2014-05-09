@@ -8,31 +8,45 @@
             <div class="item item-divider">
             朋友
             </div>
-            <div ng-repeat="friend in getFriendList()" class="item" ng-click="onFriendClick(friend.account)">
+            <!-- <div ng-repeat="friend in getFriendList()" class="item" ng-click="onFriendClick(friend.account)">
                 <h2>{{friend.name}}</h2>
                 <p>{{friend.phone}}</p>
                 <p>{{friend.account}}</p>
                 <p>isActive : {{friend.isActive}}</p>
                 <p>isWaitingAccept : {{friend.isWaitingAccept}}</p>
                 <p>isInvited : {{friend.isInvited}}</p>
+            </div> -->
+            <div class="list">
+                <div ng-repeat="friend in getFriendList()" class="item item-avatar" ng-click="onFriendClick(friend.account)">
+                    <img src="images/people_1.png"></img>
+                    <h2>{{friend.name}}</h2>
+                    <h3>{{friend.account}}</h3>
+                </div>
             </div>
 
             <div class="item item-divider">
             等待朋友接受
             </div>
-            <div ng-repeat="friend in getIsWaitingFriendList()" class="item">
+            <!-- <div ng-repeat="friend in getIsWaitingFriendList()" class="item">
                 <h2>{{friend.name}}</h2>
                 <p>{{friend.phone}}</p>
                 <p>{{friend.account}}</p>
                 <p>isActive : {{friend.isActive}}</p>
                 <p>isWaitingAccept : {{friend.isWaitingAccept}}</p>
                 <p>isInvited : {{friend.isInvited}}</p>
+            </div> -->
+            <div class="list">
+                <div ng-repeat="friend in getIsWaitingFriendList()" class="item item-avatar">
+                    <img src="images/people_1.png"></img>
+                    <h2>{{friend.name}}</h2>
+                    <h3>{{friend.account}}</h3>
+                </div>
             </div>
 
             <div class="item item-divider">
             交友邀請
             </div>
-            <div ng-repeat="friend in getIsInvitedFriendList()" class="item">
+            <!-- <div ng-repeat="friend in getIsInvitedFriendList()" class="item">
                 <h2>{{friend.name}}</h2>
                 <p>{{friend.phone}}</p>
                 <p>{{friend.account}}</p>
@@ -41,6 +55,15 @@
                 <p>isInvited : {{friend.isInvited}}</p>
                 <button class="button button-block button-positive" ng-click="onAcceptClick(friend.account)">接受</button>
                 <button class="button button-block button-positive" ng-click="onRefuseClick(friend.account)">拒絕</button>
+            </div> -->
+            <div class="list">
+                <div ng-repeat="friend in getIsInvitedFriendList()" class="item item-avatar">
+                    <img src="images/people_1.png"></img>
+                    <h2>{{friend.name}}</h2>
+                    <span class="badge badge-assertive" ng-click="onRefuseClick(friend.account)">拒絕</span>
+                    <span class="badge badge-balanced" ng-click="onAcceptClick(friend.account)">接受</span>
+                    <h3>{{friend.account}}</h3>
+                </div>
             </div>
 
 		</div>

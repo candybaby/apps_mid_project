@@ -1,0 +1,29 @@
+<ion-view title="'開啓活動'" ng-init="init();">
+	<ion-content has-header="true" padding="true">
+		<div class="card">
+			<form name="editForm" class="item item-text-wrap">
+				<label class="item item-input item-stacked-label">
+			    	<span class="input-label">名稱: </span>
+			    	<input type="text" ng-model="activity.name">
+				</label>
+				<label class="item item-input item-stacked-label">
+			    	<span class="input-label">地點: </span>
+			    	<input type="text" ng-model="activity.place">
+				</label>
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">開始時間: </span>
+			    	<input type="datetime-local" placeholder="yyyy-MM-dd HH:mm" ng-model="activity.startTime">
+				</label>
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">結束時間: </span>
+			    	<input type="datetime-local" placeholder="yyyy-MM-dd HH:mm" ng-model="activity.endTime">
+				</label>
+				<label class="item item-input item-stacked-label">
+			    	<span class="input-label">描述: </span>
+			    	<input type="text" ng-model="activity.describe">
+				</label>
+				<button ng-click="onCreateClick()" class="button button-block button-positive">新增</button>
+			</form>
+		</div>
+	</ion-content>
+</ion-view>

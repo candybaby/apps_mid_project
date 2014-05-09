@@ -104,3 +104,36 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 .testB {
 	background-color: yellow;
 }
+
+.item .time {
+	z-index: 1;
+	display: flex;
+	position: absolute;
+	top: 12px;
+	right: 10px;
+	font-size: 13px;
+}
+
+.item .message {
+	color: #aaa;
+	font-size: 13px;
+}
+
+.item-mystyle {
+	padding-left:70px;
+	min-height:70px
+}
+
+.item-mystyle .item-img,.item-mystyle img:first-child
+{
+	position:absolute;
+	top:15px;
+	left:15px;
+	max-width:40px;
+	max-height:40px;
+	width:100%;
+	border-radius:4px
+}
+
+.badgegg{position:absolute;padding:2px 6px;top:2%;right:10%;font-size:12px;height:auto;line-height:16px}
+.badgegg{float:right}

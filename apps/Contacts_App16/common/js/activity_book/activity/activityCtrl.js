@@ -13,4 +13,15 @@ app.controller('ActivityCtrl', function($scope, $state, SettingManager) {
     $scope.onRegisterClick = function() {
     	$state.go('tab.setting');
     };
+
+    $scope.newActivityButton = [{
+		type: 'button-icon button-clear ion-plus',
+		tap: function() {
+			if ($scope.state == $scope.REGISTERED) {
+				$state.go('tab.newactivity');
+			} else {
+				Notification.alert('請先註冊', null, "提示");
+			}
+        }
+	}];
 });
