@@ -104,6 +104,9 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 }
 
 .testB {
+	position: absolute;
+	top: 12px;
+	right: 10px;
 	background-color: yellow;
 }
 
@@ -111,13 +114,34 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	z-index: 1;
 	display: flex;
 	position: absolute;
-	top: 12px;
+	top: 14px;
 	right: 10px;
 	font-size: 13px;
 }
 
 .item .message {
 	color: #aaa;
+	font-size: 13px;
+}
+
+.item .badge.my-badge {
+	top: -5px;
+}
+
+#map-canvas {
+   	height: 400px;
+}
+
+.labels {
+   color: red;
+   background-color: white;
+   font-family: "Lucida Grande", "Arial", sans-serif;
+   font-size: 10px;
+   font-weight: bold;
+   text-align: center;
+   width: 60px;     
+   border: 2px solid black;
+   white-space: nowrap;
 }
 
 .item-mystyle {
@@ -136,8 +160,6 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	border-radius:4px
 }
 
-.badgegg{position:absolute;padding:2px 6px;top:2%;right:10%;font-size:12px;height:auto;line-height:16px}
-.badgegg{float:right}
 
 /* Stylesheet content from css/Contacts_App16.css in folder android */
 

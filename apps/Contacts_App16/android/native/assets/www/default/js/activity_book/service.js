@@ -156,8 +156,8 @@ app.factory('DBManager', function($window, PhoneGap) {
         updateChat: function (chat, onSuccess, onError) {
             PhoneGap.ready(function() {
                 db.transaction(function(tx) {
-                    tx.executeSql("UPDATE chat SET whoTalk = ?, message = ?, dateTime = ? where id = ?",
-                        [chat.whoTalk, chat.message, chat.dateTime, chat.id],
+                    tx.executeSql("UPDATE chat SET whoTalk = ?, message = ?, dateTime = ?,badge = ? where id = ?",
+                        [chat.whoTalk, chat.message, chat.dateTime, chat.badge, chat.id],
                         onSuccess,
                         onError
                     );
@@ -167,7 +167,6 @@ app.factory('DBManager', function($window, PhoneGap) {
 
         updateChatBadge: function (badge, chatId, onSuccess, onError) {
             PhoneGap.ready(function() {
-                console.log("badge db : " + badge);
                 db.transaction(function(tx) {
                     tx.executeSql("UPDATE chat SET badge = ? where id = ?",
                         [badge, chatId],
@@ -185,9 +184,9 @@ app.factory('ChatManager', function(DBManager) {
     DBManager.getChats(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexChats[res.rows.item(i).id] = res.rows.item(i);
-            // for (var attrName in res.rows.item(i)) {
-            //     console.log("ChatManager - "+attrName+" : "+res.rows.item(i)[attrName]);
-            // }
+            for (var attrName in res.rows.item(i)) {
+                console.log("ChatManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            }
         }
     });
     return {
@@ -227,6 +226,7 @@ app.factory('ChatManager', function(DBManager) {
             });
         },
         resetBadge: function(id) {
+            console.log("resetBadge id:" + id);
             DBManager.updateChatBadge(0, id, function() {
                 idIndexChats[id].badge = 0;
             });

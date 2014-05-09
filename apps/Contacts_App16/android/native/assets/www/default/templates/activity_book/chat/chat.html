@@ -9,10 +9,8 @@
                     <img src="images/people_1.png"></img>
                     <h2>{{chat.title}}</h2>
                     <span class="time">{{chat.dateTime | fromNow}}</span>
-                    <span class="badge badge-assertive">{{chat.badge}}</span>
                     <span class="message">{{chat.whoTalk}} : {{chat.message}}</span>
-                    
-                    
+                    <span class="badge badge-assertive my-badge" ng-show="chat.badge != 0">{{chat.badge | badgeCount}}</span>
                 </div>
             </div>
         <div>

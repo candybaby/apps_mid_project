@@ -17,6 +17,9 @@
 	<uses-permission android:name="android.permission.CALL_PHONE"/>
 	<uses-permission android:name="android.permission.SEND_SMS"/>
 	<uses-permission android:name="android.permission.VIBRATE"/>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <application android:label="@string/app_name" android:debuggable="true" android:icon="@drawable/icon"> 
         <activity android:name=".Contacts_App16" android:label="@string/app_name" android:configChanges="orientation|keyboardHidden|screenSize" android:launchMode="singleTask"> 
             <intent-filter> 

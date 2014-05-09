@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/activity_book/chat/chatCtrl.js in folder common */
-app.controller('ChatCtrl', function($scope, $state, $location, SettingManager, ChatManager) {
+app.controller('ChatCtrl', function($scope, $state, $location, $timeout, SettingManager, ChatManager) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
 
@@ -9,7 +9,12 @@ app.controller('ChatCtrl', function($scope, $state, $location, SettingManager, C
 		$scope.host = SettingManager.getHost();
 		if ($scope.host.registered) {
 			$scope.state = $scope.REGISTERED;
+            $scope.refreshTime();
 		}
+    };
+
+    $scope.refreshTime = function() {
+        $timeout($scope.refreshTime, 30000, true);
     };
 
     $scope.onRegisterClick = function() {

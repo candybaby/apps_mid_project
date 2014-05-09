@@ -66,6 +66,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('map', {
+            url: '/map?latitude&longitude&friendName&isMe',
+            templateUrl: 'templates/activity_book/activity/map.html',
+            controller: 'MapCtrl'
+        })
         ;
     $urlRouterProvider.otherwise("/tab/friends");
 });
@@ -73,6 +78,15 @@ app.config(function($stateProvider, $urlRouterProvider) {
 app.filter('fromNow', function() {
     return function(dateString) {
         return moment(dateString).fromNow();
+    };
+});
+
+app.filter('badgeCount', function() {
+    return function(badgeNumber) {
+        if (badgeNumber > 10) {
+            return "10+";
+        }
+        return badgeNumber;
     };
 });
 
@@ -86,9 +100,10 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 acLabMember.resetBadge(host.account);
             }, false);
             $window.document.addEventListener("backbutton", function() {
-                console.log("**** backbutton time ****");
                 // 不是很好 應該在離開app的時候 清空 但抓不到event
                 acLabMember.resetBadge(host.account);
+                console.log("**** backbutton time ****");
+                
             }, false);
         }
         onReceiveMqtt();
