@@ -159,8 +159,7 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	min-height:70px
 }
 
-.item-mystyle .item-img,.item-mystyle img:first-child
-{
+.item-mystyle .item-img,.item-mystyle img:first-child {
 	position:absolute;
 	top:15px;
 	left:15px;
@@ -168,6 +167,14 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	max-height:40px;
 	width:100%;
 	border-radius:4px
+}
+
+.my-modal {
+	top: 10%; width: 80%; left: 10%;
+	bottom: 20%;
+	min-height: 0px;
+	overflow: visible;
+	z-index: 10;
 }
 
 

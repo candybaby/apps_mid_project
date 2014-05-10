@@ -157,8 +157,7 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	min-height:70px
 }
 
-.item-mystyle .item-img,.item-mystyle img:first-child
-{
+.item-mystyle .item-img,.item-mystyle img:first-child {
 	position:absolute;
 	top:15px;
 	left:15px;

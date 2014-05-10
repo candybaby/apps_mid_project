@@ -36,10 +36,33 @@
   			</li>
 		</ol>
     </ion-content>
+    </ion-view>
+    <script id="imgList.html" type="text/ng-template">
+        <div class="modal my-modal" ng-controller="ImgListCtrl">
+            <header class="bar bar-header bar-positive">
+                <h1 class="title">Modal</h1>
+                <button class="button button-clear button-primary" ng-click="onCloseClick()">Close</button>
+            </header>
+            <ion-content has-header="true">
+                <form name="editForm" class="item item-text-wrap">
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">姓名: </span>
+            <input type="text" ng-model="model.name">
+        </label>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">電話: </span>
+            <input type="tel" ng-model="model.phone">
+        </label>
+      </form>
+            </ion-content>
+        </div>
+    </script>
 	<ion-footer-bar class="bar-positive tabs-secondary tabs-icon-left">
       <button class="button button-clear icon-left ion-ios7-location" ng-click="onSendLocationClick()">傳送我的位置</button>
+      <button class="button button-clear icon-left ion-ios7-compose" ng-click="showModal()">OK</button>
       <button class="button button-clear icon-left ion-ios7-compose" ng-click="onSendMessageClick()">傳送訊息</button>
   		<!-- <h2 class="title">傳送訊息</h2> -->
 
 	</ion-footer-bar>
-</ion-view>
+
+

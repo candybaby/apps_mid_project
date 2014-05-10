@@ -71,6 +71,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/activity_book/activity/map.html',
             controller: 'MapCtrl'
         })
+        
         ;
     $urlRouterProvider.otherwise("/tab/friends");
 });

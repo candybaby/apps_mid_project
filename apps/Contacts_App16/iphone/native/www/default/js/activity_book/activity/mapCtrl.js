@@ -80,10 +80,7 @@ app.controller('MapCtrl', function($scope, $stateParams, Geolocation, $window){
 		}
 	};
 
-	$scope.backButton = [{
-		type: 'button-icon button-clear ion-ios7-arrow-back',
-		tap: function() {
-            $window.history.back();
-        }
-	}];
+	$scope.onCloseClick = function() {
+		$window.history.back();
+	};
 });
