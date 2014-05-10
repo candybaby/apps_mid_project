@@ -72,6 +72,16 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	color:#fff;
 }
 
+.msgMap {
+	max-width:80px;
+	width:100%;
+}
+
+.msgImg {
+	max-width:100px;
+	width:100%;
+}
+
 .chatTableTd {
 	vertical-align: bottom;
 }

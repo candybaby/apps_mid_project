@@ -1,4 +1,4 @@
-<ion-view title="chatName" left-buttons="backButton" ng-init="init();">
+<ion-view title="chatName" left-buttons="backButton" ng-init="init()">
 <!-- 	<header class="bar bar-subheader bar-stable">
   		<h2 class="title">{{model.name}}</h2>
 	</header> -->
@@ -14,7 +14,7 @@
   						</tr>
   						<tr  ng-show="message.owner == 'target'">
   							<td>
-  								<span class="msg">{{message.content}}</span>
+                  <span class="msg" ng-bind-html="message.content | messageAdapter" ng-click="onMessageClick(message)"></span>
   							</td>
   							<td class="chatTableTd">
   								<!-- <span class="read" ng-show="message.hasRead">已讀</span>
@@ -28,7 +28,7 @@
   								<span class="time">{{message.dateTime | fromNow}}</span>
   							</td>
   							<td>
-  								<span class="msg">{{message.content}}</span>
+  								<span class="msg" ng-bind-html="message.content | messageAdapter" ng-click="onMessageClick(message)"></span>
   							</td>
   						</tr>
   					</table>

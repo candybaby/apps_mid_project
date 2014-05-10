@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/activity_book/chat/messagePageCtrl.js in folder common */
-app.controller('MessagePageCtrl', function($scope, $stateParams, $location, $window, FriendManager, MessageManager, SettingManager, acLabMessage, ChatManager, Geolocation, $timeout) {
+app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $location, $window, FriendManager, MessageManager, SettingManager, acLabMessage, ChatManager, Geolocation, $timeout) {
 	$scope.model = {};
 	$scope.account = $stateParams["account"];
 	$scope.model = angular.copy(FriendManager.getByAccount($scope.account));
@@ -34,9 +34,7 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $location, $win
 		console.log("onSendLocationClick");
 		Geolocation.getCurrentPosition(function(position) {
 			console.log("onSendLocationClick: getLocation");
-			var location = {};
-			location.latitude = position.coords.latitude;
-			location.longitude = position.coords.longitude;
+			var location = "map:("+position.coords.latitude+","+position.coords.longitude+")";
     		$scope.sendMessage(location);
     	}, function () {
     		console.log("error");
@@ -64,6 +62,19 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $location, $win
 
    	$scope.readMessage = function(mId) {
     	acLabMessage.readMessage(mId);
+   	};
+
+   	$scope.onMessageClick = function(message) {
+   		console.log("onMessageClick");
+        if (!message.content.replace(/\map:\([0-9.]+,[0-9.]+\)/, '')) {
+        	var latlng = message.content.match(/([0-9.-]+).+?([0-9.-]+)/);
+   			$state.go('map', {
+        		latitude:latlng[1],
+        		longitude:latlng[2],
+        		friendName:$scope.model.name,
+        		isMe:message.owner == 'source'
+        	});
+        }
    	};
 
     $scope.backButton = [{

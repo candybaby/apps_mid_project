@@ -1,4 +1,4 @@
-app.controller('ChatCtrl', function($scope, $state, $location, $timeout, SettingManager, ChatManager) {
+app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, ChatManager) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
 
@@ -25,6 +25,8 @@ app.controller('ChatCtrl', function($scope, $state, $location, $timeout, Setting
 
     $scope.onFriendChatClick = function(account) {
     	//alert("onFriendChatClick" + account);
-    	$location.url('messagepage?account=' + account);//friend id
+        $state.go('messagepage', {
+            account:account
+        });
     };
 });

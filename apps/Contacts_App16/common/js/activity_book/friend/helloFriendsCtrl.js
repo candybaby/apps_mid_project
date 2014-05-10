@@ -34,8 +34,9 @@ app.controller('HelloFriendsCtrl', function($scope, $state, $ionicLoading, $loca
 	}];
 
 	$scope.onFriendClick = function(account) {
-		console.log("onFriendClick account:" + account);
-		$location.url('messagepage?account=' + account);
+		$state.go('messagepage', {
+            account:account
+        });
 	};
 
 	$scope.onAcceptClick = function(account) {

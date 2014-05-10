@@ -92,6 +92,26 @@ app.filter('badgeCount', function() {
     };
 });
 
+app.filter('messageAdapter', function() {
+    return function(messageString) {
+        var result = messageString.replace(/\map:\([0-9.]+,[0-9.]+\)/, '');
+        if (!result) {
+            return '<img class="msgMap" src="images/mapImg.png"></img>';
+        }
+        return result;
+    };
+});
+
+app.filter('chatContentAdapter', function() {
+    return function(messageString) {
+        var result = messageString.replace(/\map:\([0-9.]+,[0-9.]+\)/, '');
+        if (!result) {
+            return '傳送了自己的位置';
+        }
+        return result;
+    };
+});
+
 app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager, MessageManager, ChatManager, acLabMember) {
     var host = SettingManager.getHost();
     
