@@ -169,14 +169,6 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	border-radius:4px
 }
 
-.my-modal {
-	top: 10%; width: 80%; left: 10%;
-	bottom: 20%;
-	min-height: 0px;
-	overflow: visible;
-	z-index: 10;
-}
-
 
 /* Stylesheet content from css/Contacts_App16.css in folder iphone */
 

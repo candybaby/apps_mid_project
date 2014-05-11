@@ -93,6 +93,20 @@ app.filter('badgeCount', function() {
     };
 });
 
+app.filter('orderObjectBy', function() {
+    return function(items, field, reverse) {
+        var filtered = [];
+        angular.forEach(items, function(item) {
+            filtered.push(item);
+        });
+        filtered.sort(function (a ,b) {
+            return (a[field] > b[field] ? 1 : -1);
+        });
+        if (reverse) filtered.reverse();
+        return filtered;
+    };
+});
+
 app.filter('messageAdapter', function() {
     return function(messageString) {
         var result = messageString.replace(/\map:\([0-9.]+,[0-9.]+\)/, '');

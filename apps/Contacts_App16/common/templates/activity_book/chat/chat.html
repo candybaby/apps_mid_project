@@ -5,7 +5,7 @@
         </div>
 		<div ng-show="state == REGISTERED">
             <div class="list">
-                <div ng-repeat="chat in getChatList()" class="item item-avatar" ng-click="onFriendChatClick(chat.fromAccount)">
+                <div ng-repeat="(key, chat) in getChatList()|orderObjectBy:'dateTime':true" class="item item-avatar" ng-click="onFriendChatClick(chat.fromAccount)">
                     <img src="images/people_1.png"></img>
                     <h2>{{chat.title}}</h2>
                     <span class="time">{{chat.dateTime | fromNow}}</span>

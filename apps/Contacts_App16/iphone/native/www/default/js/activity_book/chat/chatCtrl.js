@@ -17,6 +17,11 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
         $timeout($scope.refreshTime, 30000, true);
     };
 
+    $scope.getTimeValue = function(chat) {
+        console.log("time:" + chat.dateTime);
+        return chat.dateTime;
+    };
+
     $scope.onRegisterClick = function() {
     	$state.go('tab.setting');
     };
