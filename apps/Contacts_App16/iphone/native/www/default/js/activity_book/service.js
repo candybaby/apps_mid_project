@@ -5,7 +5,7 @@ app.factory('DBManager', function($window, PhoneGap) {
     PhoneGap.ready(function() {
         db = $window.sqlitePlugin.openDatabase({name: "ActivityBookDB"});
         db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT, account TEXT UNIQUE, isActive BOOLEAN, isWaitingAccept BOOLEAN, isInvited BOOLEAN)", []);
+            tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT, account TEXT UNIQUE, pictureUrl TEXT, isActive BOOLEAN, isWaitingAccept BOOLEAN, isInvited BOOLEAN)", []);
         });
         db.transaction(function(tx) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER, activityId INTEGER)", []);
@@ -24,8 +24,8 @@ app.factory('DBManager', function($window, PhoneGap) {
                 if (friend.phone != null)
                     friend.phone = friend.phone.replace(/-/g, "").replace(/ /g, "");
 	            db.transaction(function(tx) {
-	                tx.executeSql("INSERT INTO friends(name, phone, account, isActive, isWaitingAccept, isInvited) VALUES (?, ?, ?, ?, ?, ?)",
-	                    [friend.name, friend.phone, friend.account, friend.isActive, friend.isWaitingAccept, friend.isInvited],
+	                tx.executeSql("INSERT INTO friends(name, phone, account, pictureUrl, isActive, isWaitingAccept, isInvited) VALUES (?, ?, ?, ?, ?, ?, ?)",
+	                    [friend.name, friend.phone, friend.account, friend.pictureUrl, friend.isActive, friend.isWaitingAccept, friend.isInvited],
 	                    function(tx, res) {
 	                		friend.id = res.insertId;
 	                        (onSuccess || angular.noop)();
@@ -42,8 +42,8 @@ app.factory('DBManager', function($window, PhoneGap) {
         updateFriend: function (friend, onSuccess, onError) {
         	PhoneGap.ready(function() {
                 db.transaction(function (tx) {
-                    tx.executeSql("UPDATE friends SET name = ?, phone = ?, account = ?, isActive = ?, isWaitingAccept = ?, isInvited = ? where id = ?",
-                        [friend.name, friend.phone, friend.account, friend.isActive, friend.isWaitingAccept, friend.isInvited, friend.id],
+                    tx.executeSql("UPDATE friends SET name = ?, phone = ?, account = ?, pictureUrl = ?, isActive = ?, isWaitingAccept = ?, isInvited = ? where id = ?",
+                        [friend.name, friend.phone, friend.account, friend.pictureUrl, friend.isActive, friend.isWaitingAccept, friend.isInvited, friend.id],
                         onSuccess,
                         onError
 	                );
@@ -282,6 +282,9 @@ app.factory('FriendManager', function(DBManager) {
     DBManager.getFriends(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexFriends[res.rows.item(i).id] = res.rows.item(i);
+            for (var attrName in res.rows.item(i)) {
+                console.log("FriendManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            }
         }
     });
     return {

@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/activity_book/chat/chatCtrl.js in folder common */
-app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, ChatManager) {
+app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, ChatManager, FriendManager) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
 
@@ -28,6 +28,12 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
 
     $scope.getChatList = function() {
     	return ChatManager.list();
+    };
+
+    $scope.getPictureUrl = function(account) {
+        var url = FriendManager.getByAccount(account).picturlUrl;
+        console.log(url);
+        return url;
     };
 
     $scope.onFriendChatClick = function(account) {

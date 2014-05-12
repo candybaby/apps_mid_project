@@ -1,4 +1,4 @@
-app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, ChatManager) {
+app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, ChatManager, FriendManager) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
 

@@ -125,8 +125,19 @@ app.filter('chatContentAdapter', function() {
     };
 });
 
+app.filter('pictureUrlAdapter', function(FriendManager) {
+    return function(account) {
+        var url = FriendManager.getByAccount(account).pictureUrl;
+        console.log(account);
+        return url;
+    };
+});
+
 app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager, MessageManager, ChatManager, acLabMember) {
     var host = SettingManager.getHost();
+    var fbAppId = '770004963018175';
+    $window.openFB.init(fbAppId);
+
     
     PhoneGap.ready(function() {
         if(host.phone) {
@@ -141,6 +152,9 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 
             }, false);
         }
+        // if(host.hasFB) {
+        //     $window.openFB.login('user_friends');
+        // }
         onReceiveMqtt();
         //FriendManager.updateIsMember();
     });
@@ -230,6 +244,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         friend.name = message['name'];
         friend.phone = message['phone'];
         friend.account = message['account'];
+        friend.pictureUrl = message['pictureUrl'];
         friend.isActive = 1;
         FriendManager.addInvitedFriend(friend);
     }

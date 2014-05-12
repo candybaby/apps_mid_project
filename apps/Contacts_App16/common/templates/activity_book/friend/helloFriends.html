@@ -18,7 +18,7 @@
             </div> -->
             <div class="list">
                 <div ng-repeat="friend in getFriendList()" class="item item-avatar" ng-click="onFriendClick(friend.account)">
-                    <img src="images/people_1.png"></img>
+                    <img ng-src="{{friend.pictureUrl}}">
                     <h2>{{friend.name}}</h2>
                     <h3>{{friend.account}}</h3>
                 </div>
@@ -37,7 +37,7 @@
             </div> -->
             <div class="list">
                 <div ng-repeat="friend in getIsWaitingFriendList()" class="item item-avatar">
-                    <img src="images/people_1.png"></img>
+                    <img ng-src="{{friend.pictureUrl}}">
                     <h2>{{friend.name}}</h2>
                     <h3>{{friend.account}}</h3>
                 </div>
@@ -58,7 +58,7 @@
             </div> -->
             <div class="list">
                 <div ng-repeat="friend in getIsInvitedFriendList()" class="item item-avatar">
-                    <img src="images/people_1.png"></img>
+                    <img ng-src="{{friend.pictureUrl}}">
                     <h2>{{friend.name}}</h2>
                     <span class="badge badge-assertive" ng-click="onRefuseClick(friend.account)">拒絕</span>
                     <span class="badge badge-balanced" ng-click="onAcceptClick(friend.account)">接受</span>

@@ -9,7 +9,7 @@
   		<br />
 		<div class="list">
 			<div ng-repeat="candidate in candidates" class="item item-avatar">
-				<img src="images/people_1.png"></img>
+        <img ng-src="{{candidate.pictureUrl}}">
             	<h2>{{candidate.name}}</h2>
             	<span class="badge badge-assertive" ng-click="onAddClick(candidate.account)">加朋友</span>
       			<h3>{{candidate.phone}}</h3>

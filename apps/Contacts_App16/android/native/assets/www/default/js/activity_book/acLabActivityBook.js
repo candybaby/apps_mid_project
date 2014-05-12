@@ -208,6 +208,7 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
                 account: host.account,
                 phone: host.phone,
                 name: host.name,
+                pictureUrl: host.pictureUrl,
                 deviceType: host.type,
                 token: host.token
             };
@@ -223,6 +224,34 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
             });
                 
             add.error(function (response, status, headers, config){
+                (onError || angular.noop)(response);
+            });
+        },
+
+        update: function(host, onSuccess, onError) {
+            for (var attrName in host) {
+                console.log("update - "+attrName+" : "+host[attrName]);
+            }
+            var hostData = {
+                account: host.account,
+                phone: host.phone,
+                name: host.name,
+                pictureUrl: host.pictureUrl,
+                deviceType: host.type,
+                token: host.token
+            };
+                
+            var update = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'update' + acLabServiceFormat,
+                data: hostData
+            });
+                
+            update.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+                
+            update.error(function (response, status, headers, config){
                 (onError || angular.noop)(response);
             });
         },

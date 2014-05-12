@@ -16,6 +16,7 @@
 			    	<input type="tel" ng-model="host.phone">
 				</label>
 				<button ng-click="onNextClick()" ng-disabled="!host.account || !host.name || !host.phone" class="button button-block button-positive">下一步</button>
+				<button ng-click="onFBRegisterClick()" class="button button-block button-positive" ng-show="!host.hasFB">臉書登入</button>
 			</form>
 		</div>
 
@@ -27,6 +28,7 @@
 				</label>
 				<button ng-click="onSubmitClick()" class="button button-block button-positive">送出</button>
 				<button ng-click="onReSendAuthClick()" class="button button-block button-positive">重寄認證碼</button>
+				<button ng-click="onBackClick()" class="button button-block button-positive">上一步</button>
 			</form>
 		</div>
 
@@ -35,6 +37,12 @@
 			    註冊成功
 			</label>
 			<button ng-click="onDeleteClick()" class="button button-block button-positive">刪除註冊資訊</button>
+			<button ng-click="onFBRegisterClick()" class="button button-block button-positive" ng-show="!host.hasFB">綁定臉書</button>
+		</div>
+
+		<div class="card">
+			<img ng-src="{{host.pictureUrl}}">
+			
 		</div>
 
 	</ion-content>
