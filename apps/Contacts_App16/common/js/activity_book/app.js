@@ -135,7 +135,7 @@ app.filter('pictureUrlAdapter', function(FriendManager) {
 
 app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager, MessageManager, ChatManager, acLabMember) {
     var host = SettingManager.getHost();
-    var fbAppId = '770004963018175';
+    var fbAppId = '238880266302926';
     $window.openFB.init(fbAppId);
 
     

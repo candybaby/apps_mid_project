@@ -73,7 +73,7 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
 	};
 
     $scope.onFBRegisterClick = function() {
-        $window.openFB.login('user_friends', function() {
+        $window.openFB.login('user_friends,email', function() {
             $window.openFB.api({
                 path: '/me',
                 params: {fields: "name,email,picture"},

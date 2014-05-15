@@ -5,7 +5,7 @@
 				<label class="item item-input item-stacked-label">
 			    	<span class="input-label">帳號: </span>
 			    	<i class="icon ion-ios7-information assertive" ng-show="registerForm.emailInput.$error.email">格式不符</i>
-			    	<input type="email" ng-model="host.account" name="emailInput">
+			    	<input type="email" ng-model="host.account" ng-disabled="host.hasFB" name="emailInput">
 				</label>
 				<label class="item item-input item-stacked-label">
 			    	<span class="input-label">姓名: </span>

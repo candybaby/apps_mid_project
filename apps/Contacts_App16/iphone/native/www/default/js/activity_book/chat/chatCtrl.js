@@ -30,12 +30,6 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
     	return ChatManager.list();
     };
 
-    $scope.getPictureUrl = function(account) {
-        var url = FriendManager.getByAccount(account).picturlUrl;
-        console.log(url);
-        return url;
-    };
-
     $scope.onFriendChatClick = function(account) {
     	//alert("onFriendChatClick" + account);
         $state.go('messagepage', {
