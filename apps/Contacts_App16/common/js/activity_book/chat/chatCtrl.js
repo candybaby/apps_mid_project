@@ -16,7 +16,6 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
     };
 
     $scope.getTimeValue = function(chat) {
-        console.log("time:" + chat.dateTime);
         return chat.dateTime;
     };
 
@@ -34,4 +33,46 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
             account:account
         });
     };
-});
+
+    $scope.reportEvent = function(event)  {
+        console.log('Reporting : ' + event.type);
+        var chat = {};
+        chat.id = event.currentTarget.id;
+        ChatManager.delete(chat, function() {
+            $scope.$apply();
+        });
+        //alert("chatId:"+event.currentTarget.id);
+    };
+})
+.directive('detectGestures', function($ionicGesture) {
+    return {
+        restrict :  'A',
+
+        link : function(scope, elem, attrs) {
+            var gestureType = attrs.gestureType;
+
+            switch(gestureType) {
+                case 'swipe':
+                    $ionicGesture.on('swipe', scope.reportEvent, elem);
+                    break;
+                case 'swiperight':
+                    $ionicGesture.on('swiperight', scope.reportEvent, elem);
+                    break;
+                case 'swipeleft':
+                    $ionicGesture.on('swipeleft', scope.reportEvent, elem);
+                    break;
+                case 'doubletap':
+                    $ionicGesture.on('doubletap', scope.reportEvent, elem);
+                    break;
+                case 'tap':
+                    $ionicGesture.on('tap', scope.reportEvent, elem);
+                    break;
+                case 'scroll':
+                    $ionicGesture.on('scroll', scope.reportEvent, elem);
+                    break;
+            }
+
+        }
+    }
+})
+;

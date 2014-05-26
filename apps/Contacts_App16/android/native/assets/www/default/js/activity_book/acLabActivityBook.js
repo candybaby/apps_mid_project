@@ -5,28 +5,24 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
     var acLabServiceFormat = '/format/json';
 	
 	return {
-        add: function(activity) {
-            var messageData = {
-                name: activity.name,
-                describe: activity.describe,
-                startTime: activity.startTime,
-                endTime: activity.endTime,
-                place: activity.place,
-                owner: activity.owner,
-                latlng: activity.latlng
+        add: function(activity, onSuccess, onError) {
+            var activityData = {
+                activity: activity
             };
             var add = $http({
                 method: 'POST',
                 url: acLabServiceUrl + 'add' + acLabServiceFormat,
-                data: activity
+                data: activityData
             });
             
             add.success(function(response, status, headers, config){
-                console.log("createActivity success");
+                console.log("createActivity success" + response);
+                (onSuccess || angular.noop)(response);
             });
             
             add.error(function(response, status, headers, config) {
                 console.log("createActivity error，原因:"+response);
+                (onError || angular.noop)(response);
             });
         },
         getActivitiesByOwner: function(ownerPhone, onSuccess, onError) {
@@ -210,7 +206,8 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
                 name: host.name,
                 pictureUrl: host.pictureUrl,
                 deviceType: host.type,
-                token: host.token
+                token: host.token,
+                FBid: host.FBid
             };
                 
             var add = $http({
@@ -238,7 +235,8 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
                 name: host.name,
                 pictureUrl: host.pictureUrl,
                 deviceType: host.type,
-                token: host.token
+                token: host.token,
+                FBid: host.FBid
             };
                 
             var update = $http({
@@ -318,6 +316,27 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
             });
                 
             search.error(function (response, status, headers, config){
+                (onError || angular.noop)(response);
+            });
+        },
+
+        searchByFB: function(FBids, account, onSuccess, onError) {
+            var data = {
+                FBids: FBids,
+                account: account
+            };
+
+            var searchByFB = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'searchByFB' + acLabServiceFormat,
+                data: data
+            });
+                
+            searchByFB.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+                
+            searchByFB.error(function (response, status, headers, config){
                 (onError || angular.noop)(response);
             });
         },

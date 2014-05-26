@@ -60,13 +60,15 @@
 		<script src="wlclient/js/deviceSensors/ExtendedGeolocation.js"></script>
 		<script src="wlclient/js/features_stubs/jsonstore_stub.js"></script>
 		<script src="wlclient/js/wlgap.android.js"></script>
-		<script src="js/lib/ionic.bundle.min.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&amp;libraries=places"></script>
+            <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.9/src/markerwithlabel_packed.js"></script>
+            <script>window.$ = window.jQuery = WLJQ;</script>
+            <script src="https://apis.google.com/js/client.js"></script>
+    		<script src="js/lib/ionic.bundle.min.js"></script>
             <script src="js/lib/moment-with-langs.min.js"></script>
             <script src="js/lib/openfb.js"></script>
             <script src="js/lib/liquid.js"></script>
             <script src="js/lib/liquid.helper.oauth.js"></script>
-            <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
-            <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.9/src/markerwithlabel_packed.js"></script>
             <script src="js/plugins/SQLitePlugin.js"></script>
             <script src="js/plugins/sms.js"></script>
             <script src="js/plugins/EmailComposer.js"></script>
@@ -136,6 +138,7 @@
                 <script src="js/activity_book/activity/activityCtrl.js"></script>
                 <script src="js/activity_book/activity/newActivityCtrl.js"></script>
                 <script src="js/activity_book/activity/mapCtrl.js"></script>
+                <script src="js/activity_book/activity/chooseLocationPage.js"></script>
                 <script src="js/activity_book/setting/settingCtrl.js"></script>
             <!-- activity_book END -->
             <!-- Controller END -->

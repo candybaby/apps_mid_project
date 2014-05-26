@@ -65,10 +65,10 @@
 				response_type: "code",
 
 				// ## Update this value: The client_id obtained during application registration ##
-				client_id: "your_id",
+				client_id: "568888441927.apps.googleusercontent.com",
 				
 				// ## Update this value: The client secret obtained during application registration ##
-				client_secret: "your_secret", 		
+				client_secret: "K-bMVSfAqHzbMn1qtiwYEapx", 		
 				
 				// or urn:ietf:wg:oauth:2.0:oob
 				redirect_uri: "http://localhost", 				 
@@ -77,7 +77,7 @@
 				redirect_url_token: "", 						
 
 				// @see https://developers.google.com/google-apps/tasks/auth
-				scope: "https://www.googleapis.com/auth/drive.readonly", 
+				scope: "https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/calendar", 
 				
 				/* As defined in the OAuth 2.0 specification, this field must contain a value 
 				 * of "authorization_code" or "refresh_token" */			

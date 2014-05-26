@@ -71,10 +71,32 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/activity_book/activity/map.html',
             controller: 'MapCtrl'
         })
+        .state('chooselocationpage', {
+            url: '/chooselocationpage',
+            templateUrl: 'templates/activity_book/activity/chooseLocationPage.html',
+            controller: 'ChooseLocationPageCtrl'
+        })
         
         ;
     $urlRouterProvider.otherwise("/tab/friends");
 });
+
+app.service('sharedData', function () {
+    var data = {
+        place: "",
+        latlng: ""
+    };
+
+    return {
+        getData:function () {
+            return data;
+        },
+        setData:function (value) {
+            data = value;
+        }
+    };
+});
+
 
 app.filter('fromNow', function() {
     return function(dateString) {
@@ -111,7 +133,7 @@ app.filter('messageAdapter', function() {
         if (!result) {
             return '<img class="msgMap" src="images/mapImg.png"></img>';
         }
-        return result;
+        return "";
     };
 });
 
@@ -128,7 +150,6 @@ app.filter('chatContentAdapter', function() {
 app.filter('pictureUrlAdapter', function(FriendManager) {
     return function(account) {
         var url = FriendManager.getByAccount(account).pictureUrl;
-        console.log(account);
         return url;
     };
 });
@@ -227,6 +248,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 ChatManager.update(chat);
                 console.log("chat update : " + isExist);
             } else {
+                chat['badge'] = message['send_myself'] ? 0 : 1;
                 ChatManager.add(chat);
                 console.log("chat add");
             }

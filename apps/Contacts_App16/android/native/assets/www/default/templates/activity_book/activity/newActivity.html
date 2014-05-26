@@ -1,5 +1,5 @@
-<ion-view title="'新增活動'" ng-init="init();">
-	<ion-content has-header="true" padding="true">
+<ion-view title="'新增活動'" ng-init="init()">
+	<ion-content has-header="true" has-footer="true" padding="true">
 		<div class="card">
 			<form name="editForm" class="item item-text-wrap">
 				<label class="item item-input item-stacked-label">
@@ -8,7 +8,7 @@
 				</label>
 				<label class="item item-input item-stacked-label">
 			    	<span class="input-label">地點: </span>
-			    	<input type="text" ng-model="activity.place">
+			    	<input type="text" ng-model="activity.place" ng-focus="onFocusLocation()">
 				</label>
 				<label class="item item-input item-stacked-label">
 					<span class="input-label">開始時間: </span>
@@ -23,6 +23,7 @@
 			    	<input type="text" ng-model="activity.describe">
 				</label>
 				<button ng-click="onCreateClick()" class="button button-block button-positive">新增</button>
+				<button class="button button-clear icon-left ion-ios7-compose" ng-click="showModal()">showModal</button>
 			</form>
 		</div>
 	</ion-content>

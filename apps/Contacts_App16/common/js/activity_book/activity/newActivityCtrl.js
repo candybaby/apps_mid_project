@@ -1,6 +1,14 @@
-app.controller('NewActivityCtrl', function($scope, Notification, SettingManager, acLabActivity) {
+app.controller('NewActivityCtrl', function($scope, Notification, SettingManager, acLabActivity, $state, sharedData) {
 	$scope.activity = {};
-	$scope.init = function() {};
+
+	$scope.init = function() {
+		$scope.activity.name = "name";
+		$scope.activity.place = sharedData.getData().place;
+		$scope.activity.startTime = "2014-5-21 08:12:12";
+		$scope.activity.endTime = "2014-5-22 08:12:12";
+		$scope.activity.describe = "describe";
+		$scope.activity.latlng = sharedData.getData().latlng;
+	};
 
 	$scope.onCreateClick = function() {
 		if (!$scope.activity.name) {
@@ -9,10 +17,15 @@ app.controller('NewActivityCtrl', function($scope, Notification, SettingManager,
 		}
 		$scope.activity.owner = SettingManager.getHost().account;
 		//create
-		acLabActivity.add($scope.activity);
-		$scope.activity = {};
+		acLabActivity.add($scope.activity, function() {
+			$scope.activity = {};
+			Notification.alert("建立活動成功", null, '提示', '確定');
+			sharedData.setData({});
+		});
+	};
 
-		Notification.alert("建立活動成功", null, '提示', '確定');
+	$scope.onFocusLocation = function() {
+		$state.go('chooselocationpage');
 	};
 });
 

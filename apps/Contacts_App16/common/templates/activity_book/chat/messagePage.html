@@ -14,7 +14,8 @@
   						</tr>
   						<tr  ng-show="message.owner == 'target'">
   							<td>
-                  <span class="msg" ng-bind-html="message.content | messageAdapter" ng-click="onMessageClick(message)"></span>
+                  <span class="msg" ng-hide="message.content | isSpcMsg">{{message.content}}</span>
+                  <span class="msg" ng-bind-html="message.content | messageAdapter" ng-click="onMessageClick(message)" ng-show="message.content | isSpcMsg"></span>
   							</td>
   							<td class="chatTableTd">
   								<!-- <span class="read" ng-show="message.hasRead">已讀</span>
@@ -28,7 +29,8 @@
   								<span class="time">{{message.dateTime | fromNow}}</span>
   							</td>
   							<td>
-  								<span class="msg" ng-bind-html="message.content | messageAdapter" ng-click="onMessageClick(message)"></span>
+                  <span class="msg" ng-hide="message.content | isSpcMsg">{{message.content}}</span>
+                  <span class="msg" ng-bind-html="message.content | messageAdapter" ng-click="onMessageClick(message)" ng-show="message.content | isSpcMsg"></span>
   							</td>
   						</tr>
   					</table>

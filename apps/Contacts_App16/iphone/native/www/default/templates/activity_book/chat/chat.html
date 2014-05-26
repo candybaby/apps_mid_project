@@ -5,7 +5,7 @@
         </div>
 		<div ng-show="state == REGISTERED">
             <div class="list">
-                <div ng-repeat="(key, chat) in getChatList()|orderObjectBy:'dateTime':true" class="item item-avatar" ng-click="onFriendChatClick(chat.fromAccount)">
+                <div ng-repeat="(key, chat) in getChatList()|orderObjectBy:'dateTime':true" class="item item-avatar" ng-click="onFriendChatClick(chat.fromAccount)" detect-gestures gesture-type="swiperight" id="{{chat.id}}">
                     <img ng-src="{{chat.fromAccount | pictureUrlAdapter}}">
                     <h2>{{chat.title}}</h2>
                     <span class="time">{{chat.dateTime | fromNow}}</span>

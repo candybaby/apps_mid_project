@@ -123,6 +123,15 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $locati
     	}
   	};
 })
+.filter('isSpcMsg', function() {
+    return function(messageString) {
+        var result = messageString.replace(/\map:\([0-9.]+,[0-9.]+\)/, '');
+        if (!result) {
+            return true;
+        }
+        return false;
+    };
+})
 .controller('ImgListCtrl', function($scope) {
 
 });

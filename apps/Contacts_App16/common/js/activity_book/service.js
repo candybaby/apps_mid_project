@@ -140,6 +140,15 @@ app.factory('DBManager', function($window, PhoneGap) {
             });
         },
 
+        deleteChat: function (chat, onSuccess, onError) {
+            db.transaction(function(tx) {
+                tx.executeSql("delete from chat where id = ?", [chat.id],
+                    onSuccess,
+                    onError
+                );
+            });
+        },
+
         getChats: function (onSuccess, onError) {
             PhoneGap.ready(function() {
                 db.transaction(function(tx) {
@@ -228,6 +237,12 @@ app.factory('ChatManager', function(DBManager) {
             DBManager.updateChatBadge(0, id, function() {
                 idIndexChats[id].badge = 0;
             });
+        },
+        delete: function(chat, onSuccess, onError) {
+            DBManager.deleteChat(chat, function(){
+                delete idIndexChats[chat.id];
+                (onSuccess || angular.noop)();
+            }, onError);
         }
     }
 });
