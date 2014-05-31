@@ -44,7 +44,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             }
         })
         .state('messagepage', {
-            url: "/messagepage?account",
+            url: "/messagepage?account&activityId",
             templateUrl: 'templates/activity_book/chat/messagePage.html',
             controller: 'MessagePageCtrl'      
         })
@@ -63,6 +63,33 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 'tab-activity': {
                     templateUrl: 'templates/activity_book/activity/newActivity.html',
                     controller: 'NewActivityCtrl'
+                }
+            }
+        })
+        .state('tab.activitydetail', {
+            url: "/activitydetail?id",
+            views: {
+                'tab-activity': {
+                    templateUrl: 'templates/activity_book/activity/activityDetail.html',
+                    controller: 'ActivityDetailCtrl'
+                }
+            }
+        })
+        .state('tab.friendList', {
+            url: "/friendList?id",
+            views: {
+                'tab-activity': {
+                    templateUrl: 'templates/activity_book/activity/friendList.html',
+                    controller: 'FriendListCtrl'
+                }
+            }
+        })
+        .state('tab.memberList', {
+            url: "/memberList?id",
+            views: {
+                'tab-activity': {
+                    templateUrl: 'templates/activity_book/activity/memberList.html',
+                    controller: 'MemberListCtrl'
                 }
             }
         })
@@ -154,7 +181,7 @@ app.filter('pictureUrlAdapter', function(FriendManager) {
     };
 });
 
-app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager, MessageManager, ChatManager, acLabMember) {
+app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager, MessageManager, ChatManager, acLabMember, ActivityManager, ActivityMemberManager) {
     var host = SettingManager.getHost();
     var fbAppId = '238880266302926';
     $window.openFB.init(fbAppId);
@@ -207,6 +234,12 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 receiveAcceptInvitedFriendMessage(message);
             } else if (message['message_type'] == "refuseFriend") {
                 receiveRefuseInvitedFriendMessage(message);
+            } else if (message['message_type'] == "inviteActivity") {
+                receiveInvitedActivityMessage(message);
+            } else if (message['message_type'] == "joinActivity") {
+                receiveJoinActivityMessage(message);
+            } else if (message['message_type'] == "refuseActivity") {
+                receiveRefuseActivityMessage(message);
             }
             
             console.log("mqtt onReceiveMqtt:" + res);
@@ -286,6 +319,40 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         var friend = FriendManager.getByAccount(account);
         FriendManager.remove(friend);
         // FriendManager.remove(friend);
+    }
+
+    var receiveInvitedActivityMessage = function(message) {
+        var activity = {};
+        activity = message;
+        activity.status = "Invited";
+        ActivityManager.add(activity);
+        console.log("receiveInvitedActivityMessage Add member:");
+        for (var index in activity.member) {
+            console.log("Add Member" + activity.member[index].name);
+            var people = activity.member[index];
+            people.memberName = activity.member[index].name;
+            ActivityMemberManager.add(people);
+        }
+    }
+
+    var receiveJoinActivityMessage = function(message) {
+        var people = ActivityMemberManager.getByActivityIdAndAccount(message['activity_id'], message['member_account']);
+        if (people) {
+            people.isJoin = true;
+            ActivityMemberManager.update(people);//update
+        } else {
+            console.log("people false : " + message['member_account']);
+        }
+    }
+
+    var receiveRefuseActivityMessage = function(message) {
+        var people = ActivityMemberManager.getByActivityIdAndAccount(message['activity_id'], message['member_account']);
+        if (people) {
+            people.isJoin = false;
+            ActivityMemberManager.update(people);//update
+        } else {
+            console.log("people false : " + message['member_account']);
+        }
     }
     
     var GCMSENDERID = '568888441927';

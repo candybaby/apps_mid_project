@@ -68,7 +68,7 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
             $scope.state = $scope.REGISTERED;
         }, function(res) {
             $scope.hide();
-            Notification.alert('註冊失敗：' + res, null, "警告");
+            Notification.alert('註冊失敗：' + res.error, null, "警告");
         });
     };
 	

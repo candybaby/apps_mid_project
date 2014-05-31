@@ -4,11 +4,24 @@
             <button ng-click="onRegisterClick()" class="button button-block button-positive">註冊</button>
         </div>
 		<div ng-show="state == REGISTERED">
-			<i class="icon ion-person-stalker"></i>
-			   	活動
-			<span class="item-note">
-				測試
-			</span>
+			<div class="item item-divider">
+            進行中活動（有效時間 已加入）
+            </div>
+            <div class="list">
+                <div ng-repeat="activity in getActivityJoinList()" class="item item-avatar" ng-click="onActivityClick(activity.id)">
+                    <h2>{{activity.name}}</h2>
+                    <h3>{{activity.place}}</h3>
+                </div>
+            </div>
+            <div class="item item-divider">
+            活動邀請（有效時間 invited）
+            </div>
+            <div class="list">
+                <div ng-repeat="activity in getActivityInvitedList()" class="item item-avatar" ng-click="onActivityClick(activity.id)">
+                    <h2>{{activity.name}}</h2>
+                    <h3>{{activity.place}}</h3>
+                </div>
+            </div>
 		</div>
                
     </ion-content>

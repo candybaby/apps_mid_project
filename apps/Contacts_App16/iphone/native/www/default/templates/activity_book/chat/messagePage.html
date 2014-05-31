@@ -1,7 +1,4 @@
 <ion-view title="chatName" left-buttons="backButton" ng-init="init()">
-<!-- 	<header class="bar bar-subheader bar-stable">
-  		<h2 class="title">{{model.name}}</h2>
-	</header> -->
 	<ion-content padding="true" class="chatContent">
   		<ol class="messages">
   			<li ng-repeat="message in getMessageList()" ng-class="message.owner" ng-init="onMessageShow(message.id)" my-message-repeat-directive>

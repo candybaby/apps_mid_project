@@ -19,83 +19,74 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
             });
             
             add.error(function(response, status, headers, config) {
-                console.log("createActivity error，原因:"+response);
+                console.log("createActivity error，原因:"+response.error);
                 (onError || angular.noop)(response);
             });
         },
-        getActivitiesByOwner: function(ownerPhone, onSuccess, onError) {
-            var messageData = {
-                owner: ownerPhone
+        invite: function(friendArray, activityId, onSuccess, onError) {
+            var inviteData = {
+                invite_account: friendArray,
+                activity_id: activityId
             };
-            
-            var check = $http({
+            var invite = $http({
                 method: 'POST',
-                url: acLabServiceUrl + 'activities' + acLabServiceFormat,
-                data: messageData
+                url: acLabServiceUrl + 'inviteFriends' + acLabServiceFormat,
+                data: inviteData
             });
             
-            check.success(function(response, status, headers, config){
-                console.log("getActivitiesByOwner success");
+            invite.success(function(response, status, headers, config){
+                console.log("Activity invite success" + response);
                 (onSuccess || angular.noop)(response);
             });
             
-            check.error(function(response, status, headers, config) {
-                (onError || angular.noop)(false);
+            invite.error(function(response, status, headers, config) {
+                console.log("Activity invite error，原因:"+response.error);
+                (onError || angular.noop)(response);
             });
         },
-        getActivitiesByPhone: function(memberPhone, onSuccess, onError) {
-            var messageData = {
-                phone: memberPhone
+        accept: function(account, activityId, onSuccess, onError) {
+            var acceptData = {
+                member_account: account,
+                activity_id: activityId
             };
-            
-            var check = $http({
+            var accept = $http({
                 method: 'POST',
-                url: acLabServiceUrl + 'activities' + acLabServiceFormat,
-                data: messageData
+                url: acLabServiceUrl + 'accept' + acLabServiceFormat,
+                data: acceptData
             });
             
-            check.success(function(response, status, headers, config){
-                console.log("getActivitiesByPhone success");
+            accept.success(function(response, status, headers, config){
+                console.log("Activity accept success" + response);
                 (onSuccess || angular.noop)(response);
             });
             
-            check.error(function(response, status, headers, config) {
-                (onError || angular.noop)(false);
+            accept.error(function(response, status, headers, config) {
+                console.log("Activity accept error，原因:"+response.error);
+                (onError || angular.noop)(response);
             });
         },
-        getActivitiesById: function(id, onSuccess, onError) {
-            var messageData = {
-                id: id
+        refuse: function(account, activityId, onSuccess, onError) {
+            var acceptData = {
+                member_account: account,
+                activity_id: activityId
             };
-            
-            var check = $http({
+            var refuse = $http({
                 method: 'POST',
-                url: acLabServiceUrl + 'activities' + acLabServiceFormat,
-                data: messageData
+                url: acLabServiceUrl + 'refuse' + acLabServiceFormat,
+                data: acceptData
             });
             
-            check.success(function(response, status, headers, config){
-                console.log("getActivitiesById success");
+            refuse.success(function(response, status, headers, config){
+                console.log("Activity refuse success" + response);
                 (onSuccess || angular.noop)(response);
             });
             
-            check.error(function(response, status, headers, config) {
-                (onError || angular.noop)(false);
-            });
-        },
-        getActivities: function(onSuccess, onError) {
-            var check = $http({
-                method: 'GET',
-                url: acLabServiceUrl + 'activities' + acLabServiceFormat,
-            });
-            check.success(function(response, status, headers, config){
-                console.log("getActivities:" + response);
-                (onSuccess || angular.noop)(response);
-            });
-            check.error(function (response, status, headers, config){
-                (onError || angular.noop)(false);
+            refuse.error(function(response, status, headers, config) {
+                console.log("Activity refuse error，原因:"+response.error);
+                (onError || angular.noop)(response);
             });
         }
+
     };
 })
 .factory('acLabMessage', function ($http, $window, PhoneGap, $rootScope) {

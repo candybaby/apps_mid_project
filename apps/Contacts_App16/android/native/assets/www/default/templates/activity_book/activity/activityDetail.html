@@ -1,0 +1,47 @@
+<ion-view title="'活動資訊'" ng-init="init();">
+    <ion-content has-header="true" padding="true">
+	<div class="list card">
+        <div class="item item-text-wrap">
+            <p>編號: {{activity.id}}</p>
+			<p>名稱: {{activity.name}}</p>
+            <p>描述: {{activity.describe}}</p>
+		    <p>地點: {{activity.place}}</p>
+		    <p>時間: {{activity.startTime}}~{{activity.endTime}}</p>
+		    <p>主辦人: {{activity.owner}}</p>
+            <p>狀態: {{activity.status}}</p>
+            <p>經緯度: {{activity.latlng}}</p>
+            <p>事件編號: {{activity.eventId}}</p>
+        </div>
+        <div class="item tabs tabs-secondary tabs-icon-left" ng-show="true">
+        <a class="tab-item" ng-click="onMemberClick()">
+            <i class="icon ion-ios7-person"></i>
+            成員
+        </a>
+        <a class="tab-item" ng-click="onInviteClick()" ng-show="canInvite()">
+            <i class="icon ion-ios7-email"></i>
+            邀請
+        </a>
+        <a class="tab-item" ng-click="onJoinClick()" ng-show="canJoin()">
+            <i class="icon ion-ios7-checkmark"></i>
+            參加
+        </a>
+        <a class="tab-item" ng-click="onNotJoinClick()" ng-show="canRefuse()">
+            <i class="icon ion-ios7-close"></i>
+            婉拒
+        </a>
+        <a class="tab-item" ng-click="" ng-show="canSetNotify()">
+            <i class="icon ion-ios7-calendar"></i>
+            提醒
+        </a>
+        <a class="tab-item" ng-click="" ng-show="canUseMap()">
+            <i class="icon ion-ios7-navigate"></i>
+            小地圖
+        </a>
+        <a class="tab-item" ng-click="onChatClick()" ng-show="canChat()">
+            <i class="icon ion-ios7-chatboxes-outline"></i>
+            訊息
+        </a>
+    </div>
+    </div>
+    </ion-content>
+</ion-view>

@@ -11,9 +11,95 @@ app.factory('DBManager', function($window, PhoneGap) {
         db.transaction(function(tx) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS chat(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, activityId INTEGER, title TEXT, whoTalk TEXT, message TEXT, dateTime DATETIME, badge INTEGER)", []);
         });
+        db.transaction(function(tx) {
+            tx.executeSql("CREATE TABLE IF NOT EXISTS activity(id INTEGER PRIMARY KEY, name TEXT, describe TEXT, startTime DATETIME, endTime DATETIME, place TEXT, latlng TEXT, owner TEXT, status TEXT, eventId TEXT default '')", []);            
+        });
+        db.transaction(function(tx) {
+            tx.executeSql("CREATE TABLE IF NOT EXISTS activity_member(id INTEGER PRIMARY KEY ASC, activityId INTEGER, memberAccount TEXT, memberName TEXT, isJoin BOOLEAN)", []);            
+        });
     });
     
     return {
+        // 新增活動成員
+        addActivityMember: function (people, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("INSERT INTO activity_member(activityId, memberAccount, memberName, isJoin) VALUES (?, ?, ?, ?)",
+                        [people.activityId, people.memberAccount, people.memberName, people.isJoin],
+                        function(tx, res) {
+                            (onSuccess || angular.noop)();
+                        }, function (e) {
+                            console.log("新增失敗：" + JSON.stringify(people));
+                            (onError || angular.noop)(e);
+                        }
+                    );
+                });
+            });
+        },
+
+        updateActivityMember: function (people, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function (tx) {
+                    tx.executeSql("UPDATE activity_member SET activityId = ?,memberAccount = ?, memberName = ?, isJoin = ? where id = ?",
+                        [people.activityId, people.memberAccount, people.memberName, people.isJoin, people.id],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
+        getActivityMember: function (onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("SELECT * FROM activity_member", [],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
+        // 新增活動
+        addActivity: function (activity, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("INSERT INTO activity(id, name, describe, startTime, endTime, place, latlng, owner, status, eventId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        [activity.id, activity.name, activity.describe, activity.startTime, activity.endTime, activity.place, activity.latlng, activity.owner, activity.status, activity.eventId],
+                        function(tx, res) {
+                            (onSuccess || angular.noop)();
+                        }, function (e) {
+                            console.log("新增失敗：" + JSON.stringify(friend));
+                            (onError || angular.noop)(e);
+                        }
+                    );
+                });
+            });
+        },
+
+        updateActivity: function (activity, onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function (tx) {
+                    tx.executeSql("UPDATE activity SET name = ?, describe = ?, startTime = ?, endTime = ?, place = ?, latlng = ?, owner = ?, status = ?, eventId = ? where id = ?",
+                        [activity.name, activity.describe, activity.startTime, activity.endTime, activity.place, activity.latlng, activity.owner, activity.status, activity.eventId, activity.id],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
+        getActivity: function (onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("SELECT * FROM activity", [],
+                        onSuccess,
+                        onError
+                    );
+                });
+            });
+        },
+
         // 加入加朋友的 朋友資訊
         addFriend: function (friend, onSuccess, onError) {
         	PhoneGap.ready(function() {
@@ -126,7 +212,7 @@ app.factory('DBManager', function($window, PhoneGap) {
             PhoneGap.ready(function() {
                 db.transaction(function(tx) {
                     tx.executeSql("INSERT INTO chat(fromAccount, activityId, title, whoTalk, message, dateTime, badge) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                        [chat.fromAccount, chat.activityId, chat.title, chat.whoTalk, chat.message, chat.dateTime, 1],
+                        [chat.fromAccount, chat.activityId, chat.title, chat.whoTalk, chat.message, chat.dateTime, chat.badge],
                         function(tx, res) {
                             chat.id = res.insertId;
                             (onSuccess || angular.noop)();
@@ -185,6 +271,107 @@ app.factory('DBManager', function($window, PhoneGap) {
         },
     };
 });
+
+app.factory('ActivityMemberManager', function(DBManager) {
+    var idIndexActivityMember = {};
+    DBManager.getActivityMember(function(tx, res) {
+        for (var i = 0, max = res.rows.length; i < max; i++) {
+            idIndexActivityMember[res.rows.item(i).id] = res.rows.item(i);
+            for (var attrName in res.rows.item(i)) {
+                console.log("ActivityMemberManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            }
+        }
+    });
+    return {
+        add: function(people, onSuccess) {
+            DBManager.addActivityMember(people, function() {
+                idIndexActivityMember[people.id] = people;
+                (onSuccess || angular.noop)(people);
+            });
+        },
+        list: function() {
+            return idIndexActivityMember;
+        },
+        getById: function(id) {
+            return idIndexActivityMember[id];
+        },
+        getByActivityId: function(activityId) {
+            var memberByActivityId = [];
+            for (var id in idIndexActivityMember) {
+                if (idIndexActivityMember[id].activityId == activityId) {
+                    memberByActivityId.push(idIndexActivityMember[id]);
+                }
+            }
+            return memberByActivityId;
+        },
+        update: function(people, onSuccess) {
+            DBManager.updateActivityMember(people, function() {
+                idIndexActivityMember[people.id] = people;
+                (onSuccess || angular.noop)();
+            });
+        },
+        getByActivityIdAndAccount: function(activityId, account) {
+            for (var id in idIndexActivityMember) {
+                if (idIndexActivityMember[id].activityId == activityId && idIndexActivityMember[id].memberAccount == account) {
+                    return idIndexActivityMember[id];
+                }
+            }
+            return false;
+        }
+    }
+});
+
+
+app.factory('ActivityManager', function(DBManager) {
+    var idIndexActivity = {};
+    DBManager.getActivity(function(tx, res) {
+        for (var i = 0, max = res.rows.length; i < max; i++) {
+            idIndexActivity[res.rows.item(i).id] = res.rows.item(i);
+            for (var attrName in res.rows.item(i)) {
+                console.log("ActivityManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            }
+        }
+    });
+    return {
+        add: function(activity, onSuccess) {
+            DBManager.addActivity(activity, function() {
+                idIndexActivity[activity.id] = activity;
+                (onSuccess || angular.noop)(activity);
+            });
+        },
+        list: function() {
+            return idIndexActivity;
+        },
+        listJoin: function() {
+            var activityJoin= [];
+            for (var id in idIndexActivity) {
+                if (idIndexActivity[id].status == 'Join') {
+                    activityJoin.push(idIndexActivity[id]);
+                }
+            }
+            return activityJoin;
+        },
+        listInvited: function() {
+            var activityInvited = [];
+            for (var id in idIndexActivity) {
+                if (idIndexActivity[id].status == 'Invited') {
+                    activityInvited.push(idIndexActivity[id]);
+                }
+            }
+            return activityInvited;
+        },
+        getById: function(id) {
+            return idIndexActivity[id];
+        },
+        update: function(activity, onSuccess) {
+            DBManager.updateActivity(activity, function() {
+                idIndexActivity[activity.id] = activity;
+                (onSuccess || angular.noop)();
+            });
+        }
+    }
+});
+
 
 app.factory('ChatManager', function(DBManager) {
     var idIndexChats = {};
@@ -295,9 +482,9 @@ app.factory('FriendManager', function(DBManager) {
     DBManager.getFriends(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexFriends[res.rows.item(i).id] = res.rows.item(i);
-            for (var attrName in res.rows.item(i)) {
-                console.log("FriendManager - "+attrName+" : "+res.rows.item(i)[attrName]);
-            }
+            // for (var attrName in res.rows.item(i)) {
+            //     console.log("FriendManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            // }
         }
     });
     return {

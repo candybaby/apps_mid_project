@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/activity_book/activity/activityCtrl.js in folder common */
-app.controller('ActivityCtrl', function($scope, $state, SettingManager) {
+app.controller('ActivityCtrl', function($scope, $state, SettingManager, ActivityManager) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
 
@@ -26,4 +26,18 @@ app.controller('ActivityCtrl', function($scope, $state, SettingManager) {
 			}
         }
 	}];
+
+	$scope.getActivityJoinList = function() {
+		return ActivityManager.listJoin();
+	};
+
+	$scope.getActivityInvitedList = function() {
+		return ActivityManager.listInvited();
+	};
+
+	$scope.onActivityClick = function(activityId) {
+		$state.go('tab.activitydetail', {
+            id:activityId
+        });
+	};
 });
