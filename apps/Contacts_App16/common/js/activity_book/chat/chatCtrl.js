@@ -27,11 +27,18 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
     	return ChatManager.list();
     };
 
-    $scope.onFriendChatClick = function(account) {
+    $scope.onFriendChatClick = function(account, activityId) {
     	//alert("onFriendChatClick" + account);
-        $state.go('messagepage', {
-            account:account
-        });
+        if (activityId == 0) {
+            $state.go('messagepage', {
+                account: account
+            });
+        }else {
+            $state.go('messagepage', {
+                account: account,
+                activityId: activityId
+            });
+        }
     };
 
     $scope.reportEvent = function(event)  {

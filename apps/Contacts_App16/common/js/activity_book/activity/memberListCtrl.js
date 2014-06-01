@@ -2,12 +2,13 @@ app.controller('MemberListCtrl', function($scope, $stateParams, ActivityMemberMa
 	
 	$scope.init = function() {
 		$scope.id = $stateParams["id"];
+        console.log("MemberListCtrl init : " + $scope.id);
 	};
 
     $scope.getMemberList = function() {
         return ActivityMemberManager.getByActivityId($scope.id);
     };
-    
+
 }).filter('joinStatusAdapter', function() {
     return function(isJoin) {
         if (isJoin == 0) {

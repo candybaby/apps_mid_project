@@ -6,6 +6,8 @@ app.controller('ActivityDetailCtrl', function($scope, $stateParams, ActivityMana
 	$scope.init = function() {
 		$scope.id = $stateParams["id"];
 		$scope.activity = ActivityManager.getById($scope.id);
+		console.log("*** : account" + $scope.account);
+		console.log("*** : activityId" + $scope.id);
 		console.log("*** : " + ActivityMemberManager.getByActivityIdAndAccount($scope.id, $scope.account).memberName);
 	};
 
@@ -37,20 +39,20 @@ app.controller('ActivityDetailCtrl', function($scope, $stateParams, ActivityMana
 
 	$scope.onChatClick = function() {
 		$state.go('messagepage', {
-            id: $scope.id
+            activityId: $scope.id
         });
 	};
 
 	$scope.canJoin = function() {
-		return true;
+		return $scope.activity.status != "Join";
 	};
 
 	$scope.canRefuse = function() {
-		return true;
+		return $scope.activity.status == "Join";
 	};
 
 	$scope.canChat = function() {
-		return true;
+		return $scope.activity.status == "Join";
 	};
 
 	$scope.canUseMap = function() {
@@ -58,11 +60,11 @@ app.controller('ActivityDetailCtrl', function($scope, $stateParams, ActivityMana
 	};
 
 	$scope.canInvite = function() {
-		return $scope.meIsOwner;
+		return $scope.meIsOwner();
 	};
 
 	$scope.canSetNotify = function() {
-		return false
+		return false;
 	};
 
 	$scope.meIsOwner = function() {

@@ -3,11 +3,11 @@
 app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $location, $window, $ionicModal, FriendManager, MessageManager, SettingManager, acLabMessage, ChatManager, Geolocation, $timeout, ActivityManager) {
     $scope.model = {};
     $scope.activity = {};
-	  $scope.account = $stateParams["account"];
-	  $scope.model = angular.copy(FriendManager.getByAccount($scope.account));
+	  $scope.account = $stateParams["account"] ? $stateParams["account"] : "";
+	  $scope.model = angular.copy(FriendManager.getByAccount($scope.account)); // 找不到回傳false
 	  $scope.activityId = $stateParams["activityId"] ? $stateParams["activityId"] : 0;
-    $scope.activity = $stateParams["activityId"] ? ActivityManager.getById($stateParams["activityId"]) : {};
-	  $scope.chatName = ($scope.activityId) ? "activityName" : $scope.model.name;
+    $scope.activity = ActivityManager.getById($scope.activityId);
+	  $scope.chatName = $scope.activityId != 0 ? $scope.activity.name + "活動聊天室" : $scope.model.name;
 	  $scope.$on('receivedMessage', function(res, message) {
 		    var cId = ChatManager.isExist($scope.account, $scope.activityId);
 		    ChatManager.resetBadge(cId);
@@ -51,25 +51,24 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $locati
 
 	  $scope.sendMessage = function(msg) {
 		    //alert("sendMessage:" + msg);
-		    acLabMessage.sendMessage(SettingManager.getHost().account, $scope.model.account, msg, 0);
-	  }
+		    acLabMessage.sendMessage(SettingManager.getHost().account, $scope.model.account, msg, $scope.activityId);
+	  };
 
+//
    	$scope.onMessageShow = function(id) {
     	  var message = MessageManager.getById(id);
 
     	  if (!message.hasRead && message.owner == "target") {
-    	 	    acLabMessage.readMessage(message.mId);
-    	 	    var cId = ChatManager.isExist($scope.account, $scope.activityId);
+    	 	    if ($scope.activityId == 0) {
+                acLabMessage.readMessage(message.mId);
+    	 	    }
+            var cId = ChatManager.isExist($scope.account, $scope.activityId);
 			      ChatManager.resetBadge(cId);
     	  }
     };
 
 	  $scope.getMessageList = function() {
-    	  return MessageManager.getByAccount($scope.model.account);
-   	};
-
-   	$scope.readMessage = function(mId) {
-    	  acLabMessage.readMessage(mId);
+    	  return MessageManager.getBy($scope.activityId, $scope.model.account);
    	};
 
    	$scope.onMessageClick = function(message) {
@@ -117,6 +116,15 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $locati
             return true;
         }
         return false;
+    };
+})
+.filter('nameAdapter', function(FriendManager, ActivityMemberManager) {
+    return function(accountString, activityId) {
+        if (activityId != 0) {
+            return ActivityMemberManager.getByActivityIdAndAccount(activityId, accountString)['memberName']
+        } else {
+            return FriendManager.getByAccount(accountString)['name'];
+        }
     };
 })
 .controller('ImgListCtrl', function($scope) {

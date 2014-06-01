@@ -6,7 +6,7 @@
   					<table>
   						<tr ng-show="message.owner == 'target'">
   							<td colspan="2">
-  								{{model.name}}：
+  								{{message.fromAccount | nameAdapter : message.activityId}}：
   							</td>
   						</tr>
   						<tr  ng-show="message.owner == 'target'">

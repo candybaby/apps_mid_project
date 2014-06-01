@@ -27,6 +27,7 @@ app.factory('DBManager', function($window, PhoneGap) {
                     tx.executeSql("INSERT INTO activity_member(activityId, memberAccount, memberName, isJoin) VALUES (?, ?, ?, ?)",
                         [people.activityId, people.memberAccount, people.memberName, people.isJoin],
                         function(tx, res) {
+                            people.id = res.insertId;
                             (onSuccess || angular.noop)();
                         }, function (e) {
                             console.log("新增失敗：" + JSON.stringify(people));
@@ -361,7 +362,11 @@ app.factory('ActivityManager', function(DBManager) {
             return activityInvited;
         },
         getById: function(id) {
-            return idIndexActivity[id];
+            if (idIndexActivity[id] == undefined) {
+                return {};
+            } else {
+                return idIndexActivity[id];
+            }
         },
         update: function(activity, onSuccess) {
             DBManager.updateActivity(activity, function() {
@@ -439,6 +444,9 @@ app.factory('MessageManager', function(DBManager) {
     DBManager.getMessages(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexMessages[res.rows.item(i).id] = res.rows.item(i);
+            for (var attrName in res.rows.item(i)) {
+                console.log("MessageManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            }
         }
     });
     return {
@@ -459,6 +467,21 @@ app.factory('MessageManager', function(DBManager) {
                 }
             }
             return messagesByAccount;
+        },
+        getBy: function(activityId, account) {
+            var messages = [];
+            for (var id in idIndexMessages) {
+                if (activityId == 0) {
+                    if (idIndexMessages[id].fromAccount == account) {
+                        messages.push(idIndexMessages[id]);
+                    }
+                } else {
+                    if (idIndexMessages[id].activityId == activityId) {
+                        messages.push(idIndexMessages[id]);
+                    }
+                }
+            }
+            return messages;
         },
         list: function() {
             return idIndexMessages;
@@ -520,6 +543,9 @@ app.factory('FriendManager', function(DBManager) {
                 if (idIndexFriends[id].account == account) {
                     friend = idIndexFriends[id];
                 }
+            }
+            if (friend == undefined) {
+                return {};
             }
             return friend;
         },

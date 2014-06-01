@@ -1,4 +1,4 @@
-app.controller('NewActivityCtrl', function($scope, Notification, SettingManager, acLabActivity, $state, sharedData, ActivityManager) {
+app.controller('NewActivityCtrl', function($scope, Notification, SettingManager, acLabActivity, $state, sharedData, ActivityManager, ActivityMemberManager) {
 	$scope.activity = {};
 
 	$scope.init = function() {
@@ -26,6 +26,12 @@ app.controller('NewActivityCtrl', function($scope, Notification, SettingManager,
 				$scope.activity = {};
 				Notification.alert("建立活動成功", null, '提示', '確定');
 				sharedData.setData({});
+				var people = {};
+				people.activityId = id;
+				people.memberAccount = SettingManager.getHost().account;
+				people.memberName = SettingManager.getHost().name;
+				people.isJoin = true;
+				ActivityMemberManager.add(people);
 			});
 		});
 	};

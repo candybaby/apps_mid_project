@@ -242,6 +242,8 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 receiveJoinActivityMessage(message);
             } else if (message['message_type'] == "refuseActivity") {
                 receiveRefuseActivityMessage(message);
+            } else if (message['message_type'] == "newActivityMember") {
+                newActivityMemberMessage(message);
             }
             
             console.log("mqtt onReceiveMqtt:" + res);
@@ -265,14 +267,20 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         msgObj['content'] = message['message'];
         msgObj['dateTime'] = message['date_time'];
         msgObj['mId'] = message['m_id'];
-        msgObj['activityId'] = message['activity_id'] ? message['activity_id'] : 0;
+        msgObj['activityId'] = message['activityId'] ? message['activityId'] : 0;
         MessageManager.add(msgObj, function(messagesId) {
             var chat = {};
-            var name = FriendManager.getByAccount(msgObj['fromAccount'])['name'];
+            var name;
+            if (msgObj['activityId'] == 0) {
+                name = FriendManager.getByAccount(msgObj['fromAccount'])['name'];
+            } else {
+                name = ActivityManager.getById(msgObj['activityId'])['name'];
+            }
+            
             chat['fromAccount'] = msgObj['fromAccount'];
             chat['activityId'] = msgObj['activityId'];
             chat['title'] = name;
-            chat['whoTalk'] = message['send_myself'] ? "我" : name;
+            chat['whoTalk'] = message['send_myself'] ? "我" : name; //
             chat['message'] = msgObj['content'];
             chat['dateTime'] = msgObj['dateTime'];
             var isExist = ChatManager.isExist(chat['fromAccount'], chat['activityId']);
@@ -354,6 +362,13 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             ActivityMemberManager.update(people);//update
         } else {
             console.log("people false : " + message['member_account']);
+        }
+    }
+
+    var newActivityMemberMessage = function(message) {
+        for (var index in message.newMembers) {
+            var people = message.newMembers[index];
+            ActivityMemberManager.add(people);
         }
     }
     

@@ -1,4 +1,4 @@
-app.controller('FriendListCtrl', function($scope, $stateParams, $window, ActivityManager, FriendManager, acLabActivity, Notification) {
+app.controller('FriendListCtrl', function($scope, $stateParams, $window, ActivityManager, FriendManager, acLabActivity, Notification, ActivityMemberManager) {
 	$scope.selectedFriends = [];
 	
 	$scope.init = function() {
@@ -21,6 +21,12 @@ app.controller('FriendListCtrl', function($scope, $stateParams, $window, Activit
 			var selectedFriendArray = [];
     		for (var attrName in $scope.selectedFriends) {
             	selectedFriendArray.push($scope.selectedFriends[attrName].account);
+    //         	var people = {};
+				// people.activityId = $scope.id;
+				// people.memberAccount = $scope.selectedFriends[attrName].account;
+				// people.memberName = $scope.selectedFriends[attrName].name;
+				// ActivityMemberManager.add(people);
+				// console.log("invite activityId: " + $scope.id + " memberAccount: " + $scope.selectedFriends[attrName].account + " memberName: " + $scope.selectedFriends[attrName].name);
         	}
        		console.log("selectedFriends:" + JSON.stringify(selectedFriendArray));
        		acLabActivity.invite(selectedFriendArray, $scope.id, function() {
