@@ -139,18 +139,23 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 }
 
 #map-canvas {
-   	height: 400px;
+}
+
+.normalMap {
+	height: 400px;
+}
+
+.fullMap {
+	height: 600px;
 }
 
 .labels {
-   color: red;
-   background-color: white;
-   font-family: "Lucida Grande", "Arial", sans-serif;
+   color: rgb(77, 4, 4);
+   background-color: rgb(252, 228, 197);
    font-size: 10px;
    font-weight: bold;
    text-align: center;
-   width: 60px;     
-   border: 2px solid black;
+   width: 60px; 
    white-space: nowrap;
 }
 
@@ -167,6 +172,32 @@ a, abbr, address, article, aside, audio, b, blockquote, body, canvas, caption, c
 	max-height:40px;
 	width:100%;
 	border-radius:4px
+}
+
+.animate-enter, 
+.animate-leave
+{ 
+    -webkit-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -moz-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -ms-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -o-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    position: relative;
+    display: block;
+} 
+
+.animate-enter.animate-enter-active, 
+.animate-leave {
+    opacity: 1;
+    right: 0;
+    height: 30px;
+}
+ 
+.animate-leave.animate-leave-active,
+.animate-enter {
+    opacity: 0;
+    right: -50px;
+    height: 0px;
 }
 
 /* google map css 
@@ -208,6 +239,36 @@ html, body, #map-canvas {
       .pac-container {
         font-family: Roboto;
       }
+      
+.glyphicon {
+  vertical-align: top;
+  display: inline-block;
+  font-family: "Ionicons";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: auto;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.glyphicon:before {
+  vertical-align: top;
+  font-size: 32px;
+  line-height: 32px;
+  padding-right: 2px;
+  padding-left: 2px;
+  display: inline-block;
+  padding: 0 0 1px 0;
+}
+.glyphicon-arrow-right:before {
+  content: "\f10a";
+}
+.glyphicon-arrow-left:before{
+  content: "\f107";
+}
 
 
 /* Stylesheet content from css/Contacts_App16.css in folder iphone */

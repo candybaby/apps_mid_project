@@ -278,9 +278,9 @@ app.factory('ActivityMemberManager', function(DBManager) {
     DBManager.getActivityMember(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexActivityMember[res.rows.item(i).id] = res.rows.item(i);
-            for (var attrName in res.rows.item(i)) {
-                console.log("ActivityMemberManager - "+attrName+" : "+res.rows.item(i)[attrName]);
-            }
+            // for (var attrName in res.rows.item(i)) {
+            //     console.log("ActivityMemberManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            // }
         }
     });
     return {
@@ -328,9 +328,9 @@ app.factory('ActivityManager', function(DBManager) {
     DBManager.getActivity(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexActivity[res.rows.item(i).id] = res.rows.item(i);
-            for (var attrName in res.rows.item(i)) {
-                console.log("ActivityManager - "+attrName+" : "+res.rows.item(i)[attrName]);
-            }
+            // for (var attrName in res.rows.item(i)) {
+            //     console.log("ActivityManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            // }
         }
     });
     return {
@@ -444,9 +444,9 @@ app.factory('MessageManager', function(DBManager) {
     DBManager.getMessages(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexMessages[res.rows.item(i).id] = res.rows.item(i);
-            for (var attrName in res.rows.item(i)) {
-                console.log("MessageManager - "+attrName+" : "+res.rows.item(i)[attrName]);
-            }
+            // for (var attrName in res.rows.item(i)) {
+            //     console.log("MessageManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            // }
         }
     });
     return {
@@ -471,15 +471,16 @@ app.factory('MessageManager', function(DBManager) {
         getBy: function(activityId, account) {
             var messages = [];
             for (var id in idIndexMessages) {
-                if (activityId == 0) {
-                    if (idIndexMessages[id].fromAccount == account) {
-                        messages.push(idIndexMessages[id]);
-                    }
-                } else {
-                    if (idIndexMessages[id].activityId == activityId) {
+                if (idIndexMessages[id].activityId == activityId) {
+                    if (activityId == 0) {
+                        if (idIndexMessages[id].fromAccount == account) {
+                            messages.push(idIndexMessages[id]);
+                        }
+                    } else {
                         messages.push(idIndexMessages[id]);
                     }
                 }
+                
             }
             return messages;
         },
@@ -500,7 +501,7 @@ app.factory('MessageManager', function(DBManager) {
     }
 });
 
-app.factory('FriendManager', function(DBManager) {
+app.factory('FriendManager', function(DBManager, ActivityMemberManager) {
     var idIndexFriends = {};
     DBManager.getFriends(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
@@ -568,6 +569,24 @@ app.factory('FriendManager', function(DBManager) {
                 if (!idIndexFriends[id].isInvited && !idIndexFriends[id].isWaitingAccept && idIndexFriends[id].isActive)
                 {
                     friends[id] = idIndexFriends[id];
+                }
+            }
+            return friends;
+        },
+        listCanInviteActivityFriends: function(activityId) {
+            var friends = {};
+            var inActivityFriends = ActivityMemberManager.getByActivityId(activityId);
+            for (var id in idIndexFriends) {
+                if (!idIndexFriends[id].isInvited && !idIndexFriends[id].isWaitingAccept && idIndexFriends[id].isActive)
+                {
+                    friends[id] = idIndexFriends[id];
+                }
+            }
+            for (var index in inActivityFriends) {
+                for (var id in friends) {
+                    if (friends[id].account == inActivityFriends[index].memberAccount) {
+                        delete friends[id];
+                    }
                 }
             }
             return friends;

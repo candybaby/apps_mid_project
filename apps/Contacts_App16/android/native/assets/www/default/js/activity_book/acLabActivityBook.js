@@ -87,6 +87,52 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
                 console.log("Activity refuse error，原因:"+response.error);
                 (onError || angular.noop)(response);
             });
+        },
+        sendPosition: function(positionInfo, onSuccess, onError) {
+            var positionData = {
+                activity_id: positionInfo.activityId,
+                account: positionInfo.account,
+                name: positionInfo.name,
+                img_url: positionInfo.imgUrl,
+                lat: positionInfo.lat,
+                lng: positionInfo.lng
+            };
+            var sendPosition = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'sendPosition' + acLabServiceFormat,
+                data: positionData
+            });
+            
+            sendPosition.success(function(response, status, headers, config){
+                console.log("Activity refuse success" + response);
+                (onSuccess || angular.noop)(response);
+            });
+            
+            sendPosition.error(function(response, status, headers, config) {
+                console.log("Activity refuse error，原因:"+response.error);
+                (onError || angular.noop)(response);
+            });
+        },
+        closeMap: function(activityId, account, onSuccess, onError) {
+            var positionData = {
+                activity_id: activityId,
+                account: account,
+            };
+            var closeMap = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'closeMap' + acLabServiceFormat,
+                data: positionData
+            });
+            
+            closeMap.success(function(response, status, headers, config){
+                console.log("Activity refuse success" + response);
+                (onSuccess || angular.noop)(response);
+            });
+            
+            closeMap.error(function(response, status, headers, config) {
+                console.log("Activity refuse error，原因:"+response.error);
+                (onError || angular.noop)(response);
+            });
         }
 
     };

@@ -5,7 +5,8 @@ app.controller('ChooseLocationPageCtrl', function($scope, $window, sharedData) {
 	  $scope.init = function() {
   		  var mapOptions = {
     		    center: new google.maps.LatLng(25.0441228, 121.5339948),
-    		    zoom: 13
+    		    zoom: 13,
+            streetViewControl: false
   		  };
   		  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
@@ -58,7 +59,7 @@ app.controller('ChooseLocationPageCtrl', function($scope, $window, sharedData) {
 
     		    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
     		    infowindow.open(map, marker);
-            $scope.place = place.name;
+            $scope.place = input.value;
             $scope.latlng = place.geometry.location.toString();
   		  });
     };
@@ -66,11 +67,10 @@ app.controller('ChooseLocationPageCtrl', function($scope, $window, sharedData) {
 	  $scope.okButton = [{
 		    type: 'button-icon button-clear ion-ios7-checkmark-outline',
 		    tap: function() {
-            var location = {
-                place: $scope.place,
-                latlng: $scope.latlng
-            };
-            sharedData.setData(location);
+            var activity = sharedData.getActivity();
+            activity.place = $scope.place;
+            activity.latlng = $scope.latlng;
+            sharedData.setActivity(activity);
 			      $window.history.back();
         }
 	  }];

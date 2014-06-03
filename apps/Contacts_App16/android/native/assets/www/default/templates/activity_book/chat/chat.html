@@ -5,12 +5,14 @@
         </div>
 		<div ng-show="state == REGISTERED">
             <div class="list">
-                <div ng-repeat="(key, chat) in getChatList()|orderObjectBy:'dateTime':true" class="item item-avatar" ng-click="onFriendChatClick(chat.fromAccount, chat.activityId)" detect-gestures gesture-type="swiperight" id="{{chat.id}}">
-                    <img ng-src="{{chat.fromAccount | pictureUrlAdapter}}">
-                    <h2>{{chat.title}}</h2>
-                    <span class="time">{{chat.dateTime | fromNow}}</span>
-                    <span class="message">{{chat.whoTalk}}  {{chat.message | chatContentAdapter}}</span>
-                    <span class="badge badge-assertive my-badge" ng-show="chat.badge != 0">{{chat.badge | badgeCount}}</span>
+                <div ng-repeat="(key, chat) in getChatList()|orderObjectBy:'dateTime':true" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
+                    <div class="item item-avatar" ng-click="onFriendChatClick(chat.fromAccount, chat.activityId)" detect-gestures gesture-type="swiperight" id="{{chat.id}}">
+                        <img ng-src="{{chat.fromAccount | pictureUrlAdapter:chat.activityId}}">
+                        <h2>{{chat.title}}</h2>
+                        <span class="time">{{chat.dateTime | fromNow}}</span>
+                        <span class="message">{{chat.whoTalk}}  {{chat.message | chatContentAdapter}}</span>
+                        <span class="badge badge-assertive my-badge" ng-show="chat.badge != 0">{{chat.badge | badgeCount}}</span>
+                    </div>
                 </div>
             </div>
         <div>

@@ -1,6 +1,9 @@
 app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, ChatManager, FriendManager) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
+    // $scope.data = {
+    //     showDelete: false
+    // };
 
 	$scope.state = $scope.UNREGISTERED;
 	$scope.init = function() {
@@ -29,20 +32,15 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
 
     $scope.onFriendChatClick = function(account, activityId) {
     	//alert("onFriendChatClick" + account);
-        if (activityId == 0) {
-            $state.go('messagepage', {
-                account: account
-            });
-        }else {
-            $state.go('messagepage', {
-                account: account,
-                activityId: activityId
-            });
-        }
+        $state.go('messagepage', {
+            account: account,
+            activityId: activityId
+        });
     };
 
-    $scope.reportEvent = function(event)  {
+    $scope.reportEvent = function(event) {
         console.log('Reporting : ' + event.type);
+        //$scope.data.showDelete = !$scope.data.showDelete;
         var chat = {};
         chat.id = event.currentTarget.id;
         ChatManager.delete(chat, function() {
@@ -50,6 +48,14 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
         });
         //alert("chatId:"+event.currentTarget.id);
     };
+
+    $scope.deleteChatEvent = function(id) {
+        var chat = {};
+        chat.id = id;
+        ChatManager.delete(chat, function() {
+            $scope.$apply();
+        });
+    }
 })
 .directive('detectGestures', function($ionicGesture) {
     return {

@@ -1,4 +1,4 @@
-var app = angular.module("Contacts_App16", ['ionic', 'PhoneGap', 'acLabActivityBook']);
+var app = angular.module("Contacts_App16", ['ionic', 'PhoneGap', 'acLabActivityBook', 'ui.bootstrap.datetimepicker']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider
@@ -93,6 +93,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('directionMap', {
+            url: "/directionMap?id",
+            templateUrl: 'templates/activity_book/activity/directionMap.html',
+            controller: 'DirectionMapCtrl'
+        })
+        .state('dateTimePicker', {
+            url: "/dateTimePicker?option",
+            templateUrl: 'templates/activity_book/activity/dateTimePicker.html',
+            controller: 'DateTimePickerCtrl'
+        })
         .state('map', {
             url: '/map?latitude&longitude&friendName&isMe',
             templateUrl: 'templates/activity_book/activity/map.html',
@@ -109,10 +119,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
 });
 
 app.service('sharedData', function () {
-    var data = {
-        place: "",
-        latlng: ""
-    };
+    var data = {};
+    var activityInfo = {};
 
     return {
         getData:function () {
@@ -120,6 +128,12 @@ app.service('sharedData', function () {
         },
         setData:function (value) {
             data = value;
+        },
+        getActivity:function () {
+            return activityInfo;
+        },
+        setActivity:function (value) {
+            activityInfo = value;
         }
     };
 });
@@ -175,8 +189,13 @@ app.filter('chatContentAdapter', function() {
 });
 
 app.filter('pictureUrlAdapter', function(FriendManager) {
-    return function(account) {
-        var url = FriendManager.getByAccount(account).pictureUrl;
+    return function(account, activityId) {
+        var url = "";
+        if (activityId > 0) {
+            url = "images/group.png";
+        } else {
+            url = FriendManager.getByAccount(account).pictureUrl;
+        }
         return url;
     };
 });
@@ -242,6 +261,10 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 receiveRefuseActivityMessage(message);
             } else if (message['message_type'] == "newActivityMember") {
                 newActivityMemberMessage(message);
+            } else if (message['message_type'] == "sendPosition") {
+                sendPositionMessage(message);
+            } else if (message['message_type'] == "closeMap") {
+                closeMapMessage(message);
             }
             
             console.log("mqtt onReceiveMqtt:" + res);
@@ -269,15 +292,18 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         MessageManager.add(msgObj, function(messagesId) {
             var chat = {};
             var name;
+            var title;
             if (msgObj['activityId'] == 0) {
                 name = FriendManager.getByAccount(msgObj['fromAccount'])['name'];
+                title = name;
             } else {
-                name = ActivityManager.getById(msgObj['activityId'])['name'];
+                name = ActivityMemberManager.getByActivityIdAndAccount(msgObj['activityId'], msgObj['fromAccount'])['memberName'];
+                title = ActivityManager.getById(msgObj['activityId'])['name'];
             }
             
             chat['fromAccount'] = msgObj['fromAccount'];
             chat['activityId'] = msgObj['activityId'];
-            chat['title'] = name;
+            chat['title'] = title;
             chat['whoTalk'] = message['send_myself'] ? "我" : name; //
             chat['message'] = msgObj['content'];
             chat['dateTime'] = msgObj['dateTime'];
@@ -346,7 +372,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     var receiveJoinActivityMessage = function(message) {
         var people = ActivityMemberManager.getByActivityIdAndAccount(message['activity_id'], message['member_account']);
         if (people) {
-            people.isJoin = true;
+            people.isJoin = 1;
             ActivityMemberManager.update(people);//update
         } else {
             console.log("people false : " + message['member_account']);
@@ -356,7 +382,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
     var receiveRefuseActivityMessage = function(message) {
         var people = ActivityMemberManager.getByActivityIdAndAccount(message['activity_id'], message['member_account']);
         if (people) {
-            people.isJoin = false;
+            people.isJoin = 0;
             ActivityMemberManager.update(people);//update
         } else {
             console.log("people false : " + message['member_account']);
@@ -368,6 +394,14 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             var people = message.newMembers[index];
             ActivityMemberManager.add(people);
         }
+    }
+
+    var sendPositionMessage = function(message) {
+        $rootScope.$broadcast('receivePosition', message);
+    }
+
+    var closeMapMessage = function(message) {
+        $rootScope.$broadcast('closeMap', message);
     }
     
     var GCMSENDERID = '568888441927';

@@ -179,6 +179,16 @@ angular.module('PhoneGap').factory('Geolocation', function ($q, $window, PhoneGa
             PhoneGap.ready(function () {
                 $window.navigator.geolocation.getCurrentPosition(onSuccess, onError);
             });
+        },
+        watchPosition: function(onSuccess, onError) {
+            PhoneGap.ready(function () {
+                return $window.navigator.geolocation.watchPosition(onSuccess, onError);
+            });
+        },
+        clearWatch: function(watchID) {
+            PhoneGap.ready(function () {
+                $window.navigator.geolocation.clearWatch(watchID);
+            });
         }
     };
 });

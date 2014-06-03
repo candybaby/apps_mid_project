@@ -3,7 +3,7 @@ app.controller('FriendListCtrl', function($scope, $stateParams, $window, Activit
 	
 	$scope.init = function() {
 		$scope.id = $stateParams["id"];
-		$scope.friendList = angular.copy(FriendManager.listFriends());
+		$scope.friendList = angular.copy(FriendManager.listCanInviteActivityFriends($scope.id));
 	};
 
 	$scope.onItemChanged = function (friend) {

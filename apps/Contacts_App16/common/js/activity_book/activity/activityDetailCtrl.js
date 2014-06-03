@@ -43,6 +43,12 @@ app.controller('ActivityDetailCtrl', function($scope, $stateParams, ActivityMana
         });
 	};
 
+	$scope.onMapClick = function() {
+		$state.go('directionMap', {
+            id: $scope.id
+        });
+	};
+
 	$scope.canJoin = function() {
 		return $scope.activity.status != "Join";
 	};
@@ -56,7 +62,7 @@ app.controller('ActivityDetailCtrl', function($scope, $stateParams, ActivityMana
 	};
 
 	$scope.canUseMap = function() {
-		return false;
+		return $scope.activity.status == "Join" && $scope.activity.place;
 	};
 
 	$scope.canInvite = function() {

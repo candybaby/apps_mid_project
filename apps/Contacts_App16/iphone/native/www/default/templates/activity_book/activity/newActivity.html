@@ -12,16 +12,17 @@
 				</label>
 				<label class="item item-input item-stacked-label">
 					<span class="input-label">開始時間: </span>
-			    	<input type="datetime-local" placeholder="yyyy-MM-dd HH:mm" ng-model="activity.startTime">
+			    	<input type="text" ng-model="activity.startTime" ng-focus="onFocusStartTime()">
 				</label>
 				<label class="item item-input item-stacked-label">
 					<span class="input-label">結束時間: </span>
-			    	<input type="datetime-local" placeholder="yyyy-MM-dd HH:mm" ng-model="activity.endTime">
+			    	<input type="text" ng-model="activity.endTime" ng-focus="onFocusEndTime()">
 				</label>
 				<label class="item item-input item-stacked-label">
 			    	<span class="input-label">描述: </span>
 			    	<input type="text" ng-model="activity.describe">
 				</label>
+				
 				<button ng-click="onCreateClick()" class="button button-block button-positive">新增</button>
 			</form>
 		</div>
