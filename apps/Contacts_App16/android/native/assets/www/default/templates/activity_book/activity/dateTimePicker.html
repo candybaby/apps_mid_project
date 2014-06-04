@@ -1,6 +1,7 @@
 <ion-view title="pickerName" right-buttons="okButton">
 	<ion-content has-header="true" scroll="false">
-		<datetimepicker ng-model="time.date"></datetimepicker>
-
+		<div class="card">
+			<datetimepicker ng-model="time.date" data-datetimepicker-config="{'minView':'hour'}"></datetimepicker>
+		</div>
 	</ion-content>
 </ion-view>
