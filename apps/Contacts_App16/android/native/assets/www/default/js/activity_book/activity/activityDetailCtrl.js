@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/activity_book/activity/activityDetailCtrl.js in folder common */
-app.controller('ActivityDetailCtrl', function($scope, $stateParams, ActivityManager, $state, SettingManager, acLabActivity, ActivityMemberManager) {
+app.controller('ActivityDetailCtrl', function($scope, $stateParams, ActivityManager, $state, SettingManager, acLabActivity, ActivityMemberManager, ChatManager, $window) {
 	$scope.activity = {};
 	$scope.name = SettingManager.getHost().name;
 	$scope.account = SettingManager.getHost().account;
@@ -30,6 +30,9 @@ app.controller('ActivityDetailCtrl', function($scope, $stateParams, ActivityMana
 		acLabActivity.refuse($scope.account, $scope.id, function(res) {
 			$scope.activity.status = "notJoin";
 			ActivityManager.update($scope.activity);
+			var chat = {};
+        	chat.id = ChatManager.isExist("", $scope.id);
+        	ChatManager.delete(chat);
 		});
 	};
 
@@ -82,5 +85,9 @@ app.controller('ActivityDetailCtrl', function($scope, $stateParams, ActivityMana
 	$scope.isInvited = function() {
 		return $scope.activity.status == "Invited";
 	};
+
+	$scope.reportEvent = function() {
+        $window.history.back();
+    };
 });
 

@@ -59,14 +59,10 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('tab.newactivity', {
+        .state('newactivity', {
             url: '/newactivity',
-            views: {
-                'tab-activity': {
-                    templateUrl: 'templates/activity_book/activity/newActivity.html',
-                    controller: 'NewActivityCtrl'
-                }
-            }
+            templateUrl: 'templates/activity_book/activity/newActivity.html',
+            controller: 'NewActivityCtrl'
         })
         .state('tab.activitydetail', {
             url: "/activitydetail?id",
@@ -138,6 +134,38 @@ app.service('sharedData', function () {
             activityInfo = value;
         }
     };
+});
+
+app.directive('detectGestures', function($ionicGesture) {
+    return {
+        restrict :  'A',
+
+        link : function(scope, elem, attrs) {
+            var gestureType = attrs.gestureType;
+
+            switch(gestureType) {
+                case 'swipe':
+                    $ionicGesture.on('swipe', scope.reportEvent, elem);
+                    break;
+                case 'swiperight':
+                    $ionicGesture.on('swiperight', scope.reportEvent, elem);
+                    break;
+                case 'swipeleft':
+                    $ionicGesture.on('swipeleft', scope.reportEvent, elem);
+                    break;
+                case 'doubletap':
+                    $ionicGesture.on('doubletap', scope.reportEvent, elem);
+                    break;
+                case 'tap':
+                    $ionicGesture.on('tap', scope.reportEvent, elem);
+                    break;
+                case 'scroll':
+                    $ionicGesture.on('scroll', scope.reportEvent, elem);
+                    break;
+            }
+
+        }
+    }
 });
 
 

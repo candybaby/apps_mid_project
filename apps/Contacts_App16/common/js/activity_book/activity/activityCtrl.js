@@ -18,7 +18,7 @@ app.controller('ActivityCtrl', function($scope, $state, SettingManager, Activity
 		type: 'button-icon button-clear ion-plus',
 		tap: function() {
 			if ($scope.state == $scope.REGISTERED) {
-				$state.go('tab.newactivity');
+				$state.go('newactivity');
 			} else {
 				Notification.alert('請先註冊', null, "提示");
 			}

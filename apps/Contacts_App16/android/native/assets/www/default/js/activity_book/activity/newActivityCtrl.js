@@ -75,5 +75,13 @@ app.controller('NewActivityCtrl', function($scope, Notification, SettingManager,
             option: 'end'
         });
 	};
+
+	$scope.backButton = [{
+		type: 'button-icon button-clear ion-ios7-arrow-back',
+	    tap: function() {
+	    	sharedData.setActivity({});
+			$state.go('tab.activity');
+        }
+	}];
 });
 

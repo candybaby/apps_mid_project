@@ -1,4 +1,4 @@
-app.controller('ChooseLocationPageCtrl', function($scope, $window, sharedData) {
+app.controller('ChooseLocationPageCtrl', function($scope, $state, sharedData) {
     $scope.place = "";
     $scope.latlng = "";
 
@@ -71,7 +71,7 @@ app.controller('ChooseLocationPageCtrl', function($scope, $window, sharedData) {
             activity.place = $scope.place;
             activity.latlng = $scope.latlng;
             sharedData.setActivity(activity);
-			      $window.history.back();
+			      $state.go('newactivity');
         }
 	  }];
 

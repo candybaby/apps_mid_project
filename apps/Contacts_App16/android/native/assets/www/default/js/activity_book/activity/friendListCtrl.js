@@ -16,6 +16,10 @@ app.controller('FriendListCtrl', function($scope, $stateParams, $window, Activit
 		}
     };
 
+    $scope.reportEvent = function() {
+        $window.history.back();
+    };
+
     $scope.sendInviteButton = [{
 		type: 'button-icon button-clear ion-ios7-paperplane',
 		content: '完成',

@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/activity_book/activity/memberListCtrl.js in folder common */
-app.controller('MemberListCtrl', function($scope, $stateParams, ActivityMemberManager) {
+app.controller('MemberListCtrl', function($scope, $stateParams, ActivityMemberManager, $window) {
 	
 	$scope.init = function() {
 		$scope.id = $stateParams["id"];
@@ -9,6 +9,10 @@ app.controller('MemberListCtrl', function($scope, $stateParams, ActivityMemberMa
 
     $scope.getMemberList = function() {
         return ActivityMemberManager.getByActivityId($scope.id);
+    };
+
+    $scope.reportEvent = function() {
+        $window.history.back();
     };
 
 }).filter('joinStatusAdapter', function() {
