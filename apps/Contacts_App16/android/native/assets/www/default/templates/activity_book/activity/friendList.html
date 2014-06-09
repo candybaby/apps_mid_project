@@ -1,4 +1,4 @@
-<ion-view title="'朋友列表'" right-buttons="sendInviteButton" ng-init="init()" detect-gestures gesture-type="swipeleft">
+<ion-view title="'朋友列表'" right-buttons="sendInviteButton" ng-init="init()" left-buttons="backButton" detect-gestures gesture-type="swipeleft">
     <ion-content has-header="true" has-tabs="true">
             <tick-list multiple="true" selected-icon="ion-ios7-checkmark">
                 <tick-list-item ng-repeat="friend in friendList" selected="{{friend.selected}}" selected-icon="{{friend.icon}}" model="friend" on-change="onItemChanged(friend)">

@@ -1,6 +1,6 @@
 
 /* JavaScript content from js/activity_book/chat/messagePageCtrl.js in folder common */
-app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $location, $window, $ionicModal, FriendManager, MessageManager, SettingManager, acLabMessage, ChatManager, Geolocation, $timeout, ActivityManager) {
+app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $location, $window, $ionicModal, FriendManager, MessageManager, SettingManager, acLabMessage, ChatManager, Geolocation, $timeout, ActivityManager, Notification) {
     $scope.model = {};
     $scope.activity = {};
 	  $scope.account = $stateParams["account"] ? $stateParams["account"] : "";
@@ -9,8 +9,8 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $locati
     $scope.activity = ActivityManager.getById($scope.activityId);
 	  $scope.chatName = $scope.activityId != 0 ? $scope.activity.name + "活動聊天室" : $scope.model.name;
 	  $scope.$on('receivedMessage', function(res, message) {
-		    var cId = ChatManager.isExist($scope.account, $scope.activityId);
-		    ChatManager.resetBadge(cId);
+		    // var cId = ChatManager.isExist($scope.account, $scope.activityId);
+		    // ChatManager.resetBadge(cId);
 		    $scope.$apply();
 	  });
 	  $ionicModal.fromTemplateUrl('imgList.html', function(modal) {
@@ -51,7 +51,9 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $locati
 
 	  $scope.sendMessage = function(msg) {
 		    //alert("sendMessage:" + msg);
-		    acLabMessage.sendMessage(SettingManager.getHost().account, $scope.model.account, msg, $scope.activityId);
+		    acLabMessage.sendMessage(SettingManager.getHost().account, $scope.model.account, msg, $scope.activityId, null, function(res) {
+            Notification.alert(res.error, null, "提示");
+        });
 	  };
 
 //
@@ -87,6 +89,8 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $locati
     $scope.backButton = [{
 		    type: 'button-icon button-clear ion-ios7-arrow-back',
 		    tap: function() {
+            var cId = ChatManager.isExist($scope.account, $scope.activityId);
+            ChatManager.resetBadge(cId);
             $window.history.back();
         }
 	  }];

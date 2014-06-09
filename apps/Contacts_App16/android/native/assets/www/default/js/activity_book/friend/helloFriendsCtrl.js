@@ -1,15 +1,20 @@
 
 /* JavaScript content from js/activity_book/friend/helloFriendsCtrl.js in folder common */
-app.controller('HelloFriendsCtrl', function($scope, $state, $ionicLoading, $location, SettingManager, Notification, FriendManager, acLabFriend) {
+app.controller('HelloFriendsCtrl', function($scope, $state, $ionicLoading, $location, SettingManager, Notification, FriendManager, acLabFriend, $rootScope) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
 	$scope.state = $scope.UNREGISTERED;
+
+	$scope.showFriendTitle = false;
+	$scope.showWaitingTitle = false;
+	$scope.showInvitedTitle = false;
 
 	$scope.init = function() {
 		$scope.host = SettingManager.getHost();
 		if ($scope.host.registered) {
 			$scope.state = $scope.REGISTERED;
 		}
+		$rootScope.$broadcast('resetFriendsBadge');
     };
 
     $scope.getFriendList = function() {
@@ -24,10 +29,23 @@ app.controller('HelloFriendsCtrl', function($scope, $state, $ionicLoading, $loca
     	return FriendManager.listInvitedFriends();
     };
 
+    $scope.setShowFriend = function() {
+    	$scope.showFriendTitle = true;
+    };
+
+    $scope.setShowWaiting = function() {
+    	$scope.showWaitingTitle = true;
+    };
+
+    $scope.setShowInvited = function() {
+    	$scope.showInvitedTitle = true;
+    };
+
     $scope.newFriendsButton = [{
 		type: 'button-icon button-clear ion-plus',
 		tap: function() {
 			if ($scope.state == $scope.REGISTERED) {
+				$rootScope.$broadcast('resetFriendsBadge');
 				$state.go('tab.newfriend');
 			} else {
 				Notification.alert('請先註冊', null, "提示");
@@ -36,12 +54,14 @@ app.controller('HelloFriendsCtrl', function($scope, $state, $ionicLoading, $loca
 	}];
 
 	$scope.onFriendClick = function(account) {
+		$rootScope.$broadcast('resetFriendsBadge');
 		$state.go('messagepage', {
             account:account
         });
 	};
 
 	$scope.onAcceptClick = function(account) {
+		$rootScope.$broadcast('resetFriendsBadge');
         var friend = FriendManager.getByAccount(account);
         // send accept
         $scope.show();
@@ -56,6 +76,7 @@ app.controller('HelloFriendsCtrl', function($scope, $state, $ionicLoading, $loca
 	};
 
 	$scope.onRefuseClick = function(account) {
+		$rootScope.$broadcast('resetFriendsBadge');
 		var friend = FriendManager.getByAccount(account);
 		// send refuse
 		$scope.show();

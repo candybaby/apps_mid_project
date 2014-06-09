@@ -230,6 +230,29 @@ app.filter('pictureUrlAdapter', function(FriendManager) {
     };
 });
 
+app.filter('ownerAdapter', function(ActivityMemberManager, SettingManager) {
+    return function(accountString, activityId) {
+        if (accountString == SettingManager.getHost().account) {
+            return '我';
+        } else {
+            return ActivityMemberManager.getByActivityIdAndAccount(activityId, accountString)['memberName'].charAt(0);
+        }
+    };
+});
+
+app.filter('ownerToName', function(ActivityMemberManager, SettingManager) {
+    return function(accountString, activityId) {
+        return ActivityMemberManager.getByActivityIdAndAccount(activityId, accountString)['memberName'];
+    };
+});
+
+app.filter('showTimeCalendar', function() {
+    return function(timeString) {
+        var result = moment(timeString).calendar();
+        return result.replace("00", "");
+    };
+});
+
 app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, PhoneGap, $rootScope, FriendManager, MessageManager, ChatManager, acLabMember, ActivityManager, ActivityMemberManager) {
     var host = SettingManager.getHost();
     var fbAppId = '238880266302926';
@@ -242,11 +265,10 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 console.log("**** pause time ****");
                 acLabMember.resetBadge(host.account);
             }, false);
-            $window.document.addEventListener("backbutton", function() {
-                // 不是很好 應該在離開app的時候 清空 但抓不到event
-                acLabMember.resetBadge(host.account);
+            $window.document.addEventListener("backbutton", function(e) {
                 console.log("**** backbutton time ****");
-                
+                acLabMember.resetBadge(host.account);
+                $window.navigator.app.exitApp();
             }, false);
         }
         // if(host.hasFB) {
@@ -279,12 +301,14 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 readMessage(message);
             } else if (message['message_type'] == "inviteFriend") {
                 receiveInvitedFriendMessage(message);
+                $rootScope.$broadcast('receiveInviteFriend');
             } else if (message['message_type'] == "acceptFriend") {
                 receiveAcceptInvitedFriendMessage(message);
             } else if (message['message_type'] == "refuseFriend") {
                 receiveRefuseInvitedFriendMessage(message);
             } else if (message['message_type'] == "inviteActivity") {
                 receiveInvitedActivityMessage(message);
+                $rootScope.$broadcast('receiveInviteActivity');
             } else if (message['message_type'] == "joinActivity") {
                 receiveJoinActivityMessage(message);
             } else if (message['message_type'] == "refuseActivity") {
@@ -313,13 +337,14 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
             msgObj['owner'] = 'target';
             msgObj['fromAccount'] = message['senderAccount'];
             // if sender_phone 不是好友 做一個inviteFriend
+            $rootScope.$broadcast('receiveMessageFromOthers');
         }
             
         msgObj['content'] = message['message'];
         msgObj['dateTime'] = message['date_time'];
         msgObj['mId'] = message['m_id'];
         msgObj['activityId'] = message['activityId'] ? message['activityId'] : 0;
-        MessageManager.add(msgObj, function(messagesId) {
+        MessageManager.add(msgObj);
             var chat = {};
             var name;
             var title;
@@ -350,7 +375,7 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
                 console.log("chat add");
             }
             $rootScope.$broadcast('receiveMessage', message);
-        });
+        
     }
 
     var readMessage = function(message) {
@@ -389,14 +414,16 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         var activity = {};
         activity = message;
         activity.status = "Invited";
-        ActivityManager.add(activity);
-        console.log("receiveInvitedActivityMessage Add member:");
-        for (var index in activity.member) {
-            console.log("Add Member" + activity.member[index].name);
-            var people = activity.member[index];
-            people.memberName = activity.member[index].name;
-            ActivityMemberManager.add(people);
-        }
+        ActivityManager.add(activity, function() {
+            console.log("receiveInvitedActivityMessage Add member:");
+            for (var index in activity.member) {
+                console.log("Add Member" + activity.member[index].name);
+                var people = activity.member[index];
+                people.memberName = activity.member[index].name;
+                ActivityMemberManager.add(people);
+            }
+        });
+        
     }
 
     var receiveJoinActivityMessage = function(message) {
@@ -447,5 +474,39 @@ app.run(function(DBManager, SettingManager, PushNotificationsFactory, $window, P
         SettingManager.setHost(host);
     });
 
-    moment.lang('zh-tw');
+    moment.lang('zh-tw', {
+        calendar : {
+            lastDay : '[昨天] LT',
+            sameDay : '[今天] LT',
+            nextDay : '[明天] LT',
+            lastWeek : '[上]dddd LT',
+            nextWeek : '[下]dddd LT',
+            sameElse : 'LLLL'
+        }
+    });
+});
+
+app.controller('TabsCtrl', function($scope) {
+    $scope.badge = {};
+    $scope.badge.friends = 0;
+    $scope.badge.chat = 0;
+    $scope.badge.activity = 0;
+    $scope.$on('receiveInviteFriend', function() {
+        $scope.badge.friends = $scope.badge.friends + 1;
+    });
+    $scope.$on('receiveMessageFromOthers', function() {
+        $scope.badge.chat = $scope.badge.chat + 1;
+    });
+    $scope.$on('receiveInviteActivity', function() {
+        $scope.badge.activity = $scope.badge.activity + 1;
+    });
+    $scope.$on('resetFriendsBadge', function() {
+        $scope.badge.friends = 0;
+    });
+    $scope.$on('resetChatBadge', function() {
+        $scope.badge.chat = 0;
+    });
+    $scope.$on('resetActivityBadge', function() {
+        $scope.badge.activity = 0;
+    });
 });

@@ -59,8 +59,8 @@ app.controller('DirectionMapCtrl', function($scope, $stateParams, Geolocation, $
 
 	$scope.calcRoute = function(lat, lng) {
 
-        $scope.data.counter++;
-        $scope.data.position.push("( " + lat + " , " + lng + " )");
+        // $scope.data.counter++;
+        // $scope.data.position.push("( " + lat + " , " + lng + " )");
         $scope.$apply();
         var positionInfo = {};
         positionInfo.activityId = $stateParams.id;

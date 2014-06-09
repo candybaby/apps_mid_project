@@ -1,11 +1,11 @@
-<ion-tabs tabs-style="tabs-icon-top" tabs-type="tabs-positive">
-	<ion-tab title="朋友" icon="ion-ios7-people" href="#/tab/friends">
+<ion-tabs tabs-style="tabs-icon-top" tabs-type="tabs-positive" ng-controller="TabsCtrl">
+	<ion-tab title="朋友" icon="ion-ios7-people" href="#/tab/friends" badge="badge.friends" badge-style="badge-assertive">
 		<ion-nav-view name="tab-friends"></ion-nav-view>
     </ion-tab>
-    <ion-tab title="訊息" icon="icon ion-ios7-chatboxes-outline" href="#/tab/chat">
+    <ion-tab title="訊息" icon="icon ion-ios7-chatboxes-outline" href="#/tab/chat" badge="badge.chat" badge-style="badge-assertive">
         <ion-nav-view name="tab-chat"></ion-nav-view>
     </ion-tab>
-    <ion-tab title="活動" icon="icon ion-ios7-flag" href="#/tab/activity">
+    <ion-tab title="活動" icon="icon ion-ios7-flag" href="#/tab/activity" badge="badge.activity" badge-style="badge-assertive">
         <ion-nav-view name="tab-activity"></ion-nav-view>
     </ion-tab>
     <ion-tab title="設定" icon="icon ion-gear-a" href="#/tab/setting">

@@ -6,7 +6,7 @@ app.factory('DBManager', function($window, PhoneGap) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT, account TEXT UNIQUE, pictureUrl TEXT, isActive BOOLEAN, isWaitingAccept BOOLEAN, isInvited BOOLEAN)", []);
         });
         db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER, activityId INTEGER)", []);
+            tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER UNIQUE, activityId INTEGER)", []);
         });
         db.transaction(function(tx) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS chat(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, activityId INTEGER, title TEXT, whoTalk TEXT, message TEXT, dateTime DATETIME, badge INTEGER)", []);
@@ -270,6 +270,45 @@ app.factory('DBManager', function($window, PhoneGap) {
                 });
             });
         },
+
+        databaseReset: function (onSuccess, onError) {
+            PhoneGap.ready(function() {
+                db.transaction(function(tx) {
+                    tx.executeSql("DROP TABLE friends");
+                });
+                db.transaction(function(tx) {
+                    tx.executeSql("DROP TABLE messages");
+                });
+                db.transaction(function(tx) {
+                    tx.executeSql("DROP TABLE chat");
+                });
+                db.transaction(function(tx) {
+                    tx.executeSql("DROP TABLE activity");
+                });
+                db.transaction(function(tx) {
+                    tx.executeSql("DROP TABLE activity_member", []);
+                });
+
+                // create
+                db.transaction(function(tx) {
+                    tx.executeSql("CREATE TABLE IF NOT EXISTS friends(id INTEGER PRIMARY KEY ASC, name TEXT, phone TEXT, account TEXT UNIQUE, pictureUrl TEXT, isActive BOOLEAN, isWaitingAccept BOOLEAN, isInvited BOOLEAN)", []);
+                });
+                db.transaction(function(tx) {
+                    tx.executeSql("CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, content TEXT, owner TEXT, dateTime DATETIME, hasRead BOOLEAN, mId INTEGER UNIQUE, activityId INTEGER)", []);
+                });
+                db.transaction(function(tx) {
+                    tx.executeSql("CREATE TABLE IF NOT EXISTS chat(id INTEGER PRIMARY KEY ASC, fromAccount TEXT, activityId INTEGER, title TEXT, whoTalk TEXT, message TEXT, dateTime DATETIME, badge INTEGER)", []);
+                });
+                db.transaction(function(tx) {
+                    tx.executeSql("CREATE TABLE IF NOT EXISTS activity(id INTEGER PRIMARY KEY, name TEXT, describe TEXT, startTime DATETIME, endTime DATETIME, place TEXT, latlng TEXT, owner TEXT, status TEXT, eventId TEXT default '')", []);            
+                });
+                db.transaction(function(tx) {
+                    tx.executeSql("CREATE TABLE IF NOT EXISTS activity_member(id INTEGER PRIMARY KEY ASC, activityId INTEGER, memberAccount TEXT, memberName TEXT, isJoin BOOLEAN)", [], onSuccess);            
+                });
+
+
+            });
+        },
     };
 });
 
@@ -318,7 +357,10 @@ app.factory('ActivityMemberManager', function(DBManager) {
                 }
             }
             return false;
-        }
+        },
+        reset: function() {
+            idIndexActivityMember = {};
+        },
     }
 });
 
@@ -343,23 +385,45 @@ app.factory('ActivityManager', function(DBManager) {
         list: function() {
             return idIndexActivity;
         },
-        listJoin: function() {
-            var activityJoin= [];
-            for (var id in idIndexActivity) {
-                if (idIndexActivity[id].status == 'Join') {
-                    activityJoin.push(idIndexActivity[id]);
-                }
-            }
-            return activityJoin;
-        },
         listInvited: function() {
             var activityInvited = [];
+            var now = moment();
             for (var id in idIndexActivity) {
-                if (idIndexActivity[id].status == 'Invited') {
+                if (moment(idIndexActivity[id].startTime).diff(now) > 0 && idIndexActivity[id].status == 'Invited') {
                     activityInvited.push(idIndexActivity[id]);
                 }
             }
             return activityInvited;
+        },
+        listNotStart: function() {
+            var activityNotStart = [];
+            var now = moment();
+            for (var id in idIndexActivity) {
+                if (moment(idIndexActivity[id].startTime).diff(now) > 0 && idIndexActivity[id].status != 'Invited') {
+                    activityNotStart.push(idIndexActivity[id]);
+                }
+            }
+            return activityNotStart;
+        },
+        listStarted: function() {
+            var activityStarted = [];
+            var now = moment();
+            for (var id in idIndexActivity) {
+                if (moment(idIndexActivity[id].startTime).diff(now) < 0 && moment(idIndexActivity[id].endTime).diff(now) > 0 && idIndexActivity[id].status != 'Invited') {
+                    activityStarted.push(idIndexActivity[id]);
+                }
+            }
+            return activityStarted;
+        },
+        listEnd: function() {
+            var activityEnd = [];
+            var now = moment();
+            for (var id in idIndexActivity) {
+                if (moment(idIndexActivity[id].endTime).diff(now) < 0) {
+                    activityEnd.push(idIndexActivity[id]);
+                }
+            }
+            return activityEnd;
         },
         getById: function(id) {
             if (idIndexActivity[id] == undefined) {
@@ -373,7 +437,10 @@ app.factory('ActivityManager', function(DBManager) {
                 idIndexActivity[activity.id] = activity;
                 (onSuccess || angular.noop)();
             });
-        }
+        },
+        reset: function() {
+            idIndexActivity = {};
+        },
     }
 });
 
@@ -435,7 +502,10 @@ app.factory('ChatManager', function(DBManager) {
                 delete idIndexChats[chat.id];
                 (onSuccess || angular.noop)();
             }, onError);
-        }
+        },
+        reset: function() {
+            idIndexChats = {};
+        },
     }
 });
 
@@ -444,16 +514,16 @@ app.factory('MessageManager', function(DBManager) {
     DBManager.getMessages(function(tx, res) {
         for (var i = 0, max = res.rows.length; i < max; i++) {
             idIndexMessages[res.rows.item(i).id] = res.rows.item(i);
-            // for (var attrName in res.rows.item(i)) {
-            //     console.log("MessageManager - "+attrName+" : "+res.rows.item(i)[attrName]);
-            // }
+            for (var attrName in res.rows.item(i)) {
+                console.log("MessageManager - "+attrName+" : "+res.rows.item(i)[attrName]);
+            }
         }
     });
     return {
         add: function(message, onSuccess) {
             DBManager.addMessage(message, function() {
                 idIndexMessages[message.id] = message;
-                (onSuccess || angular.noop)(message.id);
+                (onSuccess || angular.noop)(message);
             });
         },
         getByAccount: function(account) {
@@ -497,7 +567,10 @@ app.factory('MessageManager', function(DBManager) {
                     idIndexMessages[hasReadId].hasRead = 1;
                 });
             });
-        }
+        },
+        reset: function() {
+            idIndexMessages = {};
+        },
     }
 });
 
@@ -512,6 +585,14 @@ app.factory('FriendManager', function(DBManager, ActivityMemberManager) {
         }
     });
     return {
+        addFriend: function(friend, onSuccess) {
+            friend.isWaitingAccept = 0;
+            friend.isInvited = 0;
+            DBManager.addFriend(friend, function() {
+                idIndexFriends[friend.id] = friend;
+                (onSuccess || angular.noop)(friend);
+            });
+        },
         addWaitingAcceptFriend: function(friend) {
             friend.isWaitingAccept = 1;
             friend.isInvited = 0;
@@ -603,7 +684,10 @@ app.factory('FriendManager', function(DBManager, ActivityMemberManager) {
         },
         count: function() {
             return Object.keys(idIndexFriends).length;
-        }
+        },
+        reset: function() {
+            idIndexFriends = {};
+        },
     }
 });
 

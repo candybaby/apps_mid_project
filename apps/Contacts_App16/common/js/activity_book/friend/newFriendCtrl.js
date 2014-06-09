@@ -111,5 +111,12 @@ app.controller('NewFriendCtrl', function($scope, $location,$state, $window, $ion
         });
     };
 
+    $scope.backButton = [{
+        type: 'button-icon button-clear ion-ios7-arrow-back',
+        tap: function() {
+            $state.go('tab.friends');
+        }
+    }];
+
 });
 

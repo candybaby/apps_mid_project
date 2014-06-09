@@ -1,10 +1,12 @@
-<ion-view title="'活動成員列表'" ng-init="init()" detect-gestures gesture-type="swipeleft">
+<ion-view title="'活動成員列表'" ng-init="init()" left-buttons="backButton" detect-gestures gesture-type="swipeleft">
     <ion-content has-header="true" has-tabs="true">
         <div class="list">
-            <div ng-repeat="member in getMemberList()" class="item item-avatar">
+            <div ng-repeat="member in getMemberList()" class="item item-member">
                 <h2>{{member.memberName}}</h2>
                 <h3>{{member.memberAccount}}</h3>
-                <h3>{{member.isJoin | joinStatusAdapter}}</h3>
+                <span class="item-member-status item-status-wait" ng-show="member.isJoin == undefined">等待回覆</span>
+                <span class="item-member-status item-status-join" ng-show="member.isJoin == 1">參加</span>
+                <span class="item-member-status item-status-notjoin" ng-show="member.isJoin == 0">不參加</span>
             </div>
         </div>
     </ion-content>

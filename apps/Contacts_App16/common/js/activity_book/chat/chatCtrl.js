@@ -1,4 +1,4 @@
-app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, ChatManager, FriendManager) {
+app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, ChatManager, FriendManager, $rootScope) {
 	$scope.UNREGISTERED = 0;
 	$scope.REGISTERED = 1;
     // $scope.data = {
@@ -12,6 +12,7 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
 			$scope.state = $scope.REGISTERED;
             $scope.refreshTime();
 		}
+        $rootScope.$broadcast('resetChatBadge');
     };
 
     $scope.refreshTime = function() {
@@ -32,6 +33,7 @@ app.controller('ChatCtrl', function($scope, $state, $timeout, SettingManager, Ch
 
     $scope.onFriendChatClick = function(account, activityId) {
     	//alert("onFriendChatClick" + account);
+        $rootScope.$broadcast('resetChatBadge');
         $state.go('messagepage', {
             account: account,
             activityId: activityId

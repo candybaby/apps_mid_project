@@ -15,6 +15,13 @@ app.controller('MemberListCtrl', function($scope, $stateParams, ActivityMemberMa
         $window.history.back();
     };
 
+    $scope.backButton = [{
+        type: 'button-icon button-clear ion-ios7-arrow-back',
+        tap: function() {
+            $window.history.back();
+        }
+    }];
+
 }).filter('joinStatusAdapter', function() {
     return function(isJoin) {
         console.log("joinStatusAdapter:" + isJoin);

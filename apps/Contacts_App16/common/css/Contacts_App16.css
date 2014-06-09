@@ -268,3 +268,111 @@ html, body, #map-canvas {
   content: "\f107";
 }
 
+.item-activity {
+    padding-left: 70px;
+    min-height: 70px; }
+
+.item-activity-logo {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #f0b840;
+}
+
+.item-activity-logo > i {
+    position: absolute;
+    top: -3px;
+    left: 0px;
+    z-index: 1;
+    background: transparent;
+    color: rgba(50%,30%,20%,0.6);
+	-webkit-transform: rotate(-20deg);
+	-moz-transform: rotate(-20deg);
+	-o-transform: rotate(-20deg);
+	-ms-transform:rotate(-20deg);
+}
+
+.item-activity-logo > span {
+    position: absolute;
+    top: 10px;
+    right: 3px;
+    color: #FFF;
+    text-align: center;
+    font-size: 35px;
+}
+
+.item-activity > h2 {
+    padding-right: 100px;
+}
+.item-activity > h3 {
+    padding-right: 60px;
+}
+
+.item-activity > .item-activity-time {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 13px;
+}
+
+.item-activity > .item-status {
+    position: absolute;
+    top: 35px;
+    right: 15px;
+    z-index: 1;
+    display: inline-block;
+    padding: 3px 8px;
+    min-width: 10px;
+    vertical-align: baseline;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.item-status-join {
+    background-color: #46A506;
+    color: #fff;
+}
+
+.item-status-notjoin {
+    background-color: #DB414E;
+    color: #fff;
+}
+
+.item-status-wait {
+	background-color: #4a87ee;
+    color: #fff;
+}
+
+.my-icon-right {
+  	position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.item-member {
+    padding-left: 85px;
+    min-height: 70px; }
+
+.item-member > .item-member-status {
+    position: absolute;
+    top: 23px;
+    left: 15px;
+    z-index: 1;
+    display: inline-block;
+    padding: 3px 8px;
+    min-width: 10px;
+    vertical-align: baseline;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+

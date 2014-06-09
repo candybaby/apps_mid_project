@@ -140,7 +140,7 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
     var acLabServiceFormat = '/format/json';
     
     return {
-        sendMessage: function(senderAccount, receiverAccount, message, activityId) {
+        sendMessage: function(senderAccount, receiverAccount, message, activityId, onSuccess, onError) {
             var messageData = {
                 sender_account: senderAccount,
                 receiver_account: receiverAccount,
@@ -155,11 +155,13 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
             });
             
             send.success(function(response, status, headers, config){
-                console.log("發送成功");
+                console.log("發送成功" + response);
+                (onSuccess || angular.noop)(response);
             });
             
             send.error(function(response, status, headers, config) {
-                console.log("發送失敗，原因:"+response);
+                console.log("發送失敗，原因:"+response.error);
+                (onError || angular.noop)(response);
             });
         },
         readMessage: function(mId) {
@@ -323,6 +325,25 @@ angular.module('acLabActivityBook').factory('acLabMember', function ($rootScope,
                 (onSuccess || angular.noop)(response);
             });
             reset.error(function (response, status, headers, config){
+                (onError || angular.noop)(response);
+            });
+        },
+
+        getMemberData: function(account, onSuccess, onError) {
+            var data = {
+                account: account
+            };
+
+            var memberData = $http({
+                method: 'POST',
+                url: acLabServiceUrl + 'accountData' + acLabServiceFormat,
+                data: data
+            });
+
+            memberData.success(function(response, status, headers, config){
+                (onSuccess || angular.noop)(response);
+            });
+            memberData.error(function (response, status, headers, config){
                 (onError || angular.noop)(response);
             });
         }

@@ -28,7 +28,6 @@ app.controller('NewActivityCtrl', function($scope, Notification, SettingManager,
 			$scope.activity.eventId = '';
 			ActivityManager.add($scope.activity, function() {
 				$scope.activity = {};
-				Notification.alert("建立活動成功", null, '提示', '確定');
 				sharedData.setActivity({});
 
 				// 以下為將自己新增至 活動成員中
@@ -38,6 +37,9 @@ app.controller('NewActivityCtrl', function($scope, Notification, SettingManager,
 				people.memberName = SettingManager.getHost().name;
 				people.isJoin = 1;
 				ActivityMemberManager.add(people);
+				Notification.alert("建立活動成功", function() {
+					$state.go('tab.activity');
+				}, '提示', '確定');
 			});
 		});
 	};

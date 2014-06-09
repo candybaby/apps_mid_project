@@ -4,24 +4,70 @@
             <button ng-click="onRegisterClick()" class="button button-block button-positive">註冊</button>
         </div>
 		<div ng-show="state == REGISTERED">
-			<div class="item item-divider">
-            進行中活動（有效時間 已加入）
+            <div class="item item-divider" ng-click="onActivityInvitedTitleClick()" ng-show="showActivityInvitedTitle">
+            活動邀請
+            <i class="icon ion-arrow-down-b my-icon-right" ng-hide="showActivityInvitedList"></i>
+            <i class="icon ion-arrow-up-b my-icon-right" ng-show="showActivityInvitedList"></i>
             </div>
-            <div class="list">
-                <div ng-repeat="activity in getActivityJoinList()" class="item item-avatar" ng-click="onActivityClick(activity.id)">
+            <div class="list" ng-show="showActivityInvitedList">
+                <div ng-repeat="activity in getActivityInvitedList()" class="item item-activity" ng-click="onActivityClick(activity.id)" ng-init="setShowActivityInvitedTitle()">
+                    <div class="item-activity-logo"><i ng-show="isSetCalendar(activity.eventId)" class="icon ion-ios7-calendar"></i><span>{{activity.owner | ownerAdapter : activity.id}}</span></div>
+                    <span class="item-activity-time">{{activity.startTime | fromNow}}開始</span>
                     <h2>{{activity.name}}</h2>
-                    <h3>{{activity.place}}</h3>
+                    <h3>{{activity.describe}}</h3>
+                    <span class="item-status item-status-wait">等待回覆</span>
                 </div>
             </div>
-            <div class="item item-divider">
-            活動邀請（有效時間 invited）
+
+            <div class="item item-divider" ng-click="onActivityNotStartTitleClick()" ng-show="showActivityNotStartTitle">
+            尚未開始的活動
+            <i class="icon ion-arrow-down-b my-icon-right" ng-hide="showActivityNotStartList"></i>
+            <i class="icon ion-arrow-up-b my-icon-right" ng-show="showActivityNotStartList"></i>
             </div>
-            <div class="list">
-                <div ng-repeat="activity in getActivityInvitedList()" class="item item-avatar" ng-click="onActivityClick(activity.id)">
+            <div class="list" ng-show="showActivityNotStartList">
+                <div ng-repeat="activity in getActivityNotStartList()" class="item item-activity" ng-click="onActivityClick(activity.id)" ng-init="setShowActivityNotStartTitle()">
+                    <div class="item-activity-logo"><i ng-show="isSetCalendar(activity.eventId)" class="icon ion-ios7-calendar"></i><span>{{activity.owner | ownerAdapter : activity.id}}</span></div>
                     <h2>{{activity.name}}</h2>
-                    <h3>{{activity.place}}</h3>
+                    <h3>{{activity.describe}}</h3>
+                    <span class="item-activity-time">{{activity.startTime | fromNow}}開始</span>
+                    <span class="item-status item-status-join" ng-show="isJoin(activity.status)">參加</span>
+                    <span class="item-status item-status-notjoin" ng-show="isNotJoin(activity.status)">不參加</span>
                 </div>
             </div>
+
+			<div class="item item-divider" ng-click="onActivityStartedTitleClick()" ng-show="showActivityStartedTitle">
+            進行中的活動
+            <i class="icon ion-arrow-down-b my-icon-right" ng-hide="showActivityStartedList"></i>
+            <i class="icon ion-arrow-up-b my-icon-right" ng-show="showActivityStartedList"></i>
+            </div>
+            <div class="list" ng-show="showActivityStartedList">
+                <div ng-repeat="activity in getActivityStartedList()" class="item item-activity" ng-click="onActivityClick(activity.id)" ng-init="setShowActivityStartedTitle()">
+                    <div class="item-activity-logo"><i ng-show="isSetCalendar(activity.eventId)" class="icon ion-ios7-calendar"></i><span>{{activity.owner | ownerAdapter : activity.id}}</span></div>
+                    <h2>{{activity.name}}</h2>
+                    <h3>{{activity.describe}}</h3>
+                    <span class="item-activity-time">{{activity.startTime | fromNow}}開始</span>
+                    <span class="item-status item-status-join" ng-show="isJoin(activity.status)">參加</span>
+                    <span class="item-status item-status-notjoin" ng-show="isNotJoin(activity.status)">不參加</span>
+                </div>
+            </div>
+
+            <div class="item item-divider" ng-click="onActivityEndTitleClick()" ng-show="showActivityEndTitle">
+            已結束的活動
+            <i class="icon ion-arrow-down-b my-icon-right" ng-hide="showActivityEndList"></i>
+            <i class="icon ion-arrow-up-b my-icon-right" ng-show="showActivityEndList"></i>
+            </div>
+            <div class="list" ng-show="showActivityEndList">
+                <div ng-repeat="activity in getActivityEndList()" class="item item-activity" ng-click="onActivityClick(activity.id)" ng-init="setShowActivityEndTitle()">
+                    <div class="item-activity-logo"><i ng-show="isSetCalendar(activity.eventId)" class="icon ion-ios7-calendar"></i><span>{{activity.owner | ownerAdapter : activity.id}}</span></div>
+                    <h2>{{activity.name}}</h2>
+                    <h3>{{activity.describe}}</h3>
+                    <span class="item-activity-time">{{activity.endTime | fromNow}}結束</span>
+                    <span class="item-status item-status-join" ng-show="isJoin(activity.status)">參加</span>
+                    <span class="item-status item-status-notjoin" ng-show="isNotJoin(activity.status)">不參加</span>
+                    <span class="item-status item-status-wait" ng-hide="isJoin(activity.status) || isNotJoin(activity.status)">等待回覆</span>
+                </div>
+            </div>
+            
 		</div>
                
     </ion-content>

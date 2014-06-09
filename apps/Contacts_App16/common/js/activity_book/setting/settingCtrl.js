@@ -1,4 +1,4 @@
-app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoading, $location, Notification, acLabMember, $http){
+app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoading, $location, Notification, acLabMember, $http, DBManager, FriendManager, MessageManager, ChatManager, ActivityManager, ActivityMemberManager) {
 	$scope.UNREGISTERED = 0;
 	$scope.AUTH = 1;
 	$scope.REGISTERED = 2;
@@ -57,16 +57,25 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
     };
 
     $scope.registerMember = function() {
-        acLabMember.register($scope.host, function() {
+        acLabMember.register($scope.host, function(result) {
+            result = JSON.parse(result);
             $scope.hide();
             $scope.host.registered = true;
-            Notification.alert('註冊成功', null, "通知");
+            Notification.alert('登入成功', null, "通知");
             SettingManager.setHost($scope.host);
-            $window.plugins.MQTTPlugin.CONNECT(angular.noop, angular.noop, $scope.host.phone, $scope.host.account);
+            console.log("result" + result);
+            if (result == "update") {
+                $scope.getData(function() {
+                    $window.plugins.MQTTPlugin.CONNECT(angular.noop, angular.noop, $scope.host.phone, $scope.host.account);
+                });
+            } else {
+                $window.plugins.MQTTPlugin.CONNECT(angular.noop, angular.noop, $scope.host.phone, $scope.host.account);
+            }
+            
             $scope.state = $scope.REGISTERED;
         }, function(res) {
             $scope.hide();
-            Notification.alert('註冊失敗：' + res.error, null, "警告");
+            Notification.alert('登入失敗：' + res.error, null, "警告");
         });
     };
 	
@@ -129,8 +138,12 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
         acLabMember.unregister($scope.host.account, function(response) {
             $scope.initHost();
             SettingManager.setHost($scope.host);
-            $scope.hide();
-            $scope.state = $scope.UNREGISTERED;
+            $window.plugins.MQTTPlugin.CONNECT(angular.noop, angular.noop, "nullclient", "nulltopic");
+            DBManager.databaseReset(function() {
+                $scope.hide();
+                $scope.resetManagers();
+                $scope.state = $scope.UNREGISTERED;
+            });
         }, function() {
             $scope.hide();
             Notification.alert('刪除失敗', null, "警告");
@@ -161,140 +174,122 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
     	$scope.loading.hide();
     };
 
-    $scope.setFriendsFromGoogleDrive = function() {
-        if (gapi.auth.getToken()) {
-            getDriveFile();
-        } else {
-            liquid.helper.oauth.authorize(function(uriLocation) {
-                var oAuth = liquid.helper.oauth;
-                if (oAuth.authCode) {
-                    oAuth.saveRefreshToken({ 
-                        auth_code: oAuth.authCode
-                    }, function() {
-                        liquid.helper.oauth.getAccessToken(function(tokenObj) {
-                            console.log('Access Token >> ' + tokenObj.access_token);
-                            gapi.auth.setToken({
-                                access_token: tokenObj.access_token
-                            });
-                            getDriveFile();
+    $scope.resetManagers = function() {
+        FriendManager.reset();
+        MessageManager.reset();
+        ChatManager.reset();
+        ActivityManager.reset();
+        ActivityMemberManager.reset();
+    };
+
+    $scope.getData = function(doneCallBack) {
+        acLabMember.getMemberData($scope.host.account, function(response) {
+            var friends = response.friends;
+            var messages = response.messages;
+            var activities = response.activities;
+            var activityMember = response.activity_members;
+
+            $scope.recoverFriendsDB(friends, function() {
+                $scope.recoverMessagesDB(messages, function() {
+                    $scope.recoverActivityDB(activities, function() {
+                        $scope.recoverActivityMemberDB(activityMember, function() {
+                            if(typeof(doneCallBack)=='function') {  
+                                doneCallBack();
+                            }; 
                         });
                     });
+                });
+            });
+        });
+    };
+
+    $scope.recoverFriendsDB = function(friends, doneCallBack) {
+        for(var i = 0; i < friends.length; i++) {
+            console.log("recoverFriendsDB");
+            var friend = friends[i];
+            FriendManager.addFriend(friend, function(addedFriend) {
+                if (addedFriend.account == friends[friends.length-1].account) {
+                    if(typeof(doneCallBack)=='function') {  
+                        console.log("recoverFriendsDB call back!!!!!!!!"); 
+                        doneCallBack();
+                    }; 
                 }
             });
         }
     };
 
+    $scope.recoverMessagesDB = function(messages, doneCallBack) {
+        for(var i = 0; i < messages.length; i++) {
+            console.log("recoverFriendsDB");
+            var message = messages[i];
+            message.mId = messages[i].id;
+            if (messages[i].senderAccount == $scope.host.account) {
+                // 我傳的
+                message.fromAccount = messages[i].receiverAccount;
+                message.owner = "source";
+            } else {
+                message.fromAccount = messages[i].senderAccount;
+                message.owner = "target";
+            }
+            
+            message.content = messages[i].message;
+            
+            message.dateTime = messages[i].time;
 
-    function getDriveFile() {
-        $scope.show();
-        gapi.client.load('drive', 'v2', function() {
-            var list = gapi.client.drive.files.list();
-            var addressBook = 'friends.csv';
-            list.execute(function(resp) {
-                for (var i = 0; i < resp.items.length; i++) {
-                    if (resp.items[i].title == addressBook) {
-                        $http.get(resp.items[i].webContentLink).success(function(data, status, headers, config) {
-                            var lines = data.split('\r\n');
-                            for (var i = 1, max = lines.length; i < max; i++) {
-                                var freindItems = lines[i].split(',');
-                                var friend = {
-                                        name: freindItems[0],
-                                        phone: freindItems[1],
-                                        email: freindItems[2],
-                                        birthday: freindItems[3]
-                                };
-                                //FriendManager.add(friend, $scope.$apply);
-                                console.log("listFriend" + friend.name);
-                            }
-                        });
-                        $scope.hide();
-                        return;
-                    }
+
+            MessageManager.add(message, function(addedMessage) {
+                if (addedMessage.mId == messages[messages.length-1].id) {
+                    if(typeof(doneCallBack)=='function') {  
+                        console.log("recoverMessagesDB call back!!!!!!!!"); 
+                        doneCallBack();
+                    }; 
                 }
-                $scope.hide();
-                Notification.alert("存取" + addressBook + "失敗", null, '警告', '確定');
             });
-        });
+        }
     };
 
-    $scope.setEvent = function() {
-        var startDate = new Date();
-        var endDate = new Date();
-        startDate.setMinutes(startDate.getMinutes() + 6);
-        endDate.setMinutes(endDate.getMinutes() + 6);
-        gapi.client.load('calendar', 'v3', function() {
-            var list = gapi.client.calendar.calendarList.list({
-                minAccessRole: 'writer'
+    $scope.recoverActivityDB = function(activities, doneCallBack) {
+        for(var i = 0; i < activities.length; i++) {
+            console.log("recoverActivityDB");
+            var activity = activities[i];
+            activity.status = "";
+            ActivityManager.add(activity, function(addedActivity) {
+                if (addedActivity.id == activities[activities.length-1].id) {
+                    if(typeof(doneCallBack)=='function') {  
+                        console.log("recoverActivityDB call back!!!!!!!!"); 
+                        doneCallBack();
+                    }; 
+                }
             });
-            list.execute(function(resp) {
-                var calendarId = resp.items[0].id;
-                var insert = gapi.client.calendar.events.insert({
-                    calendarId: calendarId,
-                    resource: {
-                        summary: '測試事件',
-                        location: '某個地點',
-                        description: '測試描述',
-                        start: {
-                            dateTime: startDate,
-                            timeZone: "Asia/Taipei"
-                        },
-                        end: {
-                            dateTime: endDate,
-                            timeZone: "Asia/Taipei"
-                        },
-                        reminders: {
-                            useDefault: false,
-                            overrides: [{
-                                method: 'popup',
-                                minutes: 3
-                            }]
-                        }
-                    }
-                });
-                insert.execute(function(resp) {
-                    console.log(JSON.stringify(resp));
-                    // 記錄eventId 未來刪除或是修改會用到
-                    alert("create event success"+resp.id);
-                });
-            });
-        });
-        // gapi.client.load('calendar', 'v3', function() {
-        //         var list = gapi.client.calendar.calendarList.list({
-        //             minAccessRole: 'writer'
-        //         });
-        //         list.execute(function(resp) {
-        //             var calendarId = resp.items[0].id;
-        //             var remove = gapi.client.calendar.events.delete({
-        //                 calendarId: calendarId,
-        //                 eventId: friend.eventId
-        //             });
-        //             remove.execute(function(resp) {
-        //                 console.log(JSON.stringify(resp));
-        //                 friend.eventId = '';
-        //                 FriendManager.edit(friend);
-        //             });
-        //         });
-        //     });
+        }
     };
 
-    $scope.onSetEventClick = function() {
-        if (gapi.auth.getToken()) {
-            $scope.setEvent();
-        } else {
-            liquid.helper.oauth.authorize(function(uriLocation) {
-                var oAuth = liquid.helper.oauth;
-                if (oAuth.authCode) {
-                    oAuth.saveRefreshToken({ 
-                        auth_code: oAuth.authCode
-                    }, function() {
-                        liquid.helper.oauth.getAccessToken(function(tokenObj) {
-                            console.log('Access Token >> ' + tokenObj.access_token);
-                            gapi.auth.setToken({
-                                access_token: tokenObj.access_token
-                            });
-                            $scope.setEvent();
-                        });
-                    });
+    $scope.recoverActivityMemberDB = function(activityMember, doneCallBack) {
+        // 設定Activity status
+        for (var index in activityMember) {
+            if (activityMember[index].memberAccount == $scope.host.account) {
+                var activity = ActivityManager.getById(activityMember[index].activityId);
+                if (activityMember[index].isJoin == "1") {
+                    activity.status = "Join";
+                } else if(activityMember[index].isJoin == "0") {
+                    activity.status = "notJoin";
+                } else {
+                    activity.status = "Invited";
+                }
+                ActivityManager.update(activity);
+            }
+        }
+
+        for(var i = 0; i < activityMember.length; i++) {
+            console.log("recoverActivityMemberDB");
+            var people = activityMember[i];
+            people.memberName = activityMember[i].name;
+            ActivityMemberManager.add(people, function(addedActivityMember) {
+                if (addedActivityMember.memberAccount == activityMember[activityMember.length-1].memberAccount && addedActivityMember.activityId == activityMember[activityMember.length-1].activityId) {
+                    if(typeof(doneCallBack)=='function') {  
+                        console.log("recoverActivityDB call back!!!!!!!!"); 
+                        doneCallBack();
+                    }; 
                 }
             });
         }

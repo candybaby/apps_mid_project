@@ -18,6 +18,13 @@ app.controller('FriendListCtrl', function($scope, $stateParams, $window, Activit
         $window.history.back();
     };
 
+    $scope.backButton = [{
+        type: 'button-icon button-clear ion-ios7-arrow-back',
+        tap: function() {
+            $window.history.back();
+        }
+    }];
+
     $scope.sendInviteButton = [{
 		type: 'button-icon button-clear ion-ios7-paperplane',
 		content: '完成',
