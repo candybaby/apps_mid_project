@@ -58,15 +58,15 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $locati
 
 //
    	$scope.onMessageShow = function(id) {
-    	  var message = MessageManager.getById(id);
+    	var message = MessageManager.getById(id);
 
-    	  if (!message.hasRead && message.owner == "target") {
-    	 	    if ($scope.activityId == 0) {
+    	if (!message.hasRead && message.owner == "target") {
+    	 	if ($scope.activityId == 0) {
                 acLabMessage.readMessage(message.mId);
-    	 	    }
+    	 	}
             var cId = ChatManager.isExist($scope.account, $scope.activityId);
-			      ChatManager.resetBadge(cId);
-    	  }
+			ChatManager.resetBadge(cId);
+    	}
     };
 
 	  $scope.getMessageList = function() {
@@ -74,7 +74,7 @@ app.controller('MessagePageCtrl', function($scope, $stateParams, $state, $locati
    	};
 
    	$scope.onMessageClick = function(message) {
-   		  console.log("onMessageClick");
+   		console.log("onMessageClick");
         if (!message.content.replace(/\map:\([0-9.]+,[0-9.]+\)/, '')) {
         	  var latlng = message.content.match(/([0-9.-]+).+?([0-9.-]+)/);
    			    $state.go('map', {

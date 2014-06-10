@@ -220,7 +220,7 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
 
     $scope.recoverMessagesDB = function(messages, doneCallBack) {
         for(var i = 0; i < messages.length; i++) {
-            console.log("recoverFriendsDB");
+            console.log("recoverMessagesDB");
             var message = messages[i];
             message.mId = messages[i].id;
             if (messages[i].senderAccount == $scope.host.account) {
@@ -231,12 +231,8 @@ app.controller('SettingCtrl',function($scope, $window, SettingManager, $ionicLoa
                 message.fromAccount = messages[i].senderAccount;
                 message.owner = "target";
             }
-            
             message.content = messages[i].message;
-            
             message.dateTime = messages[i].time;
-
-
             MessageManager.add(message, function(addedMessage) {
                 if (addedMessage.mId == messages[messages.length-1].id) {
                     if(typeof(doneCallBack)=='function') {  

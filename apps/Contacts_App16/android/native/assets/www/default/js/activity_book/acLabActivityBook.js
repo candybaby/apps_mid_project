@@ -104,12 +104,12 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
             });
             
             sendPosition.success(function(response, status, headers, config){
-                console.log("Activity refuse success" + response);
+                console.log("Activity sendPosition success" + response);
                 (onSuccess || angular.noop)(response);
             });
             
             sendPosition.error(function(response, status, headers, config) {
-                console.log("Activity refuse error，原因:"+response.error);
+                console.log("Activity sendPosition error，原因:"+response.error);
                 (onError || angular.noop)(response);
             });
         },
@@ -125,12 +125,12 @@ angular.module('acLabActivityBook', ['PhoneGap']).factory('acLabActivity', funct
             });
             
             closeMap.success(function(response, status, headers, config){
-                console.log("Activity refuse success" + response);
+                console.log("Activity closeMap success" + response);
                 (onSuccess || angular.noop)(response);
             });
             
             closeMap.error(function(response, status, headers, config) {
-                console.log("Activity refuse error，原因:"+response.error);
+                console.log("Activity closeMap error，原因:"+response.error);
                 (onError || angular.noop)(response);
             });
         }

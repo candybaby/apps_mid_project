@@ -26,9 +26,12 @@ app.controller('DirectionMapCtrl', function($scope, $stateParams, Geolocation, $
     });
 	
 	$scope.init = function() {
+        Geolocation.getCurrentPosition(function(position) {
+            var origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         me = SettingManager.getHost();
 
         var directionsRendererOptions = {
+            preserveViewport:true,
             suppressMarkers: true,
             map: map,
         };
@@ -37,7 +40,7 @@ app.controller('DirectionMapCtrl', function($scope, $stateParams, Geolocation, $
         var taipeiTech = new google.maps.LatLng(25.0441228, 121.5339948);
   		var mapOptions = {
     		zoom: 13,
-    	    center: taipeiTech,
+    	    center: origin,
             streetViewControl: false
   		}
   		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -54,6 +57,8 @@ app.controller('DirectionMapCtrl', function($scope, $stateParams, Geolocation, $
   		console.log("init watchID:" + $scope.watchID);
         google.maps.event.addListener(map, 'zoom_changed', function() {
             console.log(map.getZoom());
+        });
+
         });
     };
 
@@ -109,7 +114,7 @@ app.controller('DirectionMapCtrl', function($scope, $stateParams, Geolocation, $
                 } else {
                     endMarker = new MarkerWithLabel({
                         position: endPosition,
-                        labelContent: $scope.activity.place,
+                        labelContent: "活動地點",
                         labelAnchor: new google.maps.Point(30, 0),
                         labelClass: "labels",
                         icon: "images/endMarker.png",
